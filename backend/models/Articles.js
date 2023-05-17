@@ -1,30 +1,21 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const { v4: uuidv4 } = require("uuid");
-const Articles = require("./Articles");
 
-const Users = sequelize.define("users", {
+const Articles = sequelize.define("articles", {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: () => uuidv4(),
     },
-    username: {
+    user_id: {
+        type: DataTypes.CHAR(36),
+        allowNull: false,
+    },
+    title: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true,
-        },
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false,
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -38,7 +29,4 @@ const Users = sequelize.define("users", {
     },
 });
 
-Users.hasMany(Articles, { foreignKey: "user_id", as: "articles" });
-Articles.belongsTo(Users, { foreignKey: "user_id", as: "users" });
-
-module.exports = Users;
+module.exports = Articles;

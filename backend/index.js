@@ -2,9 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
-// const router = express.Router();
 const { body, validationResult } = require("express-validator");
-// const phpMyAdmin = require('node-phpmyadmin');
 
 require("dotenv").config();
 
@@ -32,7 +30,9 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send("Something broke!");
 });
-const usersRoute = require("./routes/Users");
+const usersRoute = require("./routes/users");
+const articlesRoute = require("./routes/articles");
+app.use("/articles", articlesRoute);
 app.use("/users", usersRoute);
 
 // Start Server

@@ -1,8 +1,16 @@
 const Users = require("../models/Users");
 const bcrypt = require("bcrypt");
+const Articles = require("../models/Articles");
 exports.getAll = async (req, res) => {
     try {
-        const users = await Users.findAll();
+        const users = await Users.findAll({
+            include: [
+                {
+                    model: Articles,
+                    as: "articles",
+                },
+            ],
+        });
         res.status(200).json(users);
     } catch (err) {
         console.error(err);
