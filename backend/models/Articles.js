@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const { v4: uuidv4 } = require("uuid");
+const Comments = require("./Comments");
 
 const Articles = sequelize.define("articles", {
     id: {
@@ -15,7 +16,7 @@ const Articles = sequelize.define("articles", {
     title: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        // unique: true,
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -28,5 +29,8 @@ const Articles = sequelize.define("articles", {
         defaultValue: DataTypes.NOW,
     },
 });
+
+Articles.hasMany(Comments, { foreignKey: "article_id", as: "comments" });
+Comments.belongsTo(Articles, { foreignKey: "article_id", as: "articles" });
 
 module.exports = Articles;

@@ -1,5 +1,6 @@
 const Articles = require("../models/Articles");
 const Users = require("../models/Users");
+const Comments = require("../models/Comments");
 
 exports.getAll = async (req, res) => {
     // GET all articles
@@ -9,6 +10,10 @@ exports.getAll = async (req, res) => {
                 {
                     model: Users,
                     as: "users",
+                },
+                {
+                    model: Comments,
+                    as: "comments",
                 },
             ],
         });
@@ -24,12 +29,12 @@ exports.getOne = async (req, res) => {
     // GET one article
     try {
         const article = await Articles.findByPk(req.params.id, {
-            // include: [
-            //     {
-            //         model: Users,
-            //         attributes: ["username"],
-            //     },
-            // ],
+            include: [
+                {
+                    model: Users,
+                    as: "users",
+                },
+            ],
         });
         res.status(200).json(article);
     } catch (err) {
@@ -42,9 +47,7 @@ exports.getOne = async (req, res) => {
 exports.create = async (req, res) => {
     // POST an article
     try {
-        const { title, user_id } = req.body;
-        console.log(req.body.title);
-        console.log(req.body.user_id);
+        const { title, user_id, content } = req.body;
 
         // Check if article already exists
         const articleExists = await Articles.findOne({
@@ -59,6 +62,7 @@ exports.create = async (req, res) => {
         }
         const newArticle = {
             title,
+            content,
             user_id,
         };
         const article = await Articles.create(newArticle);
@@ -68,6 +72,49 @@ exports.create = async (req, res) => {
         console.error(err);
         res.status(500).json({
             message: "Erreur lors de la création de l'article.",
+        });
+    }
+};
+exports.update = async (req, res) => {
+    // PUT an article
+    try {
+        const { title, user_id } = req.body;
+        const article = await Articles.findByPk(req.params.id);
+        if (!article) {
+            return res.status(400).json({
+                message: "Cet article n'existe pas.",
+            });
+        }
+        const updatedArticle = {
+            title,
+            user_id,
+        };
+        await article.update(updatedArticle);
+        res.status(200).json(article);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la modification de l'article.",
+        });
+    }
+};
+exports.delete = async (req, res) => {
+    // DELETE an article
+    try {
+        const article = await Articles.findByPk(req.params.id);
+        if (!article) {
+            return res.status(400).json({
+                message: "Cet article n'existe pas.",
+            });
+        }
+        await article.destroy();
+        res.status(200).json({
+            message: "L'article a bien été supprimé.",
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la suppression de l'article.",
         });
     }
 };

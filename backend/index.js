@@ -32,12 +32,14 @@ app.use((err, req, res, next) => {
 });
 const usersRoute = require("./routes/users");
 const articlesRoute = require("./routes/articles");
+const commentsRoute = require("./routes/comments");
 app.use("/articles", articlesRoute);
 app.use("/users", usersRoute);
+app.use("/comments", commentsRoute);
 
 // Start Server
 
-sequelize.sync().then(() => {
+sequelize.sync({ alter: false }).then(() => {
     console.log("Drop and re-sync db.");
     app.listen(port, () => {
         console.log(`Example app listening at http://${DB_HOST}:${port}`);
