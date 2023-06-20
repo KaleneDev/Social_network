@@ -1,6 +1,8 @@
 const Users = require("../models/Users");
 const bcrypt = require("bcrypt");
 const Articles = require("../models/Articles");
+const multer = require("multer");
+
 exports.getAll = async (req, res) => {
     try {
         const users = await Users.findAll({
@@ -80,4 +82,12 @@ exports.delete = async (req, res) => {
             message: "Erreur lors de la suppression de l'utilisateur.",
         });
     }
+};
+exports.upload = async (req, res) => {
+    // POST an image
+    console.log(req.file);
+
+    res.status(201).json({
+        message: "File uploaded successfully!",
+    });
 };
