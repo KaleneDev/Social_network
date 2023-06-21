@@ -1,8 +1,9 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const { v4: uuidv4 } = require("uuid");
-const Articles = require("./Articles");
-const Comments = require("./Comments");
+const Articles = require("./Articles.model");
+const Comments = require("./Comments.model");
+const { isEmail } = require("validator");
 
 const Users = sequelize.define("users", {
     id: {
@@ -12,18 +13,26 @@ const Users = sequelize.define("users", {
     },
     username: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
+
         validate: {
-            isEmail: true,
+            isEmail: { isEmail: true },
         },
     },
     password: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    role: {
+        type: DataTypes.ENUM("admin", "user"),
+        allowNull: false,
+        defaultValue: "user",
     },
     createdAt: {
         type: DataTypes.DATE,

@@ -1,29 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const usersCtrl = require("../controllers/users");
-const multer = require("multer");
-const path = require("path");
+const usersCtrl = require("../controllers/users.controller");
+const authCtrl = require("../controllers/auth.controller");
+const upload = require("../middleware/multer.middleware");
+// const auth = require("../middleware/auth");
 
-const filename = path.resolve();
-const dirname = path.dirname(filename);
+// const multer = require("multer");
+// const path = require("path");
+
+// const filename = path.resolve();
+// const dirname = path.dirname(filename);
 
 router.get("/", usersCtrl.getAll);
 router.get("/:id", usersCtrl.getOne);
 router.post("/", usersCtrl.create);
 router.put("/:id", usersCtrl.update);
 router.delete("/:id", usersCtrl.delete);
-// console.log(dirname + "/frontend/public/assets");
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(dirname, "frontend/public/assets"));
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname);
-    },
-});
-const upload = multer({ storage: storage });
+router.post("/register", authCtrl.signUp);
+router.post("/login", authCtrl.signIn);
 
-router.post("/upload", upload.single("file"), usersCtrl.upload);
+router.post("/upload", upload, usersCtrl.upload);
 
 module.exports = router;

@@ -1,6 +1,6 @@
-const Comments = require("../models/Comments");
-const Users = require("../models/Users");
-const Articles = require("../models/Articles");
+const Comments = require("../models/Comments.model");
+const Users = require("../models/Users.model");
+const Articles = require("../models/Articles.model");
 
 exports.getAll = async (req, res) => {
     // GET all comments
@@ -24,7 +24,7 @@ exports.getAll = async (req, res) => {
             message: "Erreur lors de la récupération des commentaires.",
         });
     }
-}
+};
 exports.getOne = async (req, res) => {
     // GET one comment
     try {
@@ -47,12 +47,12 @@ exports.getOne = async (req, res) => {
             message: "Erreur lors de la récupération du commentaire.",
         });
     }
-}
+};
 exports.create = async (req, res) => {
     // POST a comment
     try {
         const { content, user_id, article_id } = req.body;
-        
+
         const comment = await Comments.create({
             content: content,
             user_id: user_id,
@@ -65,7 +65,7 @@ exports.create = async (req, res) => {
             message: "Erreur lors de la création du commentaire.",
         });
     }
-}
+};
 exports.update = async (req, res) => {
     // PUT a comment
     try {
@@ -86,7 +86,7 @@ exports.update = async (req, res) => {
             message: "Erreur lors de la modification du commentaire.",
         });
     }
-}
+};
 exports.delete = async (req, res) => {
     // DELETE a comment
     try {
@@ -106,5 +106,4 @@ exports.delete = async (req, res) => {
             message: "Erreur lors de la suppression du commentaire.",
         });
     }
-}
-
+};

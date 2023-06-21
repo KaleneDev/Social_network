@@ -31,25 +31,6 @@ app.use(bodyparser.json({ limit: "30mb", extended: true }));
 app.use(bodyparser.urlencoded({ limit: "30mb", extended: true }));
 // app.use('/assets',express.static(path.join(dirname, "frontend/public/assets")));
 
-console.log(dirname + "frontend/public/assets");
-// FILE STORAGE
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(dirname, "frontend/public/assets"));
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname);
-    },
-});
-const upload = multer({ storage: storage });
-app.post("/upload", upload.single("file"), (req, res) => {
-    console.log(req.file);
-
-    res.status(201).json({
-        message: "File uploaded successfully!!!",
-    });
-});
-
 // Rate Limiting
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 app.use(limiter);

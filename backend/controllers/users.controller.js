@@ -1,7 +1,6 @@
-const Users = require("../models/Users");
+const Users = require("../models/Users.model");
 const bcrypt = require("bcrypt");
-const Articles = require("../models/Articles");
-const multer = require("multer");
+const Articles = require("../models/Articles.model");
 
 exports.getAll = async (req, res) => {
     try {
@@ -35,7 +34,6 @@ exports.getOne = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        console.log(req.body.username);
 
         if (!username || !email || !password) {
             return res.status(400).json({
@@ -85,7 +83,7 @@ exports.delete = async (req, res) => {
 };
 exports.upload = async (req, res) => {
     // POST an image
-    console.log(req.file);
+    console.log(req.file.path);
 
     res.status(201).json({
         message: "File uploaded successfully!",

@@ -1,6 +1,6 @@
-const Articles = require("../models/Articles");
-const Users = require("../models/Users");
-const Comments = require("../models/Comments");
+const Articles = require("../models/Articles.model");
+const Users = require("../models/Users.model");
+const Comments = require("../models/Comments.model");
 
 exports.getAll = async (req, res) => {
     // GET all articles
