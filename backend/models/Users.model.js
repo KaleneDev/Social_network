@@ -34,6 +34,27 @@ const Users = sequelize.define("users", {
         allowNull: false,
         defaultValue: "user",
     },
+    bio: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    avatar: {
+        type: DataTypes.STRING,
+        defaultValue: "default.png",
+        allowNull: true,
+    },
+    following: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    followers: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+    likes: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

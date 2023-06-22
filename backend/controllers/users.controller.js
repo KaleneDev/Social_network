@@ -1,6 +1,11 @@
 const Users = require("../models/Users.model");
 const bcrypt = require("bcrypt");
 const Articles = require("../models/Articles.model");
+const fs = require("fs");
+const path = require("path");
+const { log } = require("console");
+const filename = path.resolve();
+const dirname = path.dirname(filename);
 
 exports.getAll = async (req, res) => {
     try {
@@ -40,6 +45,20 @@ exports.create = async (req, res) => {
                 error: "Veuillez fournir tous les champs obligatoires.",
             });
         }
+        const existingEmail = await Users.findOne({ where: { email } });
+
+        if (existingEmail) {
+            return res.status(409).json({
+                error: "Un utilisateur avec cet e-mail existe déjà.",
+            });
+        }
+        const existingUsername = await Users.findOne({ where: { username } });
+
+        if (existingUsername) {
+            return res.status(409).json({
+                error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
+            });
+        }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const newUser = {
@@ -47,6 +66,10 @@ exports.create = async (req, res) => {
             email,
             password: hashedPassword,
         };
+
+        if (req.file) {
+            newUser.avatar = req.file.filename;
+        }
 
         const user = await Users.create(newUser);
         res.status(200).json(user);
@@ -72,6 +95,20 @@ exports.update = async (req, res) => {
 };
 exports.delete = async (req, res) => {
     try {
+        const userAvatar = await Users.findByPk(req.params.id);
+        const elements = userAvatar.avatar.split(" + ");
+        if (elements !== "default.png" && elements) {
+            for (let index = 0; index < elements.length; index++) {
+                const element = elements[index];
+                console.log(`${dirname}\\frontend\\public\\assets\\${element}`);
+                fs.unlink(
+                    `${dirname}\\frontend\\public\\assets\\${element}`,
+                    () => {
+                        return;
+                    }
+                );
+            }
+        }
         const user = await Users.destroy({ where: { id: req.params.id } });
         res.status(200).json(user);
     } catch (err) {
@@ -82,10 +119,66 @@ exports.delete = async (req, res) => {
     }
 };
 exports.upload = async (req, res) => {
-    // POST an image
-    console.log(req.file.path);
+    try {
+        const { username, email, password } = req.body;
+        const files = req.files;
+        if (!username || !email || !password) {
+            return res.status(400).json({
+                error: "Veuillez fournir tous les champs obligatoires.",
+            });
+        }
+        const existingEmail = await Users.findOne({ where: { email } });
+        function deleteFile() {
+            for (let index = 0; index < files.length; index++) {
+                const element = files[index].path;
+                console.log(element);
+                fs.unlink(element, () => {
+                    return;
+                });
+            }
+        }
 
-    res.status(201).json({
-        message: "File uploaded successfully!",
-    });
+        if (existingEmail) {
+            // supprimer le fichier si mail existe
+            deleteFile();
+            return res.status(409).json({
+                error: "Un utilisateur avec cet e-mail existe déjà.",
+            });
+        }
+        const existingUsername = await Users.findOne({ where: { username } });
+
+        if (existingUsername) {
+            deleteFile();
+            return res.status(409).json({
+                error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
+            });
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const newUser = {
+            username,
+            email,
+            password: hashedPassword,
+        };
+
+        if (req.files) {
+            for (let index = 0; index < files.length; index++) {
+                if (index === 0) {
+                    newUser.avatar = "";
+                }
+                newUser.avatar += files[index].filename;
+                if (index < files.length - 1) {
+                    newUser.avatar += " + ";
+                }
+            }
+        }
+
+        const user = await Users.create(newUser);
+        res.status(200).json(user);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la création de l'utilisateur.",
+        });
+    }
 };

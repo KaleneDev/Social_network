@@ -8,10 +8,15 @@ const storage = multer.diskStorage({
         cb(null, path.join(dirname, "frontend/public/assets"));
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname);
+        //format name of file
+        const originalName = file.originalname;
+        const extension = originalName.split(".").pop();
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const fileName = `${uniqueSuffix}.${extension}`;
+        cb(null, fileName);
     },
 });
 
 const upload = multer({ storage: storage });
 
-module.exports = upload.single("file");
+module.exports = upload.array("file", 4);

@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const path = require("path");
 // const { fileURLToPath } = require("url");
 const bodyparser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const { body, validationResult } = require("express-validator");
 
 // CONFIGURATION
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyparser.json({ limit: "30mb", extended: true }));
 app.use(bodyparser.urlencoded({ limit: "30mb", extended: true }));
+app.use(cookieParser());
 // app.use('/assets',express.static(path.join(dirname, "frontend/public/assets")));
 
 // Rate Limiting

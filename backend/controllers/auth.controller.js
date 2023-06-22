@@ -1,5 +1,8 @@
 const Users = require("../models/Users.model");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 exports.signUp = async (req, res) => {
     try {
@@ -72,7 +75,15 @@ exports.signIn = async (req, res) => {
             });
         }
 
-        res.status(200).json(user.username + " " + "vous êtes connecté.");
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+            expiresIn: maxAge,
+        });
+        res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge });
+
+        res.status(200).json({
+            message: "Authentification réussie",
+            token: token,
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({
@@ -80,3 +91,10 @@ exports.signIn = async (req, res) => {
         });
     }
 };
+exports.signOut = (req, res) => {
+    res.cookie("jwt", "", { maxAge: 1 });
+    res.status(200).json({
+        message: "Déconnexion réussie",
+    });
+}
+
