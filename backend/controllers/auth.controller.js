@@ -1,8 +1,10 @@
 const Users = require("../models/Users.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { signUpErrors, signInErrors } = require("../utils/errors.utils");
 require("dotenv").config();
-const maxAge = 3 * 24 * 60 * 60 * 1000;
+const maxAge = 60 * 60 * 1000;
+// const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 exports.signUp = async (req, res) => {
     try {
@@ -51,9 +53,8 @@ exports.signUp = async (req, res) => {
         res.status(200).json(user);
     } catch (err) {
         console.error(err);
-        res.status(500).json({
-            message: "Erreur lors de la création de l'utilisateur.",
-        });
+        const errors = signUpErrors(err);
+        res.status(500).send({ errors });
     }
 };
 exports.signIn = async (req, res) => {
@@ -75,9 +76,18 @@ exports.signIn = async (req, res) => {
             });
         }
 
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-            expiresIn: maxAge,
-        });
+        const token = jwt.sign(
+            {
+                userId: user.id,
+                username: user.username,
+                email: user.email,
+                admin: user.role,
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: maxAge,
+            }
+        );
         res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge });
 
         res.status(200).json({
@@ -86,9 +96,8 @@ exports.signIn = async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({
-            message: "Erreur lors de l'authentification.",
-        });
+        const errors = signInErrors(err);
+        res.status(500).send({ errors });
     }
 };
 exports.signOut = (req, res) => {
@@ -96,5 +105,4 @@ exports.signOut = (req, res) => {
     res.status(200).json({
         message: "Déconnexion réussie",
     });
-}
-
+};

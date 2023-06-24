@@ -2,13 +2,13 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
-const multer = require("multer");
+const { requireAuth, auth } = require("./middleware/auth.middleware");
 const morgan = require("morgan");
 const path = require("path");
 // const { fileURLToPath } = require("url");
 const bodyparser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const { body, validationResult } = require("express-validator");
+// const { body, validationResult } = require("express-validator");
 
 // CONFIGURATION
 const filename = path.resolve();
@@ -41,6 +41,11 @@ app.use(limiter);
 app.get("/", (req, res) => {
     res.send("Salut, c'est moi le serveur !");
 });
+// app.get("*", auth);
+
+app.get("/jwtid", requireAuth, (req, res) => {
+    res.status(200).send(res.locals.user.userId);
+});
 // Error Handling
 app.use((err, req, res, next) => {
     console.error(err.stack);
@@ -49,6 +54,7 @@ app.use((err, req, res, next) => {
 const usersRoute = require("./routes/users");
 const articlesRoute = require("./routes/articles");
 const commentsRoute = require("./routes/comments");
+const { log } = require("console");
 app.use("/articles", articlesRoute);
 app.use("/users", usersRoute);
 app.use("/comments", commentsRoute);

@@ -17,6 +17,18 @@ const Articles = sequelize.define("articles", {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    content: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    file: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

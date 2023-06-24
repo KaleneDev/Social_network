@@ -1,9 +1,9 @@
 const Users = require("../models/Users.model");
 const bcrypt = require("bcrypt");
 const Articles = require("../models/Articles.model");
+const Comments = require("../models/Comments.model");
 const fs = require("fs");
 const path = require("path");
-const { log } = require("console");
 const filename = path.resolve();
 const dirname = path.dirname(filename);
 
@@ -27,7 +27,18 @@ exports.getAll = async (req, res) => {
 };
 exports.getOne = async (req, res) => {
     try {
-        const user = await Users.findByPk(req.params.id);
+        const user = await Users.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Articles,
+                    as: "articles",
+                    include: {
+                        model: Comments,
+                        as: "comments",
+                    },
+                },
+            ],
+        });
         res.status(200).json(user);
     } catch (err) {
         console.error(err);
@@ -39,15 +50,23 @@ exports.getOne = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-
+        const file = req.file;
         if (!username || !email || !password) {
             return res.status(400).json({
                 error: "Veuillez fournir tous les champs obligatoires.",
             });
         }
         const existingEmail = await Users.findOne({ where: { email } });
+        function deleteFile() {
+            const element = file.path;
+            fs.unlink(element, () => {
+                return;
+            });
+        }
 
         if (existingEmail) {
+            // supprimer le fichier si mail existe
+            deleteFile();
             return res.status(409).json({
                 error: "Un utilisateur avec cet e-mail existe déjà.",
             });
@@ -55,6 +74,7 @@ exports.create = async (req, res) => {
         const existingUsername = await Users.findOne({ where: { username } });
 
         if (existingUsername) {
+            deleteFile();
             return res.status(409).json({
                 error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
             });
@@ -68,7 +88,7 @@ exports.create = async (req, res) => {
         };
 
         if (req.file) {
-            newUser.avatar = req.file.filename;
+            newUser.avatar = file.filename;
         }
 
         const user = await Users.create(newUser);
@@ -97,12 +117,12 @@ exports.delete = async (req, res) => {
     try {
         const userAvatar = await Users.findByPk(req.params.id);
         const elements = userAvatar.avatar.split(" + ");
-        if (elements !== "default.png" && elements) {
-            for (let index = 0; index < elements.length; index++) {
-                const element = elements[index];
-                console.log(`${dirname}\\frontend\\public\\assets\\${element}`);
+        for (let index = 0; index < elements.length; index++) {
+            const element = elements[index];
+            console.log(element);
+            if (element !== "default.png" && elements) {
                 fs.unlink(
-                    `${dirname}\\frontend\\public\\assets\\${element}`,
+                    `${dirname}\\frontend\\public\\assets\\users\\${element}`,
                     () => {
                         return;
                     }
