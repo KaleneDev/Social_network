@@ -95,7 +95,6 @@ exports.signIn = async (req, res) => {
             token: token,
         });
     } catch (err) {
-        console.error(err);
         const errors = signInErrors(err);
         res.status(500).send({ errors });
     }

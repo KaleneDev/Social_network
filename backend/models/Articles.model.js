@@ -8,10 +8,12 @@ const Articles = sequelize.define("articles", {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: () => uuidv4(),
+        collate: "utf8_bin",
     },
     user_id: {
-        type: DataTypes.CHAR(36),
+        type: DataTypes.UUID,
         allowNull: false,
+        collate: "utf8_bin",
     },
     title: {
         type: DataTypes.STRING,
@@ -46,6 +48,7 @@ Articles.hasMany(Comments, {
     as: "comments",
     onDelete: "CASCADE",
 });
+
 Comments.belongsTo(Articles, { foreignKey: "article_id", as: "articles" });
 
 module.exports = Articles;

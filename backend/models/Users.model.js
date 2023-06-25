@@ -3,6 +3,7 @@ const sequelize = require("../config/database");
 const { v4: uuidv4 } = require("uuid");
 const Articles = require("./Articles.model");
 const Comments = require("./Comments.model");
+const Follows = require("./Follow.model");
 const { isEmail } = require("validator");
 
 const Users = sequelize.define("users", {
@@ -10,17 +11,20 @@ const Users = sequelize.define("users", {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: () => uuidv4(),
+        collate: "utf8_bin",
     },
     username: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
+        required: true,
+        minLenght: 3,
+        maxLenght: 20,
     },
+
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
-
+        required: true,
         validate: {
             isEmail: { isEmail: true },
         },
@@ -28,6 +32,9 @@ const Users = sequelize.define("users", {
     password: {
         type: DataTypes.STRING,
         allowNull: false,
+        required: true,
+        minLenght: 6,
+        maxLenght: 20,
     },
     role: {
         type: DataTypes.ENUM("admin", "user"),
@@ -69,6 +76,21 @@ const Users = sequelize.define("users", {
 
 Users.hasMany(Articles, { foreignKey: "user_id", as: "articles" });
 Users.hasMany(Comments, { foreignKey: "user_id", as: "comments" });
+
+Users.hasMany(Follows, {
+    foreignKey: "follower_id",
+    as: "Following",
+    onDelete: "CASCADE",
+});
+Users.hasMany(Follows, {
+    foreignKey: "following_id",
+    as: "Follower",
+    onDelete: "CASCADE",
+});
+
+Follows.belongsTo(Users, { foreignKey: "follower_id", as: "follower" });
+Follows.belongsTo(Users, { foreignKey: "following_id", as: "following" });
+
 Articles.belongsTo(Users, { foreignKey: "user_id", as: "users" });
 Comments.belongsTo(Users, { foreignKey: "user_id", as: "users" });
 

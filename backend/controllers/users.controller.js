@@ -2,6 +2,7 @@ const Users = require("../models/Users.model");
 const bcrypt = require("bcrypt");
 const Articles = require("../models/Articles.model");
 const Comments = require("../models/Comments.model");
+const Relation = require("../models/Follow.model");
 const fs = require("fs");
 const path = require("path");
 const filename = path.resolve();
@@ -14,6 +15,16 @@ exports.getAll = async (req, res) => {
                 {
                     model: Articles,
                     as: "articles",
+                },
+                {
+                    model: Relation,
+                    as: "Follower",
+                    attributes: ["follower_id"],
+                },
+                {
+                    model: Relation,
+                    as: "Following",
+                    attributes: ["following_id"],
                 },
             ],
         });
@@ -37,6 +48,16 @@ exports.getOne = async (req, res) => {
                         as: "comments",
                     },
                 },
+                {
+                    model: Relation,
+                    as: "Follower",
+                    attributes: ["follower_id"],
+                },
+                {
+                    model: Relation,
+                    as: "Following",
+                    attributes: ["following_id"],
+                },
             ],
         });
         res.status(200).json(user);
@@ -57,16 +78,20 @@ exports.create = async (req, res) => {
             });
         }
         const existingEmail = await Users.findOne({ where: { email } });
+
         function deleteFile() {
-            const element = file.path;
-            fs.unlink(element, () => {
-                return;
-            });
+            if (req.file) {
+                const element = file.path;
+                fs.unlink(element, () => {
+                    return;
+                });
+            }
         }
 
         if (existingEmail) {
             // supprimer le fichier si mail existe
             deleteFile();
+
             return res.status(409).json({
                 error: "Un utilisateur avec cet e-mail existe déjà.",
             });
@@ -102,6 +127,30 @@ exports.create = async (req, res) => {
 };
 exports.update = async (req, res) => {
     try {
+        // si le nom d'utilisateur existe déjà
+        const existingUsername = await Users.findOne({
+            where: { username: req.body.username },
+        });
+        if (existingUsername && existingUsername.id !== req.params.id) {
+            return res.status(409).json({
+                error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
+            });
+        }
+        // si l'email existe déjà
+        const existingEmail = await Users.findOne({
+            where: { email: req.body.email },
+        });
+        if (existingEmail && existingEmail.id !== req.params.id) {
+            return res.status(409).json({
+                error: "Un utilisateur avec cet e-mail existe déjà.",
+            });
+        }
+        // si le mot de passe est modifié
+        if (req.body.password) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(req.body.password, salt);
+            req.body.password = hashedPassword;
+        }
         const user = await Users.update(req.body, {
             where: { id: req.params.id },
         });
@@ -122,7 +171,7 @@ exports.delete = async (req, res) => {
             console.log(element);
             if (element !== "default.png" && elements) {
                 fs.unlink(
-                    `${dirname}\\frontend\\public\\assets\\users\\${element}`,
+                    `${dirname}\\frontend\\public\\upload\\users\\${element}`,
                     () => {
                         return;
                     }
@@ -199,6 +248,21 @@ exports.upload = async (req, res) => {
         console.error(err);
         res.status(500).json({
             message: "Erreur lors de la création de l'utilisateur.",
+        });
+    }
+};
+exports.follow = async (req, res) => {
+    try {
+        const { follower_id, following_id } = req.body;
+        const relation = await Relation.create({
+            follower_id,
+            following_id,
+        });
+        res.status(200).json(relation);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la création de la relation.",
         });
     }
 };

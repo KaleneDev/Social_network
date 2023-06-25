@@ -1,6 +1,10 @@
 const Comments = require("../models/Comments.model");
 const Users = require("../models/Users.model");
 const Articles = require("../models/Articles.model");
+const fs = require("fs");
+const path = require("path");
+const filename = path.resolve();
+const dirname = path.dirname(filename);
 
 exports.getAll = async (req, res) => {
     // GET all comments
@@ -51,13 +55,44 @@ exports.getOne = async (req, res) => {
 exports.create = async (req, res) => {
     // POST a comment
     try {
-        const { content, user_id, article_id } = req.body;
+        for (let index = 0; index < req.files.length; index++) {
+            const element = req.files[index];
 
-        const comment = await Comments.create({
-            content: content,
-            user_id: user_id,
-            article_id: article_id,
-        });
+            if (
+                element.mimetype !== "image/png" &&
+                element.mimetype !== "image/jpeg" &&
+                element.mimetype !== "image/jpg"
+            ) {
+                return res.status(400).json({
+                    message: "Le format de l'image n'est pas valide.",
+                });
+            }
+            if (element.size > 10000000) {
+                return res.status(400).json({
+                    message: "L'image ne doit pas dépasser 10Mo.",
+                });
+            }
+        }
+        const { content, user_id, article_id } = req.body;
+        const newComment = {
+            content,
+            user_id,
+            article_id,
+        };
+
+        const files = req.files;
+        if (files) {
+            for (let index = 0; index < files.length; index++) {
+                if (index === 0) {
+                    newComment.file = "";
+                }
+                newComment.file += files[index].filename;
+                if (index < files.length - 1) {
+                    newComment.file += " + ";
+                }
+            }
+        }
+        const comment = await Comments.create(newComment);
         res.status(201).json(comment);
     } catch (err) {
         console.error(err);
@@ -91,6 +126,16 @@ exports.delete = async (req, res) => {
     // DELETE a comment
     try {
         const comment = await Comments.findByPk(req.params.id);
+        const elements = comment.file.split(" + ");
+        for (let index = 0; index < elements.length; index++) {
+            const element = elements[index];
+            fs.unlink(
+                `${dirname}\\frontend\\public\\upload\\articles\\${element}`,
+                () => {
+                    return;
+                }
+            );
+        }
         if (!comment) {
             return res.status(404).json({
                 message: "Ce commentaire n'existe pas.",

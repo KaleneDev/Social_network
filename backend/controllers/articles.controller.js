@@ -51,8 +51,27 @@ exports.getOne = async (req, res) => {
 exports.create = async (req, res) => {
     // POST an article
     try {
+        for (let index = 0; index < req.files.length; index++) {
+            const element = req.files[index];
+
+            if (
+                element.mimetype !== "image/png" &&
+                element.mimetype !== "image/jpeg" &&
+                element.mimetype !== "image/jpg"
+            ) {
+                return res.status(400).json({
+                    message: "Le fichier doit être au format png, jpeg ou jpg.",
+                });
+            }
+
+            if (element.size > 10000000) {
+                return res.status(400).json({
+                    message: "Le fichier ne doit pas dépasser 10Mo.",
+                });
+            }
+        }
+
         const { title, user_id, content } = req.body;
-        const files = req.files;
         // Check if article already exists
         const articleExists = await Articles.findOne({
             where: {
@@ -70,7 +89,8 @@ exports.create = async (req, res) => {
             user_id,
         };
 
-        if (req.files) {
+        const files = req.files;
+        if (files) {
             for (let index = 0; index < files.length; index++) {
                 if (index === 0) {
                     newArticle.file = "";
@@ -119,12 +139,10 @@ exports.delete = async (req, res) => {
     try {
         const article = await Articles.findByPk(req.params.id);
         const elements = article.file.split(" + ");
-        console.log(elements);
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index];
-            console.log(element);
             fs.unlink(
-                `${dirname}\\frontend\\public\\assets\\articles\\${element}`,
+                `${dirname}\\frontend\\public\\upload\\articles\\${element}`,
                 () => {
                     return;
                 }
