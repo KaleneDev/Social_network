@@ -2,7 +2,9 @@ const Users = require("../models/Users.model");
 const bcrypt = require("bcrypt");
 const Articles = require("../models/Articles.model");
 const Comments = require("../models/Comments.model");
-const Relation = require("../models/Follow.model");
+const Follow = require("../models/Follow.model");
+const Likes = require("../models/Likes.model");
+
 const fs = require("fs");
 const path = require("path");
 const filename = path.resolve();
@@ -17,15 +19,20 @@ exports.getAll = async (req, res) => {
                     as: "articles",
                 },
                 {
-                    model: Relation,
+                    model: Follow,
                     as: "Follower",
                     attributes: ["follower_id"],
                 },
                 {
-                    model: Relation,
+                    model: Follow,
                     as: "Following",
                     attributes: ["following_id"],
                 },
+                {
+                    model: Likes,
+                    as: "likes",
+                    attributes: ["user_id", "article_id"],
+                }
             ],
         });
         res.status(200).json(users);
@@ -49,12 +56,12 @@ exports.getOne = async (req, res) => {
                     },
                 },
                 {
-                    model: Relation,
+                    model: Follow,
                     as: "Follower",
                     attributes: ["follower_id"],
                 },
                 {
-                    model: Relation,
+                    model: Follow,
                     as: "Following",
                     attributes: ["following_id"],
                 },
@@ -251,14 +258,27 @@ exports.upload = async (req, res) => {
         });
     }
 };
+
 exports.follow = async (req, res) => {
     try {
-        const { follower_id, following_id } = req.body;
-        const relation = await Relation.create({
-            follower_id,
-            following_id,
+        const { user_id, following_id } = req.body;
+        // Check if relation already exists
+        const relationExists = await Follow.findOne({
+            where: {
+                following_id: following_id,
+                follower_id: user_id,
+            },
         });
-        res.status(200).json(relation);
+        if (relationExists) {
+            return res.status(400).json({
+                message: "Cette relation existe déjà.",
+            });
+        }
+        const relation = await Follow.create({
+            following_id: following_id,
+            follower_id: user_id,
+        });
+        res.status(201).json(relation);
     } catch (err) {
         console.error(err);
         res.status(500).json({
@@ -266,3 +286,134 @@ exports.follow = async (req, res) => {
         });
     }
 };
+exports.unfollow = async (req, res) => {
+    try {
+        const { unFollowing_id, user_id } = req.body;
+        const relation = await Follow.findOne({
+            where: {
+                following_id: unFollowing_id,
+                follower_id: user_id,
+            },
+        });
+        console.log(relation);
+        if (!relation) {
+            return res.status(404).json({
+                message: "Cette relation n'existe pas.",
+            });
+        }
+        await relation.destroy();
+        res.status(200).json({
+            message: "Relation supprimée avec succès.",
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la suppression de la relation.",
+        });
+    }
+};
+exports.getFollowers = async (req, res) => {
+    try {
+        const followers = await Follow.findAll({
+            where: {
+                following_id: req.params.id,
+            },
+            include: [
+                {
+                    model: Users,
+                    as: "follower",
+                    attributes: ["id", "username", "avatar"],
+                },
+            ],
+        });
+        res.status(200).json(followers);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des followers.",
+        });
+    }
+}
+exports.getFollowings = async (req, res) => {
+    try {
+        const followings = await Follow.findAll({
+            where: {
+                follower_id: req.params.id,
+            },
+            include: [
+                {
+                    model: Users,
+                    as: "following",
+                    attributes: ["id", "username", "avatar"],
+                },
+            ],
+        });
+        res.status(200).json(followings);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des followings.",
+        });
+    }
+}
+
+exports.getFollowersCount = async (req, res) => {
+    try {
+        const followers = await Follow.count({
+            where: {
+                following_id: req.params.id,
+            },
+        });
+        res.status(200).json(followers);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des followers.",
+        });
+    }
+}
+exports.getFollowingsCount = async (req, res) => {
+    try {
+        const followings = await Follow.count({
+            where: {
+                follower_id: req.params.id,
+            },
+        });
+        res.status(200).json(followings);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des followings.",
+        });
+    }
+}
+
+// Likes
+exports.like = async (req, res) => {
+    try {
+        const { user_id, article_id } = req.body;
+        // Check if relation already exists
+        const relationExists = await Likes.findOne({
+            where: {
+                article_id: article_id,
+                user_id: user_id,
+            },
+        });
+        if (relationExists) {
+            return res.status(400).json({
+                message: "Cette relation existe déjà.",
+            });
+        }
+        const relation = await Likes.create({
+            article_id: article_id,
+            user_id: user_id,
+        });
+        res.status(201).json(relation);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la création de la relation.",
+        });
+    }
+}
+

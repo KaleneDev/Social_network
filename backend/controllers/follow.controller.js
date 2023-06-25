@@ -1,5 +1,4 @@
-const Users = require("../models/Users.model");
-const Relation = require("../models/Follow.model");
+const Follow = require("../models/Follow.model");
 
 exports.getAll = async (req, res) => {
     // GET all relations
@@ -18,7 +17,7 @@ exports.followUser = async (req, res) => {
     try {
         const { user_id, following_id } = req.body;
         // Check if relation already exists
-        const relationExists = await Relation.findOne({
+        const relationExists = await Follow.findOne({
             where: {
                 following_id: following_id,
                 follower_id: user_id,
@@ -29,7 +28,7 @@ exports.followUser = async (req, res) => {
                 message: "Cette relation existe déjà.",
             });
         }
-        const relation = await Relation.create({
+        const relation = await Follow.create({
             following_id: following_id,
             follower_id: user_id,
         });
@@ -44,7 +43,7 @@ exports.followUser = async (req, res) => {
 exports.unfollowUser = async (req, res) => {
     try {
         const { unFollowing_id, user_id } = req.body;
-        const relation = await Relation.findOne({
+        const relation = await Follow.findOne({
             where: {
                 following_id: unFollowing_id,
                 follower_id: user_id,

@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 const Articles = require("./Articles.model");
 const Comments = require("./Comments.model");
 const Follows = require("./Follow.model");
+const Likes = require("./Likes.model");
 const { isEmail } = require("validator");
 
 const Users = sequelize.define("users", {
@@ -11,7 +12,6 @@ const Users = sequelize.define("users", {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: () => uuidv4(),
-        collate: "utf8_bin",
     },
     username: {
         type: DataTypes.STRING,
@@ -50,18 +50,6 @@ const Users = sequelize.define("users", {
         defaultValue: "default.png",
         allowNull: true,
     },
-    following: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-    },
-    followers: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-    },
-    likes: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -93,5 +81,14 @@ Follows.belongsTo(Users, { foreignKey: "following_id", as: "following" });
 
 Articles.belongsTo(Users, { foreignKey: "user_id", as: "users" });
 Comments.belongsTo(Users, { foreignKey: "user_id", as: "users" });
+
+Users.hasMany(Likes, {
+    foreignKey: "user_id",
+    as: "likes",
+    onDelete: "CASCADE",
+});
+
+Likes.belongsTo(Users, { foreignKey: "user_id", as: "users" });
+
 
 module.exports = Users;
