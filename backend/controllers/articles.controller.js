@@ -72,17 +72,7 @@ exports.create = async (req, res) => {
         }
 
         const { title, user_id, content } = req.body;
-        // Check if article already exists
-        const articleExists = await Articles.findOne({
-            where: {
-                title: title,
-            },
-        });
-        if (articleExists) {
-            return res.status(400).json({
-                message: "Cet article existe déjà.",
-            });
-        }
+
         const newArticle = {
             title,
             content,
@@ -114,19 +104,67 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     // PUT an article
     try {
-        const { title, user_id } = req.body;
+        const { title, user_id, content } = req.body;
+        const files = req.files;
         const article = await Articles.findByPk(req.params.id);
-        if (!article) {
+        if (article.user_id !== user_id) {
             return res.status(400).json({
-                message: "Cet article n'existe pas.",
+                error: "Vous n'avez pas les droits pour modifier cet article.",
             });
         }
+        function deleteFile() {
+            if (files) {
+                for (let index = 0; index < files.length; index++) {
+                    const element = files[index].path;
+                    fs.unlink(element, () => {
+                        return;
+                    });
+                }
+            }
+        }
+        if (!article) {
+            deleteFile();
+            return res.status(400).json({
+                error: "Cet article n'existe pas.",
+            });
+        }
+
+        if (files && files.size > 100000000) {
+            deleteFile();
+            return res.status(400).json({
+                error: "Le fichier est trop volumineux il doit faire moins de 10Mo.",
+            });
+        }
+
         const updatedArticle = {
             title,
-            user_id,
+            content,
         };
+        if (files) {
+            for (let index = 0; index < files.length; index++) {
+                if (index === 0) {
+                    updatedArticle.file = "";
+                }
+                updatedArticle.file += files[index].filename;
+                if (index < files.length - 1) {
+                    updatedArticle.file += " + ";
+                }
+            }
+            // delete existingArticle.file;
+            const elements = article.file.split(" + ");
+            for (let index = 0; index < elements.length; index++) {
+                const element = elements[index];
+                fs.unlink(
+                    `${dirname}\\frontend\\public\\upload\\articles\\${element}`,
+                    () => {
+                        return;
+                    }
+                );
+            }
+        }
+
         await article.update(updatedArticle);
-        res.status(200).json(article);
+        res.status(200).json(updatedArticle);
     } catch (err) {
         console.error(err);
         res.status(500).json({

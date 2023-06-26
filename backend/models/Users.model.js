@@ -5,7 +5,6 @@ const Articles = require("./Articles.model");
 const Comments = require("./Comments.model");
 const Follows = require("./Follow.model");
 const Likes = require("./Likes.model");
-const { isEmail } = require("validator");
 
 const Users = sequelize.define("users", {
     id: {
@@ -89,6 +88,5 @@ Users.hasMany(Likes, {
 });
 
 Likes.belongsTo(Users, { foreignKey: "user_id", as: "users" });
-
 
 module.exports = Users;

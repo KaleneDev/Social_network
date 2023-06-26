@@ -32,7 +32,7 @@ exports.getAll = async (req, res) => {
                     model: Likes,
                     as: "likes",
                     attributes: ["user_id", "article_id"],
-                }
+                },
             ],
         });
         res.status(200).json(users);
@@ -333,7 +333,7 @@ exports.getFollowers = async (req, res) => {
             message: "Erreur lors de la récupération des followers.",
         });
     }
-}
+};
 exports.getFollowings = async (req, res) => {
     try {
         const followings = await Follow.findAll({
@@ -355,7 +355,7 @@ exports.getFollowings = async (req, res) => {
             message: "Erreur lors de la récupération des followings.",
         });
     }
-}
+};
 
 exports.getFollowersCount = async (req, res) => {
     try {
@@ -371,7 +371,7 @@ exports.getFollowersCount = async (req, res) => {
             message: "Erreur lors de la récupération des followers.",
         });
     }
-}
+};
 exports.getFollowingsCount = async (req, res) => {
     try {
         const followings = await Follow.count({
@@ -386,7 +386,7 @@ exports.getFollowingsCount = async (req, res) => {
             message: "Erreur lors de la récupération des followings.",
         });
     }
-}
+};
 
 // Likes
 exports.like = async (req, res) => {
@@ -415,5 +415,4 @@ exports.like = async (req, res) => {
             message: "Erreur lors de la création de la relation.",
         });
     }
-}
-
+};
