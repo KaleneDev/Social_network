@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-# Social Network
-=======
-# Social_network
->>>>>>> experimental
-=======
-
 # Social Network
 Le projet "Social Network" est une application de réseau social conçue pour permettre aux utilisateurs de se connecter, de partager du contenu et d'interagir les uns avec les autres. Cette application vise à fournir une plateforme conviviale et sécurisée pour établir des liens, communiquer et rester connecté avec des amis, des familles et des connaissances.
 
