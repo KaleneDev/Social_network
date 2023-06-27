@@ -104,16 +104,71 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     // PUT a comment
     try {
-        const { content } = req.body;
+        const { content, user_id } = req.body;
+        const files = req.files;
         const comment = await Comments.findByPk(req.params.id);
+        if (comment.user_id !== user_id) {
+            return res.status(403).json({
+                message: "Vous n'êtes pas autorisé à modifier ce commentaire.",
+            });
+        }
+
+        function deleteFile() {
+            if (files) {
+                for (let index = 0; index < files.length; index++) {
+                    const element = files[index].path;
+                    fs.unlink(element, () => {
+                        return;
+                    });
+                }
+            }
+        }
         if (!comment) {
             return res.status(404).json({
                 message: "Ce commentaire n'existe pas.",
             });
         }
-        await comment.update({
-            content: content,
-        });
+        if (!comment) {
+            deleteFile();
+            return res.status(404).json({
+                message: "Ce commentaire n'existe pas.",
+            });
+        }
+        if (files && files.size > 100000000) {
+            deleteFile();
+            return res.status(400).json({
+                error: "Le fichier est trop volumineux il doit faire moins de 10Mo.",
+            });
+        }
+
+        const updateComment = {
+            content,
+        };
+        if (files) {
+            for (let index = 0; index < files.length; index++) {
+                if (index === 0) {
+                    updateComment.file = "";
+                }
+                updateComment.file += files[index].filename;
+                if (index < files.length - 1) {
+                    updateComment.file += " + ";
+                }
+            }
+        }
+        //delete old file
+        const elements = comment.file.split(" + ");
+        for (let index = 0; index < elements.length; index++) {
+            const element = elements[index];
+            fs.unlink(
+                `${dirname}\\frontend\\public\\upload\\articles\\${element}`,
+                () => {
+                    return;
+                }
+            );
+        }
+
+        await comment.update(updateComment);
+
         res.status(200).json(comment);
     } catch (err) {
         console.error(err);

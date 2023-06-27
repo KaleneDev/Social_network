@@ -1,3 +1,4 @@
+const { log } = require("console");
 const multer = require("multer");
 const path = require("path");
 const filename = path.resolve();
@@ -5,6 +6,10 @@ const dirname = path.dirname(filename);
 
 const storageFile = multer.diskStorage({
     destination: (req, file, cb) => {
+        const url = req.originalUrl;
+        const urlParts = url.split('/')
+        const firstWord = urlParts[1].toLowerCase();
+        console.log(firstWord);
         if (
             file.mimetype === "image/png" ||
             file.mimetype === "image/jpg" ||
