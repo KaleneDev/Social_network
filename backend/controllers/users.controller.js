@@ -35,6 +35,7 @@ exports.getAll = async (req, res) => {
                 },
             ],
         });
+
         res.status(200).json(users);
     } catch (err) {
         console.error(err);
@@ -261,11 +262,11 @@ exports.upload = async (req, res) => {
 
 exports.follow = async (req, res) => {
     try {
-        const { user_id, following_id } = req.body;
+        const { user_id } = req.body;
         // Check if relation already exists
         const relationExists = await Follow.findOne({
             where: {
-                following_id: following_id,
+                following_id: req.params.id,
                 follower_id: user_id,
             },
         });
@@ -275,7 +276,7 @@ exports.follow = async (req, res) => {
             });
         }
         const relation = await Follow.create({
-            following_id: following_id,
+            following_id: req.params.id,
             follower_id: user_id,
         });
         res.status(201).json(relation);
@@ -288,14 +289,14 @@ exports.follow = async (req, res) => {
 };
 exports.unfollow = async (req, res) => {
     try {
-        const { unFollowing_id, user_id } = req.body;
+        const { user_id } = req.body;
+        console.log(user_id);
         const relation = await Follow.findOne({
             where: {
-                following_id: unFollowing_id,
+                following_id: req.params.id,
                 follower_id: user_id,
             },
         });
-        console.log(relation);
         if (!relation) {
             return res.status(404).json({
                 message: "Cette relation n'existe pas.",
@@ -413,6 +414,18 @@ exports.like = async (req, res) => {
         console.error(err);
         res.status(500).json({
             message: "Erreur lors de la création de la relation.",
+        });
+    }
+};
+
+exports.signIn = async (req, res) => {
+    try {
+        res.cookie("jwt", "token", { httpOnly: true });
+        console.log("cookie");
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des utilisateurs.",
         });
     }
 };

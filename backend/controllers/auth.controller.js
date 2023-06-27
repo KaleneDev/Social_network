@@ -20,25 +20,31 @@ exports.signUp = async (req, res) => {
         });
         if (usernameExist) {
             return res.status(400).json({
-                error: "Le nom d'utilisateur existe déjà.",
+                error: { username: "Le nom d'utilisateur existe déjà." },
             });
         }
 
         const emailExist = await Users.findOne({ where: { email: email } });
         if (emailExist) {
             return res.status(400).json({
-                error: "L'email existe déjà.",
+                error: { email: "L'email existe déjà." },
             });
         }
 
         if (password.length < 6) {
             return res.status(400).json({
-                error: "Le mot de passe doit contenir au moins 6 caractères.",
+                error: {
+                    password:
+                        "Le mot de passe doit contenir au moins 6 caractères.",
+                },
             });
         }
         if (username.length < 4 || username.length > 20) {
             return res.status(400).json({
-                error: "Le nom d'utilisateur doit contenir entre 4 et 20 caractères.",
+                error: {
+                    username:
+                        "Le nom d'utilisateur doit contenir entre 4 et 20 caractères.",
+                },
             });
         }
         const salt = await bcrypt.genSalt(10);
@@ -61,21 +67,19 @@ exports.signIn = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await Users.findOne({ where: { email: email } });
-
         if (!user) {
-            return res.status(400).json({
-                error: "L'utilisateur n'existe pas.",
-            });
+            return res
+                .status(400)
+                .json({ errors: { email: "L'email n'existe pas." } });
         }
-
         const validPassword = await bcrypt.compare(password, user.password);
-
         if (!validPassword) {
             return res.status(400).json({
-                error: "Mot de passe incorrect.",
+                errors: {
+                    password: "Mot de passe incorrect.",
+                },
             });
         }
-
         const token = jwt.sign(
             {
                 userId: user.id,
@@ -88,7 +92,10 @@ exports.signIn = async (req, res) => {
                 expiresIn: maxAge,
             }
         );
-        res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge });
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            maxAge,
+        });
 
         res.status(200).json({
             message: "Authentification réussie",
