@@ -10,42 +10,34 @@ exports.signUp = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
+        const errors = {};
         if (!username || !email || !password) {
-            return res.status(400).json({
-                error: "Veuillez fournir tous les champs obligatoires.",
-            });
-        }
-        const usernameExist = await Users.findOne({
-            where: { username: username },
-        });
-        if (usernameExist) {
-            return res.status(400).json({
-                error: { username: "Le nom d'utilisateur existe déjà." },
-            });
+            errors.badRequest =
+                "Veuillez fournir tous les champs obligatoires.";
         }
 
         const emailExist = await Users.findOne({ where: { email: email } });
         if (emailExist) {
-            return res.status(400).json({
-                error: { email: "L'email existe déjà." },
-            });
+            errors.email = "L'email existe déjà.";
         }
 
-        if (password.length < 6) {
-            return res.status(400).json({
-                error: {
-                    password:
-                        "Le mot de passe doit contenir au moins 6 caractères.",
-                },
-            });
+        const usernameExist = await Users.findOne({
+            where: { username: username },
+        });
+        if (usernameExist) {
+            errors.username = "Le nom d'utilisateur existe déjà.";
         }
+
         if (username.length < 4 || username.length > 20) {
-            return res.status(400).json({
-                error: {
-                    username:
-                        "Le nom d'utilisateur doit contenir entre 4 et 20 caractères.",
-                },
-            });
+            errors.username =
+                "Le nom d'utilisateur doit contenir entre 4 et 20 caractères.";
+        }
+        if (password.length < 6) {
+            errors.password =
+                "Le mot de passe doit contenir au moins 6 caractères.";
+        }
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -80,6 +72,7 @@ exports.signIn = async (req, res) => {
                 },
             });
         }
+
         const token = jwt.sign(
             {
                 userId: user.id,

@@ -1,5 +1,4 @@
-// import useEffect tsx
-import React, { useEffect } from "react";
+// import { useEffect } from "react";
 
 function Header() {
 

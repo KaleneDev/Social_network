@@ -1,4 +1,5 @@
 const signUpErrors = (err) => {
+    console.log(err);
     let errors = { username: "", email: "", password: "mauvais password" };
     if (err.message.includes("username"))
         errors.username = "username incorrect ou déjà pris";

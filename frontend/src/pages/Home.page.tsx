@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
+interface User {
+    id: number;
+    name: string;
+    email: string;
+}
+
 function Home() {
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
         const getUsers = async () => {
             await axios
-                .get(`http://localhost:3000/users`, {
+                .get<User[]>(`${import.meta.env.VITE_APP_URL}users`, {
                     withCredentials: true,
                 })
                 .then((response) => {

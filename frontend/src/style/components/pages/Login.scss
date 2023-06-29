@@ -24,7 +24,12 @@
         a {
             cursor: pointer;
             text-decoration: underline;
+            color: $primary-color;
+            &:hover {
+                color: darken($primary-color, 10%);
+            }
         }
+
         .form-container {
             form {
                 display: flex;
@@ -35,6 +40,7 @@
                 .password.error {
                     color: $danger-color;
                     font-size: 0.9rem;
+                    margin-top: 0.2rem;
                 }
                 label {
                     margin-bottom: 0.5rem;
@@ -60,7 +66,35 @@
                         background-color: darken($primary-color, 10%);
                     }
                 }
+                .fields.error {
+                    color: $danger-color;
+                    font-size: 0.9rem;
+                    margin-top: 1rem;
+                }
             }
         }
+    }
+}
+.topToBottom {
+    animation: topToBottom 0.5s ease-in-out;
+}
+.bottomToTop {
+    animation: bottomToTop 0.5s ease-in-out;
+}
+
+@keyframes topToBottom {
+    0% {    
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+@keyframes bottomToTop {
+    0% {    
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(0%);
     }
 }

@@ -1,25 +1,24 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
 
-function SignUpForm() {
+function SignInForm() {
+    const url: string = import.meta.env.VITE_APP_URL;
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
-
+    const [errorMessage, setErrorMessage] = useState(false);
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorPassword, setErrorPassword] = useState(false);
-    const [errorUsername, setErrorUsername] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(false);
-    console.log(email, password, username);
-    const handleRegister = async (e) => {
+
+    const handleLogin = async (e: any) => {
         e.preventDefault();
 
         await axios
             .post(
-                "http://localhost:5000/api/user/register",
+                `${url}users/login`,
                 {
                     email,
                     password,
-                    username,
                 },
                 {
                     withCredentials: true,
@@ -27,11 +26,12 @@ function SignUpForm() {
             )
             .then((response) => {
                 console.log(response);
+                localStorage.setItem("token", response.data.token);
 
-                // window.location = "/";
+                window.location.href = "/";
             })
             .catch((error) => {
-                console.log(error.response.data.errors);
+                console.log(error.response);
                 if (error.response.data.errors.email) {
                     setErrorEmail(true);
                 } else {
@@ -43,12 +43,6 @@ function SignUpForm() {
                 } else {
                     setErrorPassword(false);
                 }
-
-                if (error.response.data.errors.username) {
-                    setErrorUsername(true);
-                } else {
-                    setErrorUsername(false);
-                }
                 setErrorMessage(true);
             });
     };
@@ -56,7 +50,7 @@ function SignUpForm() {
     return (
         <div className="form-container">
             <div>Bienvenue sur mon réseau sociale</div>
-            <form action="" onSubmit={handleRegister}>
+            <form action="" onSubmit={handleLogin}>
                 <label htmlFor="email">Email</label>
                 <input
                     type="email"
@@ -65,14 +59,9 @@ function SignUpForm() {
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
                 />
-                <label htmlFor="username">Nom d'utilisateur</label>
-                <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    onChange={(e) => setUsername(e.target.value)}
-                    value={username}
-                />
+                {errorEmail && (
+                    <span className="email error">L'email inconnu</span>
+                )}
                 <label htmlFor="password">Mot de passe</label>
                 <input
                     type="password"
@@ -81,10 +70,20 @@ function SignUpForm() {
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                 />
-                <button type="submit">Inscription</button>
+                {errorPassword && (
+                    <span className="password error">
+                        Mot de passe incorrect.
+                    </span>
+                )}
+                <button type="submit">Connexion</button>
             </form>
+            {errorMessage && (
+                <span className="email error">
+                    Une erreur est survenue lors de la connexion
+                </span>
+            )}
         </div>
     );
 }
 
-export default SignUpForm;
+export default SignInForm;
