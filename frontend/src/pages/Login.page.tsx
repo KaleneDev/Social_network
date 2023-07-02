@@ -11,21 +11,20 @@ function Login() {
 
     return (
         <div>
-            <div className="login-page">
-                {uid ? (
-                    <>
-                        <div>Vous êtes connecté</div>
-                        <Profile />
-                    </>
-                ) : (
-                    <>
+            {uid ? (
+                <>
+                    <Profile />
+                </>
+            ) : (
+                <>
+                    <div className="login-page">
                         <Header />
                         <div className="login-container" ref={loginRef}>
                             <Log prop={loginRef} />
                         </div>
-                    </>
-                )}
-            </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

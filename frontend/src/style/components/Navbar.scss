@@ -7,6 +7,22 @@
     align-items: center;
     color: $primary-color;
     height: 60px;
+    .nav-links {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        li {
+            padding: 0 1rem;
+            list-style: none;
+            a {
+                text-decoration: none;
+                color: $primary-color;
+            }
+            a:hover {
+                color: $secondary-color;
+            }
+        }
+    }
     .logo {
         a {
             color: $primary-color;

@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { UserIdContext } from "./AppContext";
+import Logout from "./Log/Logout";
 import "../style/components/Navbar.scss";
 function Navbar() {
     const uid = useContext(UserIdContext);
-
+ 
     return (
         <>
             <div className="nav-container">
@@ -17,12 +18,12 @@ function Navbar() {
                     <ul className="nav-links">
                         <li>
                             <NavLink end to="/profile">
-                                <h3>Profile</h3>
+                                <div>Profile</div>
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink end to="/logout">
-                                <h3>Logout</h3>
+                            <NavLink end to="/login">
+                                <Logout />
                             </NavLink>
                         </li>
                     </ul>
@@ -30,12 +31,12 @@ function Navbar() {
                     <ul className="nav-links">
                         <li>
                             <NavLink end to="/login">
-                                <h3>Login</h3>
+                                <div>Login</div>
                             </NavLink>
                         </li>
                         <li>
                             <NavLink end to="/register">
-                                <h3>Register</h3>
+                                <div>Register</div>
                             </NavLink>
                         </li>
                     </ul>
