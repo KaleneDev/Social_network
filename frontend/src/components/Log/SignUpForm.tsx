@@ -47,7 +47,26 @@ function SignUpForm() {
             .then((response) => {
                 console.log(response);
                 setFormSubmitted(true);
-                // window.location.href = "/";
+                // connexion automatique après inscription
+                axios
+                    .post(
+                        `${url}users/login`,
+                        {
+                            email,
+                            password,
+                        },
+                        {
+                            withCredentials: true,
+                        }
+                    )
+                    .then((response) => {
+                        console.log(response);
+                        localStorage.setItem("token", response.data.token);
+                        window.location.href = "/";
+                    })
+                    .catch((error) => {
+                        console.log(error.response);
+                    });
             })
             .catch((error) => {
                 console.log(error.response.data);
@@ -94,11 +113,11 @@ function SignUpForm() {
             {formSubmitted ? (
                 <>
                     <SignInForm />
-                    <h4>Test</h4>
+                    <h4>Votre Inscription à bien été pris en compte</h4>
                 </>
             ) : (
                 <div className="form-container">
-                    <div>Bienvenue sur mon réseau sociale</div>
+                    <div>Bienvenue sur mon réseau social</div>
                     <form action="" onSubmit={handleRegister}>
                         <label htmlFor="email">Email*</label>
                         <input

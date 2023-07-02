@@ -49,7 +49,7 @@ function SignInForm() {
 
     return (
         <div className="form-container">
-            <div>Bienvenue sur mon réseau sociale</div>
+            <div>Bienvenue sur mon réseau social</div>
             <form action="" onSubmit={handleLogin}>
                 <label htmlFor="email">Email</label>
                 <input

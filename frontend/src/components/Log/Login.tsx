@@ -30,12 +30,12 @@ function Login(props: any) {
                     labels[i].style.animation = "rightToLeft 0.5s ease-in-out";
                 }, 100 * i);
             }
-            // if (loginContainer) {
-            //     loginContainer.classList.add("topToBottom");
-            //     setTimeout(() => {
-            //         loginContainer.classList.remove("topToBottom");
-            //     }, 1000);
-            // }
+            if (loginContainer) {
+                loginContainer.classList.add("topToBottom");
+                setTimeout(() => {
+                    loginContainer.classList.remove("topToBottom");
+                }, 1000);
+            }
         };
         if (!isSignInActive || !isSignUpActive) {
             handleModals();

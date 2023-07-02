@@ -121,7 +121,7 @@ exports.create = async (req, res) => {
         };
 
         if (req.file) {
-            newUser.avatar = file.filename;
+            newUser.avatar =".\\public\\upload\\users\\" + file.filename;
         }
 
         const user = await Users.create(newUser);

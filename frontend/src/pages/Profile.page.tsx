@@ -7,12 +7,14 @@ interface User {
     id: number;
     username: string;
     email: string;
+    avatar: string;
 }
 function Profile() {
     const [profile, setProfile] = useState<User>({
         id: 0,
         username: "",
         email: "",
+        avatar: "",
     });
 
     const uid = useContext(UserIdContext);
@@ -37,9 +39,12 @@ function Profile() {
     }, [uid]);
     return (
         <div className="profile">
-            <h1>Profile</h1>
-            <div>{profile.username}</div>
-            <div>{profile.email}</div>
+            <div className="container-profile">
+                <h1>Profile</h1>
+                <div>{profile.username}</div>
+                <div>{profile.email}</div>
+                <div><img src={profile.avatar} alt="" /></div>
+            </div>
         </div>
     );
 }

@@ -1,12 +1,12 @@
 @import "../variables.scss";
 .nav-container {
-    width: 100%;
     background-color: $white;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: $primary-color;
     height: 60px;
+    padding: 0 1rem;
     .nav-links {
         display: flex;
         justify-content: space-between;

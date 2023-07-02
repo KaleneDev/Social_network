@@ -29,15 +29,17 @@ function Home() {
     return (
         <>
             <div className="home">
-                <h1>Home</h1>
-                <h1>Liste des utilisateurs</h1>
-                {users.map((user) => (
-                    <div key={user.id}>
-                        <h3>{user.name}</h3>
-                        <p>Email : {user.email}</p>
-                        <hr />
-                    </div>
-                ))}
+                <div className="container-home">
+                    <h1>Home</h1>
+                    <h1>Liste des utilisateurs</h1>
+                    {users.map((user) => (
+                        <div key={user.id}>
+                            <h3>{user.name}</h3>
+                            <p>Email : {user.email}</p>
+                            <hr />
+                        </div>
+                    ))}
+                </div>
             </div>
         </>
     );
