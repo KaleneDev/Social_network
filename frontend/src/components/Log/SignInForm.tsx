@@ -56,11 +56,11 @@ function SignInForm() {
                     type="email"
                     name="email"
                     id="email"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {setEmail(e.target.value)} }
                     value={email}
                 />
                 {errorEmail && (
-                    <span className="email error">L'email inconnu</span>
+                    <span className="email error">Email inconnu</span>
                 )}
                 <label htmlFor="password">Mot de passe</label>
                 <input

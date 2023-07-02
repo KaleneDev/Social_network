@@ -12,6 +12,7 @@
     justify-content: center;
     margin: auto;
     max-width: 1025px;
+    overflow-x: hidden;
     .connection-form,
     .register-form {
         margin-top: 10rem;
@@ -76,25 +77,53 @@
     }
 }
 .topToBottom {
-    animation: topToBottom 0.5s ease-in-out;
+    animation: topToBottom 0.7s ease-in-out;
 }
 .bottomToTop {
     animation: bottomToTop 0.5s ease-in-out;
 }
+.rightToLeft {
+    animation: rightToLeft 0.5s ease-in-out;
+}
+.leftToRight {
+    animation: leftToRight 0.5s ease-in-out;
+}
 
 @keyframes topToBottom {
-    0% {    
+    0% {
         transform: translateY(-100%);
+        // animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    50% {
+        transform: translateY(-2%);
+        // animation-timing-function: cubic-bezier(0.8, 0, 0.2, 1);
+    }
+    100% {
+        transform: translateY(0%);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+@keyframes bottomToTop {
+    0% {
+        transform: translateY(100%);
     }
     100% {
         transform: translateY(0%);
     }
 }
-@keyframes bottomToTop {
-    0% {    
-        transform: translateY(100%);
+@keyframes rightToLeft {
+    0% {
+        transform: translateX(100%);
     }
     100% {
-        transform: translateY(0%);
+        transform: translateX(0%);
+    }
+}
+@keyframes leftToRight {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0%);
     }
 }

@@ -3,8 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { signUpErrors, signInErrors } = require("../utils/errors.utils");
 require("dotenv").config();
-const maxAge = 60 * 60 * 1000;
-// const maxAge = 3 * 24 * 60 * 60 * 1000;
+const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 exports.signUp = async (req, res) => {
     try {
@@ -95,8 +94,8 @@ exports.signIn = async (req, res) => {
             token: token,
         });
     } catch (err) {
-        const errors = signInErrors(err);
-        res.status(500).send({ errors });
+        
+        res.status(500).send({ err });
     }
 };
 exports.signOut = (req, res) => {

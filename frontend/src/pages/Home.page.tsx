@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import "../style/components/pages/home.scss";
 
 interface User {
     id: number;
@@ -26,17 +27,19 @@ function Home() {
         getUsers();
     }, []);
     return (
-        <div>
-            <h1>Home</h1>
-            <h1>Liste des utilisateurs</h1>
-            {users.map((user) => (
-                <div key={user.id}>
-                    <h3>{user.name}</h3>
-                    <p>Email : {user.email}</p>
-                    <hr />
-                </div>
-            ))}
-        </div>
+        <>
+            <div className="home">
+                <h1>Home</h1>
+                <h1>Liste des utilisateurs</h1>
+                {users.map((user) => (
+                    <div key={user.id}>
+                        <h3>{user.name}</h3>
+                        <p>Email : {user.email}</p>
+                        <hr />
+                    </div>
+                ))}
+            </div>
+        </>
     );
 }
 

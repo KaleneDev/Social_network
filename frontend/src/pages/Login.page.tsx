@@ -1,6 +1,8 @@
 import { useContext, useRef } from "react";
 import { UserIdContext } from "../components/AppContext";
 import Log from "../components/Log/Login";
+import Profile from "./Profile.page";
+import Header from "../components/Header";
 import "../style/components/pages/login.scss";
 
 function Login() {
@@ -11,14 +13,17 @@ function Login() {
         <div>
             <div className="login-page">
                 {uid ? (
-                    <div>
+                    <>
                         <div>Vous êtes connecté</div>
-                        <div>Profile</div>
-                    </div>
+                        <Profile />
+                    </>
                 ) : (
-                    <div className="login-container" ref={loginRef}>
-                        <Log prop={loginRef}/>
-                    </div>
+                    <>
+                        <Header />
+                        <div className="login-container" ref={loginRef}>
+                            <Log prop={loginRef} />
+                        </div>
+                    </>
                 )}
             </div>
         </div>

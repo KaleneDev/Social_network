@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import SignInForm from "./SignInForm";
 
 function SignUpForm() {
     const url: string = import.meta.env.VITE_APP_URL;
@@ -7,6 +8,7 @@ function SignUpForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
+    const [formSubmitted, setFormSubmitted] = useState(false);
 
     const [errorEmail, setErrorEmail] = useState({
         isErrorEmail: false,
@@ -44,8 +46,8 @@ function SignUpForm() {
             )
             .then((response) => {
                 console.log(response);
-
-                window.location.href = "/";
+                setFormSubmitted(true);
+                // window.location.href = "/";
             })
             .catch((error) => {
                 console.log(error.response.data);
@@ -88,53 +90,70 @@ function SignUpForm() {
     };
 
     return (
-        <div className="form-container">
-            <div>Bienvenue sur mon réseau sociale</div>
-            <form action="" onSubmit={handleRegister}>
-                <label htmlFor="email">Email*</label>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                />
-                {errorEmail && (
-                    <span className="email error">{errorEmail.message}</span>
-                )}
-                <label htmlFor="username">Nom d'utilisateur*</label>
-                <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    onChange={(e) => setUsername(e.target.value)}
-                    value={username}
-                />
-                {errorUsername && (
-                    <span className="email error">{errorUsername.message}</span>
-                )}
-                <label htmlFor="password">Mot de passe*</label>
-                <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                />
-                {errorPassword && (
-                    <span className="email error">{errorPassword.message}</span>
-                )}
-                <button type="submit">Inscription</button>
-                {errorPassword && (
-                    <span className="fields error">{badRequest.message}</span>
-                )}
-            </form>
-            {/* {errorMessage && (
+        <>
+            {formSubmitted ? (
+                <>
+                    <SignInForm />
+                    <h4>Test</h4>
+                </>
+            ) : (
+                <div className="form-container">
+                    <div>Bienvenue sur mon réseau sociale</div>
+                    <form action="" onSubmit={handleRegister}>
+                        <label htmlFor="email">Email*</label>
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                            value={email}
+                        />
+                        {errorEmail && (
+                            <span className="email error">
+                                {errorEmail.message}
+                            </span>
+                        )}
+                        <label htmlFor="username">Nom d'utilisateur*</label>
+                        <input
+                            type="text"
+                            name="username"
+                            id="username"
+                            onChange={(e) => setUsername(e.target.value)}
+                            value={username}
+                        />
+                        {errorUsername && (
+                            <span className="email error">
+                                {errorUsername.message}
+                            </span>
+                        )}
+                        <label htmlFor="password">Mot de passe*</label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            value={password}
+                        />
+                        {errorPassword && (
+                            <span className="email error">
+                                {errorPassword.message}
+                            </span>
+                        )}
+                        <button type="submit">Inscription</button>
+                        {errorPassword && (
+                            <span className="fields error">
+                                {badRequest.message}
+                            </span>
+                        )}
+                    </form>
+                    {/* {errorMessage && (
                 <span className="email error">
                     Une erreur est survenue lors de la connexion
                 </span>
             )} */}
-        </div>
+                </div>
+            )}
+        </>
     );
 }
 

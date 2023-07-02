@@ -1,0 +1,16 @@
+@import "../variables.scss";
+.nav-container {
+    width: 100%;
+    background-color: $white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $primary-color;
+    height: 60px;
+    .logo {
+        a {
+            color: $primary-color;
+            text-decoration: none;
+        }
+    }
+}

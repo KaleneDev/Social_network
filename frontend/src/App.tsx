@@ -3,11 +3,16 @@ import "./style/variables.scss";
 import "./style/index.scss";
 
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Routes from "./components/routes";
 import { UserIdContext } from "./components/AppContext";
+import Navbar from "./components/Navbar";
 import axios from "axios";
+
 function App() {
     const [uid, setUid] = useState(null);
+    const location = useLocation();
+    const isLoginPage = location.pathname === "/login";
     useEffect(() => {
         const getUid = async () => {
             await axios
@@ -26,6 +31,8 @@ function App() {
 
     return (
         <UserIdContext.Provider value={uid}>
+            {!isLoginPage && <Navbar />}
+            {isLoginPage && uid && <Navbar />}
             <Routes />
         </UserIdContext.Provider>
     );
