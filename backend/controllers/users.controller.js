@@ -417,15 +417,66 @@ exports.like = async (req, res) => {
         });
     }
 };
-
-exports.signIn = async (req, res) => {
+exports.unlike = async (req, res) => {
     try {
-        res.cookie("jwt", "token", { httpOnly: true });
-        console.log("cookie");
+        const { user_id, article_id } = req.body;
+        const relation = await Likes.findOne({
+            where: {
+                article_id: article_id,
+                user_id: user_id,
+            },
+        });
+        if (!relation) {
+            return res.status(404).json({
+                message: "Cette relation n'existe pas.",
+            });
+        }
+        await relation.destroy();
+        res.status(200).json({
+            message: "Relation supprimée avec succès.",
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({
-            message: "Erreur lors de la récupération des utilisateurs.",
+            message: "Erreur lors de la suppression de la relation.",
         });
     }
-};
+}
+exports.getLikes = async (req, res) => {
+    try {
+        const likes = await Likes.findAll({
+            where: {
+                article_id: req.params.id,
+            },
+            include: [
+                {
+                    model: Users,
+                    as: "user",
+                    attributes: ["id", "username", "avatar"],
+                },
+            ],
+        });
+        res.status(200).json(likes);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des likes.",
+        });
+    }
+}
+exports.getLikesCount = async (req, res) => {
+    try {
+        const likes = await Likes.count({
+            where: {
+                article_id: req.params.id,
+            },
+        });
+        res.status(200).json(likes);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des likes.",
+        });
+    }
+}
+

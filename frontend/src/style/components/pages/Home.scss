@@ -3,7 +3,10 @@
     background-color: $secondary-color;
     min-height: calc(100vh - 60px - 2rem);
     padding: 1rem;
-    .container-home {
+    .container-home > div {
+        display: flex;
+        flex-direction: column;
+        margin: 1rem 0;
         padding: 1rem;
         background-color: $white;
         border-radius: 10px;

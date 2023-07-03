@@ -24,8 +24,6 @@ router.post("/register", authCtrl.signUp);
 router.post("/login", authCtrl.signIn);
 router.get("/logout", authCtrl.signOut);
 
-router.get("/test", usersCtrl.signIn);
-
 router.post("/upload", uploadUser, uploadCtrl.uploadUser);
 
 router.patch("/follow/:id", usersCtrl.follow);

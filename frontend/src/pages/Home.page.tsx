@@ -1,44 +1,41 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useSelector } from "react-redux";
 import "../style/components/pages/home.scss";
-
-interface User {
-    id: number;
-    name: string;
-    email: string;
-}
+import { isEmpty } from "../components/Utils";
 
 function Home() {
-    const [users, setUsers] = useState<User[]>([]);
+    // const [users, setUsers] = useState<User[]>([]);
+    // const [articles, setArticles] = useState<Article[]>([]);
 
-    useEffect(() => {
-        const getUsers = async () => {
-            await axios
-                .get<User[]>(`${import.meta.env.VITE_APP_URL}users`, {
-                    withCredentials: true,
-                })
-                .then((response) => {
-                    setUsers(response.data);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        };
-        getUsers();
-    }, []);
+    const users = useSelector((state: any) => state.usersReducer);
+    const articles = useSelector((state: any) => state.articlesReducer);
+
     return (
         <>
             <div className="home">
                 <div className="container-home">
-                    <h1>Home</h1>
-                    <h1>Liste des utilisateurs</h1>
-                    {users.map((user) => (
-                        <div key={user.id}>
-                            <h3>{user.name}</h3>
-                            <p>Email : {user.email}</p>
-                            <hr />
-                        </div>
-                    ))}
+                    <div className="users">
+                        <h1>Home</h1>
+                        <h1>Liste des utilisateurs</h1>
+                        {!isEmpty(users) &&
+                            users.map((user: any) => (
+                                <div key={user.id}>
+                                    <h3>{user.username}</h3>
+                                    <p>Email : {user.email}</p>
+                                    <hr />
+                                </div>
+                            ))}
+                    </div>
+                    <div className="articles">
+                        <h1>Liste des articles</h1>
+                        {!isEmpty(articles) &&
+                            articles.map((article: any) => (
+                                <div key={article.id}>
+                                    <h3>{article.title}</h3>
+                                    <p>Content : {article.content}</p>
+                                    <hr />
+                                </div>
+                            ))}
+                    </div>
                 </div>
             </div>
         </>

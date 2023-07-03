@@ -8,11 +8,17 @@ import Routes from "./components/routes";
 import { UserIdContext } from "./components/AppContext";
 import Navbar from "./components/Navbar";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
+import { getUser } from "./actions/user.action";
+
+import { Dispatch } from "redux";
 function App() {
     const [uid, setUid] = useState(null);
     const location = useLocation();
     const isLoginPage = location.pathname === "/login";
+    const dispatch = useDispatch<Dispatch<any>>();
+
     useEffect(() => {
         const getUid = async () => {
             await axios
@@ -27,6 +33,10 @@ function App() {
                 });
         };
         getUid();
+
+        if (uid) {
+            dispatch(getUser(uid));
+        }
     }, [uid]);
 
     return (

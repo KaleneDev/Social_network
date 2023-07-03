@@ -68,7 +68,7 @@ app.use("/comments", commentsRoute);
 app.use("/relations", relationsRoute);
 // Start Server
 
-sequelize.sync({ alter: false }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
     console.log("Drop and re-sync db.");
     app.listen(port, () => {
         console.log(`Example app listening at http://${DB_HOST}:${port}`);
