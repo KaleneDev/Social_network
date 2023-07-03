@@ -11,12 +11,22 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        svg {
+            width: 27px;
+            height: 27px;
+            margin: auto;
+            fill: $white;
+        }
         li {
+            display: flex;
+            // align-items: center;
+            // justify-content: center;
             padding: 0 1rem;
             list-style: none;
             a {
                 text-decoration: none;
                 color: $primary-color;
+                font-weight: 500;
             }
             a:hover {
                 color: $secondary-color;
@@ -24,6 +34,14 @@
         }
     }
     .logo {
+        display: flex;
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 1rem;
+            list-style: none;
+        }
         a {
             color: $primary-color;
             text-decoration: none;

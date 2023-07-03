@@ -1,0 +1,59 @@
+@import "../../variables";
+.searchBar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    input[type="text"] {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 4px 0 0 4px;
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+
+    button[type="submit"] {
+        border: 1px solid $primary-color;
+        padding: 0px 20px;
+        background-color: $primary-color;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        border-radius: 0 4px 4px 0;
+        height: 40.39px;
+
+        cursor: pointer;
+        span:nth-child(2) {
+            display: flex;
+            svg {
+                width: 20px;
+                height: 20px;
+                margin: auto;
+                fill: $white;
+            }
+        }
+        span:nth-child(1) {
+            display: none;
+        }
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .searchBar-container {
+        width: 100%;
+
+        button[type="submit"] {
+            border: 1px solid $primary-color;
+            cursor: pointer;
+            span:nth-child(1) {
+                display: block;
+            }
+            span:nth-child(2) {
+                display: none;
+            }
+        }
+    }
+}
