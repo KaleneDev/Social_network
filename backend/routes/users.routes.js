@@ -16,7 +16,6 @@ const corsOptions = {
 
 router.get("/", usersCtrl.getAll);
 router.get("/id/:id", usersCtrl.getOne);
-router.post("/", uploadUser, usersCtrl.create);
 router.put("/id/:id",usersCtrl.update);
 router.delete("/id/:id", usersCtrl.delete);
 

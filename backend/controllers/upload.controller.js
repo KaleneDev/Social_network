@@ -1,20 +1,25 @@
 const Users = require("../models/Users.model");
-const bcrypt = require("bcrypt");
 const Articles = require("../models/Articles.model");
-const Comments = require("../models/Comments.model");
 const fs = require("fs");
 const path = require("path");
-const filename = path.resolve();
-const dirname = path.dirname(filename);
 
 exports.uploadUser = async (req, res) => {
     try {
-        const { username, userId } = req.body;
+        const { userId, username } = req.body;
+        const errors = {};
         const file = req.file;
-        if (!username) {
-            return res.status(400).json({
-                error: "Veuillez fournir tous les champs obligatoires.",
+        if (!userId || !username) {
+            errors.userId = "Veuillez fournir un id ou nom d'utilisateur.";
+        }
+        // si username correspond a userId
+        if (username && userId) {
+            const existingUsername = await Users.findOne({
+                where: { username: username },
             });
+            if (existingUsername && existingUsername.id !== userId) {
+                errors.username = "Cet utilisateur n'existe pas.";
+                deleteFile();
+            }
         }
         function deleteFile() {
             if (req.file) {
@@ -24,29 +29,23 @@ exports.uploadUser = async (req, res) => {
                 });
             }
         }
-        // const existingUsername = await Users.findOne({ where: { username } });
         const existingUserId = await Users.findOne({ where: { id: userId } });
         if (!existingUserId) {
             deleteFile();
-            return res.status(400).json({
-                error: "Cet utilisateur n'existe pas.",
-            });
+            errors.username = "Cet utilisateur n'existe pas.";
         }
-        // si le fichier ne depasse pas 1Mo
-        if (req.file && req.file.size > 10000000) {
+        // si le fichier ne depasse pas 5Mo
+        if (req.file && req.file.size > 50000000) {
             deleteFile();
-            return res.status(400).json({
-                error: "Le fichier est trop volumineux.",
-            });
+            errors.file = "Le fichier est trop volumineux.";
         }
-        const User = {
-            username,
-        };
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
+        }
+        const User = {};
         if (req.file) {
-            User.avatar = file.filename;
-            User.avatarPath = path.join(
-                "../frontend/public/upload/users/" + file.filename
-            );
+            console.log(file);
+            User.avatar = path.join("public/upload/users/" + file.filename);
         }
         // add avatarPath to existingUsername
         await Users.update(User, {

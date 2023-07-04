@@ -76,82 +76,85 @@ exports.getOne = async (req, res) => {
         });
     }
 };
-exports.create = async (req, res) => {
-    try {
-        const { username, email, password } = req.body;
-        const file = req.file;
-        if (!username || !email || !password) {
-            return res.status(400).json({
-                error: "Veuillez fournir tous les champs obligatoires.",
-            });
-        }
-        const existingEmail = await Users.findOne({ where: { email } });
+// exports.create = async (req, res) => {
+//     try {
+//         const { username, email, password } = req.body;
+//         const file = req.file;
+//         if (!username || !email || !password) {
+//             return res.status(400).json({
+//                 error: "Veuillez fournir tous les champs obligatoires.",
+//             });
+//         }
+//         const existingEmail = await Users.findOne({ where: { email } });
 
-        function deleteFile() {
-            if (req.file) {
-                const element = file.path;
-                fs.unlink(element, () => {
-                    return;
-                });
-            }
-        }
+//         function deleteFile() {
+//             if (req.file) {
+//                 const element = file.path;
+//                 fs.unlink(element, () => {
+//                     return;
+//                 });
+//             }
+//         }
 
-        if (existingEmail) {
-            // supprimer le fichier si mail existe
-            deleteFile();
+//         if (existingEmail) {
+//             // supprimer le fichier si mail existe
+//             deleteFile();
 
-            return res.status(409).json({
-                error: "Un utilisateur avec cet e-mail existe déjà.",
-            });
-        }
-        const existingUsername = await Users.findOne({ where: { username } });
+//             return res.status(409).json({
+//                 error: "Un utilisateur avec cet e-mail existe déjà.",
+//             });
+//         }
+//         const existingUsername = await Users.findOne({ where: { username } });
 
-        if (existingUsername) {
-            deleteFile();
-            return res.status(409).json({
-                error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
-            });
-        }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = {
-            username,
-            email,
-            password: hashedPassword,
-        };
+//         if (existingUsername) {
+//             deleteFile();
+//             return res.status(409).json({
+//                 error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
+//             });
+//         }
+//         const salt = await bcrypt.genSalt(10);
+//         const hashedPassword = await bcrypt.hash(password, salt);
+//         const newUser = {
+//             username,
+//             email,
+//             password: hashedPassword,
+//         };
 
-        if (req.file) {
-            newUser.avatar = "\\upload\\users\\" + file.filename;
-        }
+//         if (req.file) {
+//             newUser.avatar = "\\upload\\users\\" + file.filename;
+//         }
 
-        const user = await Users.create(newUser);
-        res.status(200).json(user);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            message: "Erreur lors de la création de l'utilisateur.",
-        });
-    }
-};
+//         const user = await Users.create(newUser);
+//         res.status(200).json(user);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({
+//             message: "Erreur lors de la création de l'utilisateur.",
+//         });
+//     }
+// };
 exports.update = async (req, res) => {
     try {
-        // si le nom d'utilisateur existe déjà
-        const existingUsername = await Users.findOne({
-            where: { username: req.body.username },
-        });
-        if (existingUsername && existingUsername.id !== req.params.id) {
-            return res.status(409).json({
-                error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
+        if (req.body.username || req.body.email) {
+            // si le nom d'utilisateur existe déjà
+            const existingUsername = await Users.findOne({
+                where: { username: req.body.username },
             });
-        }
-        // si l'email existe déjà
-        const existingEmail = await Users.findOne({
-            where: { email: req.body.email },
-        });
-        if (existingEmail && existingEmail.id !== req.params.id) {
-            return res.status(409).json({
-                error: "Un utilisateur avec cet e-mail existe déjà.",
+            if (existingUsername && existingUsername.id !== req.params.id) {
+                return res.status(409).json({
+                    error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
+                });
+            }
+
+            // si l'email existe déjà
+            const existingEmail = await Users.findOne({
+                where: { email: req.body.email },
             });
+            if (existingEmail && existingEmail.id !== req.params.id) {
+                return res.status(409).json({
+                    error: "Un utilisateur avec cet e-mail existe déjà.",
+                });
+            }
         }
         // si le mot de passe est modifié
         if (req.body.password) {
@@ -441,7 +444,7 @@ exports.unlike = async (req, res) => {
             message: "Erreur lors de la suppression de la relation.",
         });
     }
-}
+};
 exports.getLikes = async (req, res) => {
     try {
         const likes = await Likes.findAll({
@@ -463,7 +466,7 @@ exports.getLikes = async (req, res) => {
             message: "Erreur lors de la récupération des likes.",
         });
     }
-}
+};
 exports.getLikesCount = async (req, res) => {
     try {
         const likes = await Likes.count({
@@ -478,5 +481,4 @@ exports.getLikesCount = async (req, res) => {
             message: "Erreur lors de la récupération des likes.",
         });
     }
-}
-
+};
