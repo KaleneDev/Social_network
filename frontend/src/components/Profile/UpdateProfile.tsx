@@ -6,7 +6,6 @@ import "moment/locale/fr";
 import { useDispatch } from "react-redux";
 import { updateBio } from "../../actions/user.action";
 import { Dispatch } from "redux";
-import { text } from "stream/consumers";
 
 function UpdateProfile() {
     const profile = useSelector((state: any) => state.userReducer);
@@ -26,13 +25,31 @@ function UpdateProfile() {
 
     const handleUpdate = (e: any) => {
         e.preventDefault();
+        console.log(upForm);
 
+        if (upForm === false) {
+            setUpForm(!upForm);
+        }
+        if (upForm === true) {
+            setUpForm(!upForm);
+        }
         dispatch(updateBio(profile.id, bio));
-        setUpForm(!upForm);
+    };
+    const handleSwitch = () => {
+        console.log("switch");
 
+        if (upForm === false) {
+            setUpForm(!upForm);
+        }
+    };
+    const handleChange = (e: any) => {
+        if (upForm === false) {
+            setUpForm(!upForm);
+        }
+        setBio(e.target.value);
     };
     useEffect(() => {
-      setBio(profile.bio);
+        //   setBio(profile.bio);
     }, [dataChild, bio]);
 
     return (
@@ -62,20 +79,34 @@ function UpdateProfile() {
                 <div className="bio-update">
                     <h3>Bio</h3>
 
+                    {/* <textarea
+                        onClick={() => {
+                            setUpForm(upForm === false);
+                        }}
+                        typeof="text"
+                        name="bio"
+                        id="bio"
+                        onChange={(e) => setBio(e.target.value)}
+                        defaultValue={profile.bio}
+                        className="bio-inactive"
+                    ></textarea> */}
+                    <textarea
+                        typeof="text"
+                        name="bio"
+                        id="bio"
+                        onChange={(e) => handleChange(e)}
+                        onClick={() => handleSwitch()}
+                        defaultValue={profile.bio}
+                        className={`${
+                            upForm
+                                ? " bio-active"
+                                : !upForm
+                                ? " bio-inactive"
+                                : ""
+                        }`}
+                    ></textarea>
                     {!upForm && (
                         <>
-                            <textarea
-                                onClick={() => {
-                                    setUpForm(!upForm);
-                                }}
-                                typeof="text"
-                                name="bio"
-                                id="bio"
-                                onChange={(e) => setBio(e.target.value)}
-                                defaultValue={profile.bio}
-                                className="bio-inactive"
-                            ></textarea>
-
                             <button
                                 type="submit"
                                 onClick={() => setUpForm(!upForm)}
@@ -86,14 +117,6 @@ function UpdateProfile() {
                     )}
                     {upForm && (
                         <>
-                            <textarea
-                                typeof="text"
-                                name="bio"
-                                id="bio"
-                                onChange={(e) => setBio(e.target.value)}
-                                defaultValue={profile.bio}
-                                className="bio-active"
-                            ></textarea>
                             <button type="submit" onClick={handleUpdate}>
                                 Valider
                             </button>
