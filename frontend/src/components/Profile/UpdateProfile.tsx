@@ -5,6 +5,7 @@ import moment from "moment";
 import "moment/locale/fr";
 import { useDispatch } from "react-redux";
 import { updateBio } from "../../actions/user.action";
+import { updateUser } from "../../actions/user.action";
 import { Dispatch } from "redux";
 
 function UpdateProfile() {
@@ -14,6 +15,12 @@ function UpdateProfile() {
     const [bio, setBio] = useState<any>([]);
     const [upForm, setUpForm] = useState<boolean>(false);
     const dispatch = useDispatch<Dispatch<any>>();
+
+    const [username, setUsername] = useState<string>(profile.username);
+    const [email, setEmail] = useState<string>();
+    const [oldPassword, setOldPassword] = useState<string>(profile.password);
+    const [newPassword, setNewPassword] = useState<string>();
+    const [confirmPassword, setConfirmPassword] = useState<string>();
 
     const dateStr = new Date(profile.createdAt);
     const date = moment(dateStr).locale("fr");
@@ -48,14 +55,45 @@ function UpdateProfile() {
         }
         setBio(e.target.value);
     };
+    const handleProfile = (e: any) => {
+        e.preventDefault();
+        const data = {
+            username: username,
+            email: email,
+            oldPassword: oldPassword,
+            newPassword1: newPassword,
+            newPassword2: confirmPassword,
+        };
+        
+        console.log(data);
+        
+        dispatch(updateUser(profile.id, data));
+        
+        setUsername(profile.username);
+        setEmail(profile.email);
+        setOldPassword(profile.password);
+    };
     useEffect(() => {
-        //   setBio(profile.bio);
-    }, [dataChild, bio]);
+
+        // setUsername(profile.username);
+
+    }, [
+        dataChild,
+        bio,
+        username,
+        email,
+        oldPassword,
+        newPassword,
+        confirmPassword,
+        profile.username,
+        profile.email,
+        profile.password,
+    ]);
 
     return (
         <div className="profile">
             <div className="container-profile">
-                <h1>Profile de {profile.username}</h1>
+                <h1>Profile de {profile}</h1>
                 <div
                     className={`container-image${
                         dataChild.drop ? " is-drop" : ""
@@ -78,18 +116,6 @@ function UpdateProfile() {
             <div className="container-bio">
                 <div className="bio-update">
                     <h3>Bio</h3>
-
-                    {/* <textarea
-                        onClick={() => {
-                            setUpForm(upForm === false);
-                        }}
-                        typeof="text"
-                        name="bio"
-                        id="bio"
-                        onChange={(e) => setBio(e.target.value)}
-                        defaultValue={profile.bio}
-                        className="bio-inactive"
-                    ></textarea> */}
                     <textarea
                         typeof="text"
                         name="bio"
@@ -129,16 +155,55 @@ function UpdateProfile() {
                 <h3>Modifier votre profile</h3>
                 <form action="">
                     <label htmlFor="username">Username</label>
-                    <input type="text" name="username" id="username" />
+                    <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        defaultValue={profile.username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        autoComplete="off"
+                    />
                     <label htmlFor="email">Email</label>
-                    <input type="email" name="email" id="email" />
-                    <label htmlFor="password">Password</label>
-                    <input type="password" name="password" id="password" />
+                    <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        defaultValue={profile.email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="off"
+                    />
+                    <label htmlFor="oldPassword">Ancien mot de passe</label>
+                    <input
+                        type="password"
+                        name="oldPassword"
+                        id="oldPassword"
+                        onChange={(e) => setOldPassword(e.target.value)}
+                        autoComplete="off"
+                    />
+                    <label htmlFor="newPassword1">Nouveau mot de passe</label>
+                    <input
+                        type="password"
+                        name="newPassword1"
+                        id="newPassword1"
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        autoComplete="off"
+                    />
+                    <label htmlFor="NewPassword2">Confirmer mot de passe</label>
+                    <input
+                        type="password"
+                        name="NewPassword2"
+                        id="NewPassword2"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        autoComplete="off"
+                    />
 
                     <input
                         className="submit-button"
                         type="submit"
                         value="Envoyer"
+                        onClick={(e) => {
+                            handleProfile(e);
+                        }}
                     />
                 </form>
             </div>

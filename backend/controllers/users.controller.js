@@ -76,93 +76,70 @@ exports.getOne = async (req, res) => {
         });
     }
 };
-// exports.create = async (req, res) => {
-//     try {
-//         const { username, email, password } = req.body;
-//         const file = req.file;
-//         if (!username || !email || !password) {
-//             return res.status(400).json({
-//                 error: "Veuillez fournir tous les champs obligatoires.",
-//             });
-//         }
-//         const existingEmail = await Users.findOne({ where: { email } });
-
-//         function deleteFile() {
-//             if (req.file) {
-//                 const element = file.path;
-//                 fs.unlink(element, () => {
-//                     return;
-//                 });
-//             }
-//         }
-
-//         if (existingEmail) {
-//             // supprimer le fichier si mail existe
-//             deleteFile();
-
-//             return res.status(409).json({
-//                 error: "Un utilisateur avec cet e-mail existe déjà.",
-//             });
-//         }
-//         const existingUsername = await Users.findOne({ where: { username } });
-
-//         if (existingUsername) {
-//             deleteFile();
-//             return res.status(409).json({
-//                 error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
-//             });
-//         }
-//         const salt = await bcrypt.genSalt(10);
-//         const hashedPassword = await bcrypt.hash(password, salt);
-//         const newUser = {
-//             username,
-//             email,
-//             password: hashedPassword,
-//         };
-
-//         if (req.file) {
-//             newUser.avatar = "\\upload\\users\\" + file.filename;
-//         }
-
-//         const user = await Users.create(newUser);
-//         res.status(200).json(user);
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({
-//             message: "Erreur lors de la création de l'utilisateur.",
-//         });
-//     }
-// };
 exports.update = async (req, res) => {
     try {
-        if (req.body.username || req.body.email) {
+        const { username, email, password } = req.body.data;
+        
+       
+        const errors = {};
+        if (username) {
             // si le nom d'utilisateur existe déjà
             const existingUsername = await Users.findOne({
-                where: { username: req.body.username },
+                where: { username: username },
             });
             if (existingUsername && existingUsername.id !== req.params.id) {
-                return res.status(409).json({
-                    error: "Un utilisateur avec ce nom d'utilisateur existe déjà.",
-                });
+                errors.username =
+                    "Un utilisateur avec ce nom d'utilisateur existe déjà.";
             }
-
+        }
+        if (email) {
             // si l'email existe déjà
             const existingEmail = await Users.findOne({
-                where: { email: req.body.email },
+                where: { email: email },
             });
             if (existingEmail && existingEmail.id !== req.params.id) {
-                return res.status(409).json({
-                    error: "Un utilisateur avec cet e-mail existe déjà.",
-                });
+                errors.email = "Un utilisateur avec cet e-mail existe déjà.";
             }
         }
+
+        // si ancien mot de passe correspond
+        const userPass = await Users.findByPk(req.params.id);
+        if (req.body.oldPassword) {
+            const match = await bcrypt.compare(
+                req.body.oldPassword,
+                userPass.password
+            );
+            if (!match) {
+                errors.oldPassword = "Le mot de passe est incorrect.";
+            }
+        }
+
+        // si les nouveau mot de passe "NewPassword1" et "NewPassword2" correspondent
+        if (req.body.newPassword1 && req.body.newPassword2) {
+            if (req.body.newPassword1 !== req.body.newPassword2) {
+                errors.newPassword = "Les mots de passe ne correspondent pas.";
+            }
+        } else if (
+            (!req.body.newPassword1 && req.body.newPassword2) ||
+            (req.body.newPassword1 && !req.body.newPassword2)
+        ) {
+            errors.newPassword = "Veuillez remplir tous les champs.";
+        }
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
+        }
         // si le mot de passe est modifié
-        if (req.body.password) {
+        if (req.body.newPassword1) {
+            console.log(req.body.newPassword1);
             const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(req.body.password, salt);
+            const hashedPassword = await bcrypt.hash(
+                req.body.newPassword1,
+                salt
+            );
             req.body.password = hashedPassword;
         }
-        const user = await Users.update(req.body, {
+        const { oldPassword, ...updatedData } = req.body.data;
+        const user = await Users.update(updatedData, {
             where: { id: req.params.id },
         });
         res.status(200).json(user);
