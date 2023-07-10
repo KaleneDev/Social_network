@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "redux";
 import { useSelector } from "react-redux";
@@ -22,21 +22,25 @@ function UploadImage(props: any) {
     const [highlight, setHighlight] = useState(false);
     const [preview, setPreview] = useState("");
     const [drop, setDrop] = useState(false);
+    const refInputFile = useRef<any>(null);
 
     const data = {
         drop: drop,
         preview: preview,
         highlight: highlight,
+        refInputFile: refInputFile,
     };
     useEffect(() => {
         props.propsChild(data);
-        const refParent = props.propsParent.current;
-        if (refParent) {
-            refParent.addEventListener("dragenter", handleEnter);
-            refParent.addEventListener("dragover", handleOver);
-            refParent.addEventListener("dragleave", handleLeave);
-            refParent.addEventListener("drop", handleUpload);
-            refParent.addEventListener("change", handleUploadOver);
+        const refParentPreview = props.propsParent.preview.current;
+        const refParentContainer = props.propsParent.containerImage.current;
+
+        if (refParentPreview || refParentContainer) {
+            refParentPreview.addEventListener("dragenter", handleEnter);
+            refParentPreview.addEventListener("dragover", handleOver);
+            refParentPreview.addEventListener("dragleave", handleLeave);
+            refParentPreview.addEventListener("drop", handleUpload);
+            refParentPreview.addEventListener("change", handleUploadOver);
         }
     }, [preview, drop, highlight]);
     const handleEnter = (e: any) => {
@@ -129,7 +133,7 @@ function UploadImage(props: any) {
                     className="inputfile btn-file__input"
                     accept="image/*"
                     onChange={(e) => handleUpload(e)}
-                    // onChange={(e) => handleUpload(e)}
+                    ref={refInputFile}
                 />
                 <input
                     type="submit"

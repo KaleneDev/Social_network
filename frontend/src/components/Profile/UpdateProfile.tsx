@@ -12,19 +12,30 @@ function UpdateProfile() {
     const profile = useSelector((state: any) => state.userReducer);
     const [dataChild, setDataChild] = useState<any>([]);
     const preview = useRef<any>(null);
+    const containerImage = useRef<any>(null);
+
     const [bio, setBio] = useState<any>([]);
     const [upForm, setUpForm] = useState<boolean>(false);
     const dispatch = useDispatch<Dispatch<any>>();
 
     const [username, setUsername] = useState<string>(profile.username);
+    const [usernameDisplay, setUsernameDisplay] = useState<string>(
+        profile.username
+    );
     const [email, setEmail] = useState<string>();
-    const [oldPassword, setOldPassword] = useState<string>(profile.password);
+    const [oldPassword, setOldPassword] = useState<string>();
     const [newPassword, setNewPassword] = useState<string>();
     const [confirmPassword, setConfirmPassword] = useState<string>();
+    const usernameRef = useRef<any>(null);
 
     const dateStr = new Date(profile.createdAt);
     const date = moment(dateStr).locale("fr");
     const dateFr = date.format("DD/MM/YYYY à HH:mm:ss");
+
+    const imageRefs = {
+        preview: preview,
+        containerImage: containerImage,
+    };
 
     const handleDataChild = (data: any) => {
         setDataChild(data);
@@ -40,7 +51,11 @@ function UpdateProfile() {
         if (upForm === true) {
             setUpForm(!upForm);
         }
-        dispatch(updateBio(profile.id, bio));
+        const data = {
+            bio: bio,
+        };
+
+        dispatch(updateBio(profile.id, data));
     };
     const handleSwitch = () => {
         console.log("switch");
@@ -48,11 +63,13 @@ function UpdateProfile() {
         if (upForm === false) {
             setUpForm(!upForm);
         }
+        console.log(upForm);
     };
     const handleChange = (e: any) => {
         if (upForm === false) {
             setUpForm(!upForm);
         }
+
         setBio(e.target.value);
     };
     const handleProfile = (e: any) => {
@@ -64,40 +81,32 @@ function UpdateProfile() {
             newPassword1: newPassword,
             newPassword2: confirmPassword,
         };
-        
-        console.log(data);
-        
+
         dispatch(updateUser(profile.id, data));
-        
-        setUsername(profile.username);
-        setEmail(profile.email);
-        setOldPassword(profile.password);
+        if (username !== undefined) {
+            setUsernameDisplay(username);
+        }
+    };
+    const handleContainerImageClick = () => {
+        const refInputFile = dataChild.refInputFile.current;
+        if (refInputFile) {
+            refInputFile.click();
+        }
     };
     useEffect(() => {
-
-        // setUsername(profile.username);
-
-    }, [
-        dataChild,
-        bio,
-        username,
-        email,
-        oldPassword,
-        newPassword,
-        confirmPassword,
-        profile.username,
-        profile.email,
-        profile.password,
-    ]);
+        setUsernameDisplay(profile.username);
+    }, [dataChild, profile.username]);
 
     return (
         <div className="profile">
             <div className="container-profile">
-                <h1>Profile de {profile}</h1>
+                <h1 ref={usernameRef}>Profile de {usernameDisplay}</h1>
                 <div
+                    ref={containerImage}
                     className={`container-image${
                         dataChild.drop ? " is-drop" : ""
                     }`}
+                    onClick={handleContainerImageClick}
                 >
                     <div
                         className={`preview${
@@ -106,11 +115,12 @@ function UpdateProfile() {
                         ref={preview}
                         style={{ backgroundImage: `url(${dataChild.preview})` }}
                     ></div>
+
                     <img src={profile.avatar} alt="" />
                 </div>
                 <UploadImage
                     propsChild={handleDataChild}
-                    propsParent={preview}
+                    propsParent={imageRefs}
                 />
             </div>
             <div className="container-bio">
@@ -130,7 +140,7 @@ function UpdateProfile() {
                                 ? " bio-inactive"
                                 : ""
                         }`}
-                    ></textarea>
+                    />
                     {!upForm && (
                         <>
                             <button
@@ -178,7 +188,7 @@ function UpdateProfile() {
                         name="oldPassword"
                         id="oldPassword"
                         onChange={(e) => setOldPassword(e.target.value)}
-                        autoComplete="off"
+                        autoComplete="new-password"
                     />
                     <label htmlFor="newPassword1">Nouveau mot de passe</label>
                     <input

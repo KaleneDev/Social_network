@@ -35,10 +35,10 @@ export const uploadPicture = (data: any) => async (dispatch: Dispatch) => {
 };
 
 export const updateBio =
-    (userId: string, bio: string) => async (dispatch: Dispatch) => {
+    (userId: string, data: any) => async (dispatch: Dispatch) => {
         await axios
             .put(`${import.meta.env.VITE_APP_URL}users/id/${userId}`, {
-                bio,
+                data,
             })
             .then((res) => {
                 dispatch({ type: UPDATE_BIO, payload: res.data });
@@ -59,9 +59,7 @@ export const deleteUser = (userId: string) => async (dispatch: Dispatch) => {
         });
 };
 
-export const updateUser =
-    (userId: string, data: any) => async (dispatch: Dispatch) => {
-        
+export const updateUser = (userId: string, data: any) => async (dispatch: Dispatch) => {
         await axios
             .put(`${import.meta.env.VITE_APP_URL}users/id/${userId}`, {
                 data,

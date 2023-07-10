@@ -19,7 +19,7 @@
             height: 100px;
             width: 100px;
             position: relative;
-
+            cursor: pointer;
             &.is-drop {
                 img {
                     display: none;
@@ -133,13 +133,11 @@
                 margin-bottom: 1rem;
                 height: 100px;
                 resize: vertical;
-            
             }
             .bio-inactive {
                 border: 1px solid $primary-color;
                 border-radius: 4px;
                 opacity: 0.3;
-       
             }
             h3 {
                 text-align: center;
