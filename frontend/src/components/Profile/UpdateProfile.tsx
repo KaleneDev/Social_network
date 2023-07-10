@@ -32,15 +32,15 @@ function UpdateProfile() {
     const date = moment(dateStr).locale("fr");
     const dateFr = date.format("DD/MM/YYYY à HH:mm:ss");
 
-    const imageRefs = {
+    const data = {
         preview: preview,
         containerImage: containerImage,
+        profile: profile,
     };
 
     const handleDataChild = (data: any) => {
         setDataChild(data);
     };
-
     const handleUpdate = (e: any) => {
         e.preventDefault();
         console.log(upForm);
@@ -87,12 +87,6 @@ function UpdateProfile() {
             setUsernameDisplay(username);
         }
     };
-    const handleContainerImageClick = () => {
-        const refInputFile = dataChild.refInputFile.current;
-        if (refInputFile) {
-            refInputFile.click();
-        }
-    };
     useEffect(() => {
         setUsernameDisplay(profile.username);
     }, [dataChild, profile.username]);
@@ -101,26 +95,9 @@ function UpdateProfile() {
         <div className="profile">
             <div className="container-profile">
                 <h1 ref={usernameRef}>Profile de {usernameDisplay}</h1>
-                <div
-                    ref={containerImage}
-                    className={`container-image${
-                        dataChild.drop ? " is-drop" : ""
-                    }`}
-                    onClick={handleContainerImageClick}
-                >
-                    <div
-                        className={`preview${
-                            dataChild.highlight ? " is-highlight" : ""
-                        }`}
-                        ref={preview}
-                        style={{ backgroundImage: `url(${dataChild.preview})` }}
-                    ></div>
-
-                    <img src={profile.avatar} alt="" />
-                </div>
                 <UploadImage
                     propsChild={handleDataChild}
-                    propsParent={imageRefs}
+                    propsParent={data}
                 />
             </div>
             <div className="container-bio">

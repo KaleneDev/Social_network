@@ -102,19 +102,29 @@ function UploadImage(props: any) {
             console.log("There is a problem while uploading...");
         };
     }
-
+    const handleContainerImageClick = () => {
+        if (refInputFile.current) {
+            refInputFile.current.click();
+        }
+    };
     return (
         <div className="upload-picture-container">
-            <div
-                onDragEnter={(e) => handleEnter(e)}
-                onDragLeave={(e) => handleLeave(e)}
-                onDragOver={(e) => handleOver(e)}
-                onDrop={(e) => handleUploadOver(e)}
-                className={`upload${
-                    highlight ? " is-highlight" : drop ? " is-drop" : ""
-                }`}
-                style={{ backgroundImage: `url(${preview})` }}
-            ></div>
+          <div
+                  
+                    className={`container-image${
+                        drop ? " is-drop" : ""
+                    }`}
+                    onClick={handleContainerImageClick}
+                >
+                    <div
+                        className={`preview${
+                            highlight ? " is-highlight" : ""
+                        }`}
+                        style={{ backgroundImage: `url(${preview})` }}
+                    ></div>
+
+                    <img src={props.propsParent.profile.avatar} alt="" />
+                </div>
             <br />
             <form
                 action=""

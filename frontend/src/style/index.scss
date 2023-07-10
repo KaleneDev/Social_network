@@ -1,6 +1,20 @@
 @import "normalize.scss";
 @import "variables.scss";
 
-* {
-    font-family: 'Inter', sans-serif;
+:root {
+    // font-family: 'Inter', sans-serif;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
+
+@media (prefers-color-scheme: light) {
+    :root {
+      color: #101922;
+      background-color: #ffffff;
+    }
+    a:hover {
+      color: #747bff;
+    }
+    button {
+      background-color: #f9f9f9;
+    }
+  }
