@@ -10,9 +10,10 @@ import Navbar from "./components/Navbar";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
-import { getUser } from "./actions/user.action";
+import { getUser } from "./redux/user/user.action";
 
 import { Dispatch } from "redux";
+// import store from "./redux/store";
 function App() {
     const [uid, setUid] = useState(null);
     const location = useLocation();

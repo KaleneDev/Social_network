@@ -4,12 +4,14 @@ import UploadImage from "./UploadImage";
 import moment from "moment";
 import "moment/locale/fr";
 import { useDispatch } from "react-redux";
-import { updateBio } from "../../actions/user.action";
-import { updateUser } from "../../actions/user.action";
+import { updateBio } from "../../redux/user/user.action";
+import { updateUser } from "../../redux/user/user.action";
 import { Dispatch } from "redux";
+// import store from "../../redux/store";
 
 function UpdateProfile() {
     const profile = useSelector((state: any) => state.userReducer);
+
     const [dataChild, setDataChild] = useState<any>([]);
     const preview = useRef<any>(null);
     const containerImage = useRef<any>(null);
@@ -43,6 +45,7 @@ function UpdateProfile() {
     };
     const handleUpdate = (e: any) => {
         e.preventDefault();
+
         console.log(upForm);
 
         if (upForm === false) {
@@ -95,10 +98,7 @@ function UpdateProfile() {
         <div className="profile">
             <div className="container-profile">
                 <h1 ref={usernameRef}>Profile de {usernameDisplay}</h1>
-                <UploadImage
-                    propsChild={handleDataChild}
-                    propsParent={data}
-                />
+                <UploadImage propsChild={handleDataChild} propsParent={data} />
             </div>
             <div className="container-bio">
                 <div className="bio-update">

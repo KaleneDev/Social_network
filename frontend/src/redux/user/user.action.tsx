@@ -17,7 +17,6 @@ export const getUser = (uid: string) => async (dispatch: Dispatch) => {
             console.log(err);
         });
 };
-
 export const uploadPicture = (data: any) => async (dispatch: Dispatch) => {
     const headers = {
         "Content-Type": "multipart/form-data",
@@ -33,7 +32,6 @@ export const uploadPicture = (data: any) => async (dispatch: Dispatch) => {
             console.log(err);
         });
 };
-
 export const updateBio =
     (userId: string, data: any) => async (dispatch: Dispatch) => {
         await axios
@@ -47,7 +45,6 @@ export const updateBio =
                 console.log(err);
             });
     };
-
 export const deleteUser = (userId: string) => async (dispatch: Dispatch) => {
     await axios
         .delete(`${import.meta.env.VITE_APP_URL}users/id/${userId}`)
@@ -58,7 +55,6 @@ export const deleteUser = (userId: string) => async (dispatch: Dispatch) => {
             console.log(err);
         });
 };
-
 export const updateUser = (userId: string, data: any) => async (dispatch: Dispatch) => {
         await axios
             .put(`${import.meta.env.VITE_APP_URL}users/id/${userId}`, {

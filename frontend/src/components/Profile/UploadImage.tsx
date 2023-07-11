@@ -1,22 +1,25 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { Dispatch } from "redux";
 import { useSelector } from "react-redux";
-import { uploadPicture } from "../../actions/user.action";
+import { uploadPicture } from "../../redux/user/user.action";
+import store from "../../redux/store";
+// import { useDispatch } from "react-redux";
+// import { Dispatch } from "redux";
 
 function UploadImage(props: any) {
+    // const dispatch = useDispatch<Dispatch<any>>();
+
     const [file, setFile] = useState<any>(null);
-    const dispatch = useDispatch<Dispatch<any>>();
     const uid = useSelector((state: any) => state.userReducer);
-    const handlePicture = () => {
-        // e.preventDefault();
+    const handlePicture = (e: any) => {
+        e.preventDefault();
         if (file && uid.id && uid.username) {
             const data = new FormData();
             data.append("userId", uid.id);
             data.append("username", uid.username);
             data.append("file", file);
+            console.log(file);
 
-            dispatch(uploadPicture(data));
+            store.dispatch(uploadPicture(data));
         }
     };
     const [highlight, setHighlight] = useState(false);
@@ -68,7 +71,7 @@ function UploadImage(props: any) {
     const handleUpload = (e: any) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("drop!");
+        console.log("drop upload!");
         setHighlight(false);
         setDrop(true);
         const [file] = e.target.files || e.dataTransfer.files;
@@ -109,26 +112,25 @@ function UploadImage(props: any) {
     };
     return (
         <div className="upload-picture-container">
-          <div
-                  
-                    className={`container-image${
-                        drop ? " is-drop" : ""
-                    }`}
-                    onClick={handleContainerImageClick}
-                >
-                    <div
-                        className={`preview${
-                            highlight ? " is-highlight" : ""
-                        }`}
-                        style={{ backgroundImage: `url(${preview})` }}
-                    ></div>
+            <div
+                className={`container-image${drop ? " is-drop" : ""}`}
+                onClick={handleContainerImageClick}
+                onDrop={(e) => handleUpload(e)}
+                onDragEnter={(e) => handleEnter(e)}
+                onDragOver={(e) => handleOver(e)}
+                onDragLeave={(e) => handleLeave(e)}
+            >
+                <div
+                    className={`preview${highlight ? " is-highlight" : ""}`}
+                    style={{ backgroundImage: `url(${preview})` }}
+                ></div>
 
-                    <img src={props.propsParent.profile.avatar} alt="" />
-                </div>
+                <img src={props.propsParent.profile.avatar} alt="" />
+            </div>
             <br />
             <form
                 action=""
-                onSubmit={handlePicture}
+                onSubmit={(e) => handlePicture(e)}
                 className="upload-picture"
                 id="upload-form"
             >

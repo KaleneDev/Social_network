@@ -4,6 +4,10 @@ import { isEmpty } from "../components/Utils";
 
 function Home() {
     const articles = useSelector((state: any) => state.articlesReducer);
+    const users = useSelector((state: any) => state.usersReducer);
+
+    console.log(users);
+    
 
     return (
         <>
