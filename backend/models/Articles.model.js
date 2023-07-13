@@ -54,6 +54,6 @@ Articles.hasMany(Comments, {
     onDelete: "CASCADE",
 });
 
-Comments.belongsTo(Articles, { foreignKey: "article_id", as: "articles" });
+Comments.belongsTo(Articles, { foreignKey: "article_id", as: "article" });
 
 module.exports = Articles;

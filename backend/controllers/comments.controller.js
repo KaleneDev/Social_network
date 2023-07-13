@@ -13,11 +13,11 @@ exports.getAll = async (req, res) => {
             include: [
                 {
                     model: Users,
-                    as: "users",
+                    as: "user",
                 },
                 {
                     model: Articles,
-                    as: "articles",
+                    as: "article",
                 },
             ],
         });

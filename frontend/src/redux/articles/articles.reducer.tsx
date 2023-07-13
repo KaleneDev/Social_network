@@ -2,6 +2,9 @@ import {
     LOAD_ARTICLES,
     LOAD_ARTICLES_SUCCESS,
     LOAD_ARTICLES_ERROR,
+    POST_ARTICLES_SUCCESS,
+    POST_ARTICLES_ERROR,
+
 } from "./articles.type";
 
 const initialStateArticles = {
@@ -34,6 +37,20 @@ export default function articlesReducer(
                 articles: [],
                 error: action.payload,
             };
+        case POST_ARTICLES_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                articles: [...state.articles, action.payload],
+                error: "",
+            };
+        case POST_ARTICLES_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload,
+            };
+
 
         default:
             return state;

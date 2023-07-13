@@ -78,8 +78,8 @@ Users.hasMany(Follows, {
 Follows.belongsTo(Users, { foreignKey: "follower_id", as: "follower" });
 Follows.belongsTo(Users, { foreignKey: "following_id", as: "following" });
 
-Articles.belongsTo(Users, { foreignKey: "user_id", as: "users" });
-Comments.belongsTo(Users, { foreignKey: "user_id", as: "users" });
+Articles.belongsTo(Users, { foreignKey: "user_id", as: "user" });
+Comments.belongsTo(Users, { foreignKey: "user_id", as: "user" });
 
 Users.hasMany(Likes, {
     foreignKey: "user_id",

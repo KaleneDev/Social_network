@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Dispatch } from "redux";
 import { updateUser } from "../../redux/user/user.action";
 import Success from "../Infos/success";
-import "./Profile.upgrade.scss";
+import "./Profile.update.scss";
 
 function ContainerProfileUp() {
     const profile = useSelector((state: any) => state.userReducer.user);
@@ -99,9 +99,9 @@ function ContainerProfileUp() {
     ]);
     return (
         <div className="container-profile-Up">
-            <h3>Modifier votre profile</h3>
+            <h3>Modifier votre profil</h3>
             <form action="">
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username">Nom d'utilisateur</label>
                 <input
                     type="text"
                     name="username"

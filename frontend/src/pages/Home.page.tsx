@@ -1,12 +1,14 @@
 import "../style/pages/Home/home.scss";
-import Articles from "../components/Articles/Articles";
+import GET_Articles from "../components/Articles/GET_Articles";
+import ADD_Articles from "../components/Articles/POST_Articles";
 
 function Home() {
     return (
         <>
             <div className="home">
                 <div className="container-home">
-                    <Articles />
+                    <ADD_Articles />
+                    <GET_Articles />
                 </div>
             </div>
         </>

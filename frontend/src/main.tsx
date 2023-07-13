@@ -6,7 +6,7 @@ import "./style/main.scss";
 import { BrowserRouter } from "react-router-dom";
 // REDUX
 import { Provider } from "react-redux";
-import { getArticles } from "./redux/articles/article.action";
+import { getArticles } from "./redux/articles/articles.action";
 import { getUsers } from "./redux/users/users.action";
 import store from "./redux/store";
 

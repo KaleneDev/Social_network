@@ -7,6 +7,7 @@ import {
     DELETE_USER,
     UPDATE_USER_SUCCESS,
     UPDATE_USER_ERROR,
+
 } from "./user.type";
 const initialState = {
     isLoading: false,
@@ -61,6 +62,7 @@ export default function userReducer(state = initialState, action: any) {
             return {
                 ...state,
             };
+
 
         default:
             return state;
