@@ -4,7 +4,7 @@ import {
     LOAD_ARTICLES_ERROR,
     POST_ARTICLES_SUCCESS,
     POST_ARTICLES_ERROR,
-
+    ADD_ARTICLE,
 } from "./articles.type";
 
 const initialStateArticles = {
@@ -51,6 +51,13 @@ export default function articlesReducer(
                 error: action.payload,
             };
 
+        case ADD_ARTICLE:
+            return {
+                ...state,
+                isLoading: false,
+                articles: [action.payload, ...state.articles], // Ajouter le nouvel article en tête de liste
+                error: "",
+            };
 
         default:
             return state;

@@ -5,6 +5,7 @@ import {
     LOAD_ARTICLES_ERROR,
     POST_ARTICLES_SUCCESS,
     POST_ARTICLES_ERROR,
+
 } from "./articles.type";
 
 const loadComments = () => {
@@ -38,6 +39,7 @@ const postCommentsError = (error: any) => {
         payload: error,
     };
 };
+
 export const getArticles = () => {
     return (dispatch: any) => {
         dispatch(loadComments());
@@ -78,7 +80,6 @@ export const postArticles = (data: any) => async (dispatch: any) => {
         .post(`${import.meta.env.VITE_APP_URL}articles`, data, { headers })
         .then((res) => {
             dispatch(postCommentsSuccess(res.data));
-            dispatch(getArticles());
         })
         .catch((err) => {
             dispatch(postCommentsError(err.message));

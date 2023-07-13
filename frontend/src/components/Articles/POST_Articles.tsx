@@ -1,16 +1,22 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "redux";
-import { postArticles } from "../../redux/articles/articles.action";
+import {
+    postArticles,
+    getArticles,
+} from "../../redux/articles/articles.action";
+
 import "../../style/pages/Home/ADD_Articles.home.scss";
 
 function POST_Articles() {
     const profile = useSelector((state: any) => state.userReducer.user);
     const dispatch = useDispatch<Dispatch<any>>();
-    const [title, setTitle] = useState<string>("");
-    const [content, setContent] = useState<string>("");
+    const articlesData = useSelector((state: any) => state.articlesReducer);
 
-    const handlePostArticles = (e: any) => {
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+
+    const handlePostArticles = async (e: any) => {
         e.preventDefault();
         const data = {
             title: title,
@@ -18,8 +24,30 @@ function POST_Articles() {
             user_id: profile.id,
         };
 
-        dispatch(postArticles(data));
+        try {
+            dispatch(postArticles(data));
+            const currentDate = new Date().toLocaleDateString();
+            const newArticle = {
+                title,
+                content,
+                user: profile,
+                createdAt: currentDate,
+            };
+            const updatedArticles = [newArticle, ...articlesData.articles];
+            dispatch({
+                type: "LOAD_ARTICLES_SUCCESS",
+                payload: updatedArticles,
+            });
+            setTitle("");
+            setContent("");
+        } catch (error) {
+            // Gérer les erreurs si nécessaire
+        }
     };
+
+    useEffect(() => {
+        dispatch(getArticles());
+    }, []);
 
     return (
         <div className="post-articles-container">
@@ -32,6 +60,7 @@ function POST_Articles() {
                 <input
                     type="text"
                     placeholder="Titre"
+                    value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <textarea
@@ -40,6 +69,7 @@ function POST_Articles() {
                     cols={30}
                     rows={10}
                     placeholder="Contenu"
+                    value={content}
                     onChange={(e) => setContent(e.target.value)}
                 ></textarea>
                 <button type="submit">Poster</button>
