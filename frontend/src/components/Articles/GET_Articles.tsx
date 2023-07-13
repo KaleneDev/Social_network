@@ -1,20 +1,15 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getArticles } from "../../redux/articles/articles.action";
 import "../../style/pages/Home/GET_Articles.home.scss";
-
+import { Dispatch } from "redux";
 function Articles() {
     const articlesData = useSelector((state: any) => state.articlesReducer);
-
-    const [articles, setArticles] = useState([]);
+    const dispatch = useDispatch<Dispatch<any>>();
 
     useEffect(() => {
-        const updatedArticles = articlesData.articles.map((article: any) => {
-    console.log(article);
-    
-        });
-
-        setArticles(updatedArticles);
-    }, [articlesData.articles]);
+        dispatch(getArticles());
+    }, [dispatch]);
 
     const displayData = articlesData.isLoading ? (
         <p>Loading ...</p>
@@ -24,18 +19,16 @@ function Articles() {
         articlesData.articles.map((article: any) => (
             <div key={article.id} className="article">
                 <h3>{article.title}</h3>
-                <p>Content : {article.content}</p>
-                {article.user && (
-                    <p key={article.id}>Author: {article.user.username}</p>
-                )}
-                <p>Date de publication : {article.createdAt}</p>
+                <p>Content: {article.content}</p>
+                {article.user && <p>Author: {article.user.username}</p>}
+                <p>Date de publication: {article.createdAt}</p>
             </div>
         ))
     );
 
     return (
         <div className="articles-container">
-            <h1>Liste des Postes</h1>
+            <h1>Liste des Articles</h1>
             {displayData}
         </div>
     );

@@ -4,9 +4,8 @@ import { Dispatch } from "redux";
 import { postArticles } from "../../redux/articles/articles.action";
 import "../../style/pages/Home/ADD_Articles.home.scss";
 
-function ADD_Articles() {
+function POST_Articles() {
     const profile = useSelector((state: any) => state.userReducer.user);
-
     const dispatch = useDispatch<Dispatch<any>>();
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
@@ -21,11 +20,6 @@ function ADD_Articles() {
 
         dispatch(postArticles(data));
     };
-
-    useEffect(() => {
-        console.log(title);
-        console.log(content);
-    }, [title, content]);
 
     return (
         <div className="post-articles-container">
@@ -54,4 +48,4 @@ function ADD_Articles() {
     );
 }
 
-export default ADD_Articles;
+export default POST_Articles;

@@ -26,10 +26,10 @@ const loadCommentsError = (error: any) => {
         payload: error,
     };
 };
-const postCommentsSuccess = (post: any, user: any) => {
+const postCommentsSuccess = (article: any) => {
     return {
         type: POST_ARTICLES_SUCCESS,
-        payload: { articles: post, user: user },
+        payload: article,
     };
 };
 const postCommentsError = (error: any) => {
@@ -44,7 +44,11 @@ export const getArticles = () => {
         axios
             .get(`${import.meta.env.VITE_APP_URL}articles`)
             .then((res) => {
-                dispatch(loadCommentsSuccess(res.data));
+                const sortedArticles = res.data.sort((a: any, b: any) =>
+                    a.createdAt > b.createdAt ? -1 : 1
+                );
+
+                dispatch(loadCommentsSuccess(sortedArticles));
             })
             .catch((err) => {
                 dispatch(loadCommentsError(err.message));
@@ -66,14 +70,15 @@ export const getArticlesByUserId = (uid: string) => {
     };
 };
 
-export const postArticles = (data: any, user: any) => async (dispatch: any) => {
+export const postArticles = (data: any) => async (dispatch: any) => {
     const headers = {
         "Content-Type": "multipart/form-data",
     };
     await axios
         .post(`${import.meta.env.VITE_APP_URL}articles`, data, { headers })
         .then((res) => {
-            dispatch(postCommentsSuccess(res.data, user));
+            dispatch(postCommentsSuccess(res.data));
+            dispatch(getArticles());
         })
         .catch((err) => {
             dispatch(postCommentsError(err.message));
