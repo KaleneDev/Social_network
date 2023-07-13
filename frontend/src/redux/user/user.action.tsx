@@ -1,20 +1,56 @@
 import axios from "axios";
 import { Dispatch } from "redux";
+import {
+    GET_USER,
+    GET_USER_SUCCESS,
+    GET_USER_ERROR,
+    UPLOAD_PICTURE,
+    UPDATE_BIO,
+    DELETE_USER,
+    UPDATE_USER_SUCCESS,
+    UPDATE_USER_ERROR,
+} from "./user.type";
 
-export const GET_USER = "GET_USER";
-export const UPLOAD_PICTURE = "UPLOAD_PICTURE";
-export const UPDATE_BIO = "UPDATE_BIO";
-export const DELETE_USER = "DELETE_USER";
-export const UPDATE_USER = "UPDATE_USER";
+const loadUser = () => {
+    return {
+        type: GET_USER,
+        payload: "unknown user",
+    };
+};
+const loadUserSuccess = (user: any) => {
+    return {
+        type: GET_USER_SUCCESS,
+        payload: user,
+    };
+};
+const loadUserError = (error: any) => {
+    return {
+        type: GET_USER_ERROR,
+        payload: error,
+    };
+};
+const updateUserSuccess = (user: any) => {
+    return {
+        type: UPDATE_USER_SUCCESS,
+        payload: user,
+    };
+};
+const updateUserError = (error: any) => {
+    return {
+        type: UPDATE_USER_ERROR,
+        payload: error,
+    };
+};
 
 export const getUser = (uid: string) => async (dispatch: Dispatch) => {
+    dispatch(loadUser());
     await axios
         .get(`${import.meta.env.VITE_APP_URL}users/id/${uid}`)
         .then((res) => {
-            dispatch({ type: GET_USER, payload: res.data });
+            dispatch(loadUserSuccess(res.data));
         })
         .catch((err) => {
-            console.log(err);
+            dispatch(loadUserError(err.message));
         });
 };
 export const uploadPicture = (data: any) => async (dispatch: Dispatch) => {
@@ -55,15 +91,16 @@ export const deleteUser = (userId: string) => async (dispatch: Dispatch) => {
             console.log(err);
         });
 };
-export const updateUser = (userId: string, data: any) => async (dispatch: Dispatch) => {
+export const updateUser =
+    (userId: string, data: any) => async (dispatch: Dispatch) => {
         await axios
             .put(`${import.meta.env.VITE_APP_URL}users/id/${userId}`, {
                 data,
             })
             .then((res) => {
-                dispatch({ type: UPDATE_USER, payload: res.data });
+                dispatch(updateUserSuccess(res.data));
             })
             .catch((err) => {
-                console.log(err);
+                dispatch(updateUserError(err.response.data));
             });
     };

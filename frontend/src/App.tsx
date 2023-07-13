@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Routes from "./components/routes";
 import { UserIdContext } from "./components/AppContext";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 

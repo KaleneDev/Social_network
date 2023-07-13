@@ -78,7 +78,8 @@ exports.getOne = async (req, res) => {
 };
 exports.update = async (req, res) => {
     try {
-        const { username, email, password, newPassword1, newPassword2 } = req.body.data;
+        const { username, email, password, newPassword1, newPassword2 } =
+            req.body.data;
         console.log(req.body);
         const errors = {};
         if (username) {
@@ -100,7 +101,6 @@ exports.update = async (req, res) => {
                 errors.email = "Un utilisateur avec cet e-mail existe déjà.";
             }
         }
-  
 
         // si ancien mot de passe correspond
         const userPass = await Users.findByPk(req.params.id);
@@ -121,29 +121,34 @@ exports.update = async (req, res) => {
             }
         }
         // si les nouveau mot de passe "NewPassword1" et "NewPassword2" correspondent
-        if (newPassword1 && newPassword2) {
-            if (newPassword1 !== newPassword2) {
-                errors.newPassword = "Les mots de passe ne correspondent pas.";
-            }
-        } else if (
+        if (
             (!newPassword1 && newPassword2) ||
             (newPassword1 && !newPassword2)
         ) {
             errors.newPassword = "Veuillez remplir tous les champs.";
         }
+
+        if (
+            (!req.body.data.oldPassword && newPassword1 !== undefined) ||
+            (!req.body.data.oldPassword && newPassword2 !== undefined)
+        ) {
+            errors.oldPassword = "Veuillez donner votre mot de passe actuel";
+        } else if (newPassword1 && newPassword2) {
+            if (newPassword1 !== newPassword2) {
+                errors.newPassword = "Les mots de passe ne correspondent pas.";
+            }
+        }
+
         if (Object.keys(errors).length > 0) {
             return res.status(400).json({ errors });
         }
         // si le mot de passe est modifié
         if (newPassword1) {
             const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(
-                newPassword1,
-                salt
-            );
+            const hashedPassword = await bcrypt.hash(newPassword1, salt);
             req.body.data.password = hashedPassword;
         }
-        const {...updatedData } = req.body.data;
+        const { ...updatedData } = req.body.data;
         const user = await Users.update(updatedData, {
             where: { id: req.params.id },
         });

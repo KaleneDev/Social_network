@@ -1,0 +1,14 @@
+@import "../variables.scss";
+
+@mixin buttonPrimary($color) {
+    background-color: $color;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $primary-color-dark;
+    }
+}

@@ -1,0 +1,8 @@
+@import "../../main.scss";
+
+.container-delete {
+    color: $danger-color;
+    button {
+        @include buttonPrimary($primary-color);
+    }
+}

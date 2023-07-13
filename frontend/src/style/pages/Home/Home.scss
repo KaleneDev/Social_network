@@ -1,0 +1,7 @@
+@import "../../variables.scss";
+.home {
+    background-color: $secondary-color;
+    min-height: calc(100vh - 60px - 2rem);
+    padding: 1rem;
+
+}

@@ -1,5 +1,5 @@
 // import { useEffect } from "react";
-import "../style/components/Header.scss";
+import "../../style/components/Header.scss";
 import { NavLink } from "react-router-dom";
 
 function Header() {

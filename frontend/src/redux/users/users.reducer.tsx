@@ -1,4 +1,5 @@
-import { GET_USERS } from "./users.action";
+import { GET_USERS } from "./users.type";
+
 const initialState = {};
 
 export default function userReducer(state = initialState, action: any) {

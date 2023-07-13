@@ -1,10 +1,40 @@
-import { GET_ARTICLES } from "./article.action";
-const initialState = {};
+import {
+    LOAD_ARTICLES,
+    LOAD_ARTICLES_SUCCESS,
+    LOAD_ARTICLES_ERROR,
+} from "./articles.type";
 
-export default function articlesReducer(state = initialState, action: any) {
+const initialStateArticles = {
+    isLoading: false,
+    articles: [],
+    error: "",
+};
+
+export default function articlesReducer(
+    state = initialStateArticles,
+    action: any
+) {
     switch (action.type) {
-        case GET_ARTICLES:
-            return action.payload;
+        case LOAD_ARTICLES:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case LOAD_ARTICLES_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                articles: action.payload,
+                error: "",
+            };
+        case LOAD_ARTICLES_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                articles: [],
+                error: action.payload,
+            };
+
         default:
             return state;
     }

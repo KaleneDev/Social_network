@@ -1,16 +1,39 @@
 import axios from "axios";
+import {
+    LOAD_ARTICLES,
+    LOAD_ARTICLES_SUCCESS,
+    LOAD_ARTICLES_ERROR,
+} from "./articles.type";
 
-export const GET_ARTICLES = "GET_ARTICLES";
+const loadComments = () => {
+    return {
+        type: LOAD_ARTICLES,
+    };
+};
 
+const loadCommentsSuccess = (comments: any) => {
+    return {
+        type: LOAD_ARTICLES_SUCCESS,
+        payload: comments,
+    };
+};
+
+const loadCommentsError = (error: any) => {
+    return {
+        type: LOAD_ARTICLES_ERROR,
+        payload: error,
+    };
+};
 export const getArticles = () => {
     return (dispatch: any) => {
+        dispatch(loadComments())
         axios
             .get(`${import.meta.env.VITE_APP_URL}articles`)
             .then((res) => {
-                dispatch({ type: GET_ARTICLES, payload: res.data })
+                dispatch(loadCommentsSuccess(res.data));
             })
             .catch((err) => {
-                console.log(err);
+                dispatch(loadCommentsError(err.message));
             });
     };
 };

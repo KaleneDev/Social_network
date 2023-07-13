@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
-import { UserIdContext } from "./AppContext";
-import Logout from "./Log/Logout";
-import SearchBar from "./Log/SearchBar";
-import "../style/components/Navbar.scss";
+import { UserIdContext } from "../AppContext";
+import Logout from "../Log/Logout";
+import SearchBar from "../Log/SearchBar";
+import "../../style/components/Navbar.scss";
 function Navbar() {
     const uid = useContext(UserIdContext);
 

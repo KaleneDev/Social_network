@@ -1,0 +1,17 @@
+@import "../../variables.scss";
+
+.container-home {
+    .articles-container {
+        .article {
+            display: flex;
+            flex-direction: column;
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: $white;
+            border-radius: 10px;
+        }
+    }
+}
+h1 {
+    margin-top: 0;
+}
