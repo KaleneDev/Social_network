@@ -91,7 +91,7 @@ exports.create = async (req, res) => {
                 if (index === 0) {
                     newArticle.file = "";
                 }
-                newArticle.file += files[index].filename;
+                newArticle.file +=  path.join("public/upload/articles/" +files[index].filename);
                 if (index < files.length - 1) {
                     newArticle.file += " + ";
                 }
@@ -182,16 +182,20 @@ exports.delete = async (req, res) => {
     // DELETE an article
     try {
         const article = await Articles.findByPk(req.params.id);
-        const elements = article.file.split(" + ");
-        for (let index = 0; index < elements.length; index++) {
-            const element = elements[index];
-            fs.unlink(
-                `${dirname}\\frontend\\public\\upload\\articles\\${element}`,
-                () => {
-                    return;
-                }
-            );
+        if (article.file) {
+            const elements = article.file.split(" + ");
+            for (let index = 0; index < elements.length; index++) {
+                const element = elements[index];
+                console.log(`/${element}/`);
+                fs.unlink(
+                    `${dirname}\\frontend\\${element}`,
+                    () => {
+                        return;
+                    }
+                );
+            }
         }
+
         if (!article) {
             return res.status(400).json({
                 message: "Cet article n'existe pas.",

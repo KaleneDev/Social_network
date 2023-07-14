@@ -4,26 +4,18 @@ const usersCtrl = require("../controllers/users.controller");
 const authCtrl = require("../controllers/auth.controller");
 const uploadCtrl = require("../controllers/upload.controller");
 const { uploadUser } = require("../middleware/multer.middleware");
-const cors = require("cors");
-const corsOptions = {
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-    allowedHeaders: ["sessionId", "Content-Type"],
-    exposedHeaders: ["sessionId"],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue: false,
-};
+const { auth } = require("../middleware/auth.middleware");
 
 router.get("/", usersCtrl.getAll);
 router.get("/id/:id", usersCtrl.getOne);
-router.put("/id/:id",usersCtrl.update);
-router.delete("/id/:id", usersCtrl.delete);
+router.put("/id/:id", auth, usersCtrl.update);
+router.delete("/id/:id", auth, usersCtrl.delete);
 
 router.post("/register", authCtrl.signUp);
 router.post("/login", authCtrl.signIn);
 router.get("/logout", authCtrl.signOut);
 
-router.post("/upload", uploadUser, uploadCtrl.uploadUser);
+router.post("/upload", auth, uploadUser, uploadCtrl.uploadUser);
 
 router.patch("/follow/:id", usersCtrl.follow);
 router.patch("/unfollow/:id", usersCtrl.unfollow);

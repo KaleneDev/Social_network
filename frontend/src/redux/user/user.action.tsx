@@ -45,7 +45,9 @@ const updateUserError = (error: any) => {
 export const getUser = (uid: string) => async (dispatch: Dispatch) => {
     dispatch(loadUser());
     await axios
-        .get(`${import.meta.env.VITE_APP_URL}users/id/${uid}`)
+        .get(`${import.meta.env.VITE_APP_URL}users/id/${uid}`, {
+            withCredentials: true,
+        })
         .then((res) => {
             dispatch(loadUserSuccess(res.data));
         })
@@ -60,6 +62,7 @@ export const uploadPicture = (data: any) => async (dispatch: Dispatch) => {
     await axios
         .post(`${import.meta.env.VITE_APP_URL}users/upload`, data, {
             headers,
+            withCredentials: true,
         })
         .then((res) => {
             dispatch({ type: UPLOAD_PICTURE, payload: res.data });
@@ -71,9 +74,11 @@ export const uploadPicture = (data: any) => async (dispatch: Dispatch) => {
 export const updateBio =
     (userId: string, data: any) => async (dispatch: Dispatch) => {
         await axios
-            .put(`${import.meta.env.VITE_APP_URL}users/id/${userId}`, {
-                data,
-            })
+            .put(
+                `${import.meta.env.VITE_APP_URL}users/id/${userId}`,
+                { data },
+                { withCredentials: true }
+            )
             .then((res) => {
                 dispatch({ type: UPDATE_BIO, payload: res.data });
             })
@@ -94,9 +99,13 @@ export const deleteUser = (userId: string) => async (dispatch: Dispatch) => {
 export const updateUser =
     (userId: string, data: any) => async (dispatch: Dispatch) => {
         await axios
-            .put(`${import.meta.env.VITE_APP_URL}users/id/${userId}`, {
-                data,
-            })
+            .put(
+                `${import.meta.env.VITE_APP_URL}users/id/${userId}`,
+                {
+                    data,
+                },
+                { withCredentials: true }
+            )
             .then((res) => {
                 dispatch(updateUserSuccess(res.data));
             })

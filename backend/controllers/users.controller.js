@@ -80,7 +80,6 @@ exports.update = async (req, res) => {
     try {
         const { username, email, password, newPassword1, newPassword2 } =
             req.body.data;
-        console.log(req.body);
         const errors = {};
         if (username) {
             // si le nom d'utilisateur existe déjà
@@ -166,10 +165,10 @@ exports.delete = async (req, res) => {
         const elements = userAvatar.avatar.split(" + ");
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index];
-            console.log(element);
             if (element !== "default.png" && elements) {
+                console.log(dirname);
                 fs.unlink(
-                    `${dirname}\\frontend\\public\\upload\\users\\${element}`,
+                    `${dirname}\\frontend\\${element}`,
                     () => {
                         return;
                     }
@@ -177,7 +176,7 @@ exports.delete = async (req, res) => {
             }
         }
         const user = await Users.destroy({ where: { id: req.params.id } });
-        res.status(200).json(user);
+        res.status(200).json("user");
     } catch (err) {
         console.error(err);
         res.status(500).json({
@@ -198,7 +197,6 @@ exports.upload = async (req, res) => {
         function deleteFile() {
             for (let index = 0; index < files.length; index++) {
                 const element = files[index].path;
-                console.log(element);
                 fs.unlink(element, () => {
                     return;
                 });
@@ -234,6 +232,7 @@ exports.upload = async (req, res) => {
                     newUser.avatar = "";
                 }
                 newUser.avatar += files[index].filename;
+                console.log(files[index].filename, "filename");
                 if (index < files.length - 1) {
                     newUser.avatar += " + ";
                 }
@@ -280,7 +279,6 @@ exports.follow = async (req, res) => {
 exports.unfollow = async (req, res) => {
     try {
         const { user_id } = req.body;
-        console.log(user_id);
         const relation = await Follow.findOne({
             where: {
                 following_id: req.params.id,

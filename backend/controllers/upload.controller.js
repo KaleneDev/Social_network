@@ -59,7 +59,6 @@ exports.uploadUser = async (req, res) => {
         });
     }
 };
-// uploadArticle avec le id utilisateur et le id article, sans le titre qui doivent correspondre
 exports.uploadArticle = async (req, res) => {
     try {
         const { user_id, articles_id } = req.body;

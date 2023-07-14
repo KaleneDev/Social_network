@@ -5,83 +5,116 @@ import {
     LOAD_ARTICLES_ERROR,
     POST_ARTICLES_SUCCESS,
     POST_ARTICLES_ERROR,
-
+    DELETE_ARTICLE_SUCCESS,
+    DELETE_ARTICLE_ERROR,
 } from "./articles.type";
 
-const loadComments = () => {
+const loadArticles = () => {
     return {
         type: LOAD_ARTICLES,
     };
 };
 
-const loadCommentsSuccess = (comments: any) => {
+const loadArticlesSuccess = (comments: any) => {
     return {
         type: LOAD_ARTICLES_SUCCESS,
         payload: comments,
     };
 };
 
-const loadCommentsError = (error: any) => {
+const loadArticlesError = (error: any) => {
     return {
         type: LOAD_ARTICLES_ERROR,
         payload: error,
     };
 };
-const postCommentsSuccess = (article: any) => {
+const postArticlesSuccess = (article: any) => {
     return {
         type: POST_ARTICLES_SUCCESS,
         payload: article,
     };
 };
-const postCommentsError = (error: any) => {
+const postArticlesError = (error: any) => {
     return {
         type: POST_ARTICLES_ERROR,
+        payload: error,
+    };
+};
+const deleteArticleSuccess = (id: string) => {
+    return {
+        type: DELETE_ARTICLE_SUCCESS,
+        payload: id,
+    };
+};
+const deleteArticleError = (error: any) => {
+    return {
+        type: DELETE_ARTICLE_ERROR,
         payload: error,
     };
 };
 
 export const getArticles = () => {
     return (dispatch: any) => {
-        dispatch(loadComments());
+        dispatch(loadArticles());
         axios
-            .get(`${import.meta.env.VITE_APP_URL}articles`)
+            .get(`${import.meta.env.VITE_APP_URL}articles`, {
+                withCredentials: true,
+            })
             .then((res) => {
                 const sortedArticles = res.data.sort((a: any, b: any) =>
                     a.createdAt > b.createdAt ? -1 : 1
                 );
 
-                dispatch(loadCommentsSuccess(sortedArticles));
+                dispatch(loadArticlesSuccess(sortedArticles));
             })
             .catch((err) => {
-                dispatch(loadCommentsError(err.message));
+                dispatch(loadArticlesError(err.message));
             });
     };
 };
-
 export const getArticlesByUserId = (uid: string) => {
     return (dispatch: any) => {
-        dispatch(loadComments());
+        dispatch(loadArticles());
         axios
-            .get(`${import.meta.env.VITE_APP_URL}articles/users/${uid}`)
+            .get(`${import.meta.env.VITE_APP_URL}articles/users/${uid}`, {
+                withCredentials: true,
+            })
             .then((res) => {
-                dispatch(loadCommentsSuccess(res.data));
+                dispatch(postArticlesSuccess(res.data));
             })
             .catch((err) => {
-                dispatch(loadCommentsError(err.message));
+                dispatch(postArticlesError(err.message));
             });
     };
 };
-
 export const postArticles = (data: any) => async (dispatch: any) => {
     const headers = {
         "Content-Type": "multipart/form-data",
     };
     await axios
-        .post(`${import.meta.env.VITE_APP_URL}articles`, data, { headers })
+        .post(`${import.meta.env.VITE_APP_URL}articles`, data, {
+            headers,
+            withCredentials: true,
+        })
         .then((res) => {
-            dispatch(postCommentsSuccess(res.data));
+            dispatch(postArticlesSuccess(res.data));
         })
         .catch((err) => {
-            dispatch(postCommentsError(err.message));
+            dispatch(postArticlesError(err.message));
         });
+};
+export const deleteArticles = (id: string) => {
+    return (dispatch: any) => {
+        axios
+            .delete(`${import.meta.env.VITE_APP_URL}articles/id/${id}`, {
+                withCredentials: true,
+            })
+            .then(() => {
+                dispatch(deleteArticleSuccess(id));
+            })
+            .catch((err) => {
+                dispatch(deleteArticleError(err.message));
+                console.log(err);
+            });
+    };
 };

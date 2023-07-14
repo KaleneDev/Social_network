@@ -1,0 +1,24 @@
+@import "../../main.scss";
+.post-articles-container {
+    display: flex;
+    flex-direction: column;
+    .post-articles-form {
+        display: flex;
+        flex-direction: column;
+        input {
+            @include inputPrimary($primary-color);
+            margin-bottom: 1rem;
+            
+        }
+        textarea {
+            @include inputPrimary($primary-color);
+          
+            resize: none;
+        }
+        button {
+            margin: 1rem 0;
+            @include buttonPrimary($primary-color);
+          
+        }
+    }
+}

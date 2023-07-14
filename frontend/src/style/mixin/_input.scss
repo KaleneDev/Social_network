@@ -1,0 +1,9 @@
+@import "../variables.scss";
+
+@mixin inputPrimary($color) {
+    padding: 0.5rem;
+    border: 1px solid $color;
+    border-radius: 4px;
+    outline: none;
+
+}

@@ -8,9 +8,9 @@ const { auth } = require("../middleware/auth.middleware");
 
 router.get("/", articlesCtrl.getAll);
 router.get("/id/:id", articlesCtrl.getOne);
-router.post("/", uploadFile, articlesCtrl.create);
-router.put("/id/:id",uploadFile, articlesCtrl.update);
-router.delete("/id/:id", articlesCtrl.delete);
+router.post("/", auth, uploadFile, articlesCtrl.create);
+router.put("/id/:id", auth, uploadFile, articlesCtrl.update);
+router.delete("/id/:id", auth, articlesCtrl.delete);
 
 router.post("/upload", uploadFile, uploadCtrl.uploadArticle);
 // router.post("/like/:id", auth, articlesCtrl.likeArticle);

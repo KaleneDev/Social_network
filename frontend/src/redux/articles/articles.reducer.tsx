@@ -4,12 +4,14 @@ import {
     LOAD_ARTICLES_ERROR,
     POST_ARTICLES_SUCCESS,
     POST_ARTICLES_ERROR,
-    ADD_ARTICLE,
+    DELETE_ARTICLE_SUCCESS,
+    DELETE_ARTICLE_ERROR,
 } from "./articles.type";
 
 const initialStateArticles = {
     isLoading: false,
     articles: [],
+    article: {},
     error: "",
 };
 
@@ -42,6 +44,7 @@ export default function articlesReducer(
                 ...state,
                 isLoading: false,
                 articles: [...state.articles, action.payload],
+                article: action.payload,
                 error: "",
             };
         case POST_ARTICLES_ERROR:
@@ -51,12 +54,20 @@ export default function articlesReducer(
                 error: action.payload,
             };
 
-        case ADD_ARTICLE:
+        case DELETE_ARTICLE_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
-                articles: [action.payload, ...state.articles], // Ajouter le nouvel article en tête de liste
+                articles: state.articles.filter(
+                    (article: any) => article.id !== action.payload
+                ),
                 error: "",
+            };
+        case DELETE_ARTICLE_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload,
             };
 
         default:

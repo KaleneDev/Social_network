@@ -1,4 +1,4 @@
-import "../../style/pages/Profile/ContainerDelete.scss";
+import "../../style/pages/Profile/Profile.Delete.scss";
 function ContainerDelete() {
     return (
         <div className="container-delete">

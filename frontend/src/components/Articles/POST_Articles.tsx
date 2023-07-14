@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "redux";
 import {
     postArticles,
-    getArticles,
 } from "../../redux/articles/articles.action";
 
-import "../../style/pages/Home/ADD_Articles.home.scss";
+import "../../style/pages/Home/POST_Articles.home.scss";
 
 function POST_Articles() {
     const profile = useSelector((state: any) => state.userReducer.user);
@@ -15,9 +14,15 @@ function POST_Articles() {
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-
+    const articlesDataRef = useRef(articlesData);
+    useEffect(() => {
+        articlesDataRef.current = articlesData; 
+      }, [articlesData]);
+    
     const handlePostArticles = async (e: any) => {
         e.preventDefault();
+        console.log(articlesDataRef.current.article.id);
+        
         const data = {
             title: title,
             content: content,
@@ -25,13 +30,13 @@ function POST_Articles() {
         };
 
         try {
-            dispatch(postArticles(data));
-            const currentDate = new Date().toLocaleDateString();
+            await dispatch(postArticles(data));
             const newArticle = {
                 title,
                 content,
                 user: profile,
-                createdAt: currentDate,
+                createdAt: articlesDataRef.current.article.createdAt,
+                id: articlesDataRef.current.article?.id,
             };
             const updatedArticles = [newArticle, ...articlesData.articles];
             dispatch({
@@ -41,14 +46,11 @@ function POST_Articles() {
             setTitle("");
             setContent("");
         } catch (error) {
+            console.log(error);
+
             // Gérer les erreurs si nécessaire
         }
     };
-
-    useEffect(() => {
-        dispatch(getArticles());
-    }, []);
-
     return (
         <div className="post-articles-container">
             <h1>Poster un article</h1>

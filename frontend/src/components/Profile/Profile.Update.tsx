@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Dispatch } from "redux";
 import { updateUser } from "../../redux/user/user.action";
 import Success from "../Infos/success";
-import "./Profile.update.scss";
+import "../../style/pages/Profile/Profile.Update.scss";
 
 function ContainerProfileUp() {
     const profile = useSelector((state: any) => state.userReducer.user);
@@ -27,10 +27,15 @@ function ContainerProfileUp() {
     const [oldPasswordError, setOldPasswordError] = useState<boolean>(false);
     const [newPasswordError, setNewPasswordError] = useState<boolean>(false);
     // SUCCESS
-    const [successUpdate, setSuccessUpdate] = useState<boolean>(false);
-    const [updateSuccess, setUpdateSuccess] = useState<boolean>(false);
+    const successRef = useRef(success);
+    const errorRef = useRef(error);
 
-    const handleProfile = (e: any) => {
+    useEffect(() => {
+        successRef.current = success;
+        errorRef.current = error;
+    }, [success, error]);
+
+    const handleProfile = async (e: any) => {
         e.preventDefault();
         const data = {
             username: username,
@@ -39,13 +44,17 @@ function ContainerProfileUp() {
             newPassword1: newPassword,
             newPassword2: confirmPassword,
         };
+        console.log(data);
 
-        dispatch(updateUser(profile.id, data));
-        setUpdateSuccess(true);
-    };
-    useEffect(() => {
+        await dispatch(updateUser(profile.id, data));
 
-        if (updateSuccess && success) {
+        if (successRef.current) {
+            if (oldPassword === "" || oldPassword === undefined) {
+                setOldPasswordError(false);
+            }
+            if (newPassword === "" || newPassword === undefined) {
+                setNewPasswordError(false);
+            }
             containerSuccessRef.current.style.visibility = "visible";
             containerSuccessRef.current.style.opacity = "1";
             setTimeout(() => {
@@ -54,27 +63,20 @@ function ContainerProfileUp() {
                     containerSuccessRef.current.style.visibility = "hidden";
                 }, 1000);
             }, 8000);
-
-            setUpdateSuccess(false);
         }
-    }, [success, updateSuccess, containerSuccessRef, successUpdate]);
+    };
 
     useEffect(() => {
-        if (oldPassword === "") {
-            setOldPassword(undefined);
-        }
-        if (newPassword === "") {
-            setNewPassword(undefined);
-        }
-        if (confirmPassword === "") {
-            setConfirmPassword(undefined);
-        }
-        if (success === true) {
-            setSuccessUpdate(true);
-        }
-        if (success === false) {
-            setSuccessUpdate(false);
-        }
+        // if (oldPassword === "") {
+        //     setOldPassword(undefined);
+        // }
+        // if (newPassword === "") {
+        //     setNewPassword(undefined);
+        // }
+        // if (confirmPassword === "") {
+        //     setConfirmPassword(undefined);
+        // }
+
         if (error.errors) {
             if (error.errors.oldPassword && success === false) {
                 setOldPasswordError(true);
@@ -89,8 +91,6 @@ function ContainerProfileUp() {
         }
     }, [
         oldPassword,
-        updateSuccess,
-        success,
         username,
         oldPasswordError,
         newPasswordError,

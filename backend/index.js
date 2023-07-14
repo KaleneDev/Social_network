@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const bodyparser = require("body-parser");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
+const { auth } = require("./middleware/auth.middleware");
 
 // SERVER
 const app = express();
@@ -43,6 +44,10 @@ const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 // Routes
 app.get("/", (req, res) => {
     res.send("Salut, c'est moi le serveur !");
+});
+app.get("/test", (req, res) => {
+    const token = req.cookies.jwt;
+    res.send({ token });
 });
 app.get("/setcookie", (req, res) => {
     res.cookie(`Cookie token name`, `encrypted cookie string Value`);
