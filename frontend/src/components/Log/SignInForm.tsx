@@ -25,9 +25,7 @@ function SignInForm() {
                 }
             )
             .then((response) => {
-                console.log(response);
-                localStorage.setItem("token", response.data.token);
-
+          
                 window.location.href = "/";
             })
             .catch((error) => {

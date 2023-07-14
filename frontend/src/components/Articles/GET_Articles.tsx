@@ -1,26 +1,12 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-    getArticles,
-    deleteArticles,
-} from "../../redux/articles/articles.action";
-import { Dispatch } from "redux";
-
+import { useSelector } from "react-redux";
 import { ZoomOut } from "../../utils/AnimationText";
+import DELETE_Articles from "./DELETE_Articles";
+import UPDATE_Articles from "./UPDATE_Articles";
 
 import "../../style/pages/Home/GET_Articles.home.scss";
 
 function Articles() {
     const articlesData = useSelector((state: any) => state.articlesReducer);
-    const dispatch = useDispatch<Dispatch<any>>();
-
-    const handleDeleteArticles = (e: any, id: string) => {
-        e.preventDefault();
-        dispatch(deleteArticles(id));
-    };
-    useEffect(() => {
-        dispatch(getArticles());
-    }, []);
 
     const displayData = articlesData.isLoading ? (
         <p>Loading ...</p>
@@ -35,12 +21,10 @@ function Articles() {
                     <p>Content : {article.content}</p>
                     {article.user && <p>Author: {article.user.username}</p>}
                     <p>Date de publication : {article.createdAt}</p>
-
-                    <button
-                        onClick={(e) => handleDeleteArticles(e, article.id)}
-                    >
-                        Supprimer
-                    </button>
+                    <div className="article-buttons">
+                        <UPDATE_Articles propsParent={article.id} />
+                        <DELETE_Articles propsParent={article.id} />
+                    </div>
                 </div>
             </ZoomOut>
         ))
@@ -50,7 +34,6 @@ function Articles() {
         <div className="articles-container">
             <h1>Liste des Postes</h1>
             {displayData}
-         
         </div>
     );
 }

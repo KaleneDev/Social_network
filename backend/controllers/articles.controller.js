@@ -91,7 +91,9 @@ exports.create = async (req, res) => {
                 if (index === 0) {
                     newArticle.file = "";
                 }
-                newArticle.file +=  path.join("public/upload/articles/" +files[index].filename);
+                newArticle.file += path.join(
+                    "public/upload/articles/" + files[index].filename
+                );
                 if (index < files.length - 1) {
                     newArticle.file += " + ";
                 }
@@ -113,7 +115,10 @@ exports.update = async (req, res) => {
         const { title, user_id, content } = req.body;
         const files = req.files;
         const article = await Articles.findByPk(req.params.id);
-        if (article.user_id !== user_id) {
+
+        // check if user is admin or user is the owner of the article
+        const user = await Users.findByPk(user_id);
+        if (article.user_id !== user_id && user.role !== "admin") {
             return res.status(400).json({
                 error: "Vous n'avez pas les droits pour modifier cet article.",
             });
@@ -181,18 +186,23 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     // DELETE an article
     try {
+        const { user_id } = req.body;
         const article = await Articles.findByPk(req.params.id);
+        console.log(req.cookies.jwt);
+        // const user = await Users.findByPk(user_id);
+        // if (article.user_id !== user_id && user.role !== "admin") {
+        //     return res.status(400).json({
+        //         error: "Vous n'avez pas les droits pour modifier cet article.",
+        //     });
+        // }
         if (article.file) {
             const elements = article.file.split(" + ");
             for (let index = 0; index < elements.length; index++) {
                 const element = elements[index];
                 console.log(`/${element}/`);
-                fs.unlink(
-                    `${dirname}\\frontend\\${element}`,
-                    () => {
-                        return;
-                    }
-                );
+                fs.unlink(`${dirname}\\frontend\\${element}`, () => {
+                    return;
+                });
             }
         }
 
@@ -201,7 +211,7 @@ exports.delete = async (req, res) => {
                 message: "Cet article n'existe pas.",
             });
         }
-        await article.destroy();
+        // await article.destroy();
         res.status(200).json({
             message: "L'article a bien été supprimé.",
         });

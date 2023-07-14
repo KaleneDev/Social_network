@@ -61,7 +61,7 @@ function SignUpForm() {
                     )
                     .then((response) => {
                         console.log(response);
-                        localStorage.setItem("token", response.data.token);
+                        localStorage.setItem("token", response.data);
                         window.location.href = "/";
                     })
                     .catch((error) => {

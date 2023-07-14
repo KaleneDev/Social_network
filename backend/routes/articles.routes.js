@@ -6,7 +6,7 @@ const uploadCtrl = require("../controllers/upload.controller");
 
 const { auth } = require("../middleware/auth.middleware");
 
-router.get("/", articlesCtrl.getAll);
+router.get("/",auth, articlesCtrl.getAll);
 router.get("/id/:id", articlesCtrl.getOne);
 router.post("/", auth, uploadFile, articlesCtrl.create);
 router.put("/id/:id", auth, uploadFile, articlesCtrl.update);

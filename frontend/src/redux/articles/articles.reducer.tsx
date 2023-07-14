@@ -13,6 +13,7 @@ const initialStateArticles = {
     articles: [],
     article: {},
     error: "",
+    errorArticle: "",
 };
 
 export default function articlesReducer(
@@ -67,7 +68,7 @@ export default function articlesReducer(
             return {
                 ...state,
                 isLoading: false,
-                error: action.payload,
+                errorArticle: action.payload,
             };
 
         default:

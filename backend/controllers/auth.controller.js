@@ -77,7 +77,7 @@ exports.signIn = async (req, res) => {
                 userId: user.id,
                 username: user.username,
                 email: user.email,
-                admin: user.role,
+                role: user.role,
             },
             process.env.JWT_SECRET,
             {

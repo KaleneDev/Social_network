@@ -14,14 +14,12 @@ const loadArticles = () => {
         type: LOAD_ARTICLES,
     };
 };
-
 const loadArticlesSuccess = (comments: any) => {
     return {
         type: LOAD_ARTICLES_SUCCESS,
         payload: comments,
     };
 };
-
 const loadArticlesError = (error: any) => {
     return {
         type: LOAD_ARTICLES_ERROR,
@@ -47,6 +45,18 @@ const deleteArticleSuccess = (id: string) => {
     };
 };
 const deleteArticleError = (error: any) => {
+    return {
+        type: DELETE_ARTICLE_ERROR,
+        payload: error,
+    };
+};
+const updateArticleSuccess = (article: any) => {
+    return {
+        type: DELETE_ARTICLE_SUCCESS,
+        payload: article,
+    };
+};
+const updateArticleError = (error: any) => {
     return {
         type: DELETE_ARTICLE_ERROR,
         payload: error,
@@ -113,8 +123,23 @@ export const deleteArticles = (id: string) => {
                 dispatch(deleteArticleSuccess(id));
             })
             .catch((err) => {
-                dispatch(deleteArticleError(err.message));
-                console.log(err);
+                console.log(err.response.data.error);
+                
+                dispatch(deleteArticleError(err.response.data));
+            });
+    };
+};
+export const updateArticles = (id: string, data: any) => {
+    return (dispatch: any) => {
+        axios
+            .put(`${import.meta.env.VITE_APP_URL}articles/id/${id}`, data, {
+                withCredentials: true,
+            })
+            .then((res) => {
+                dispatch(updateArticleSuccess(res.data));
+            })
+            .catch((err) => {
+                dispatch(updateArticleError(err.response.data.error));
             });
     };
 };
