@@ -20,7 +20,6 @@ function ContainerBio() {
     const date = moment(dateStr).locale("fr");
     const dateFr = date.format("DD/MM/YYYY à HH:mm:ss");
     // SUCCESS
-    const [updateSuccess, setUpdateSuccess] = useState<boolean>(false);
 
     // REF
     const containerSuccessRef = useRef<any>(null);
@@ -38,10 +37,9 @@ function ContainerBio() {
         };
 
         dispatch(updateBio(profile.id, data));
-        setUpdateSuccess(true);
     };
     useEffect(() => {
-        if (updateSuccess && success) {
+        if (success) {
             containerSuccessRef.current.style.visibility = "visible";
             containerSuccessRef.current.style.opacity = "1";
             setTimeout(() => {
@@ -50,10 +48,8 @@ function ContainerBio() {
                     containerSuccessRef.current.style.visibility = "hidden";
                 }, 1000);
             }, 8000);
-
-            setUpdateSuccess(false);
         }
-    }, [success, updateSuccess, containerSuccessRef]);
+    }, [success, containerSuccessRef]);
     const handleSwitch = () => {
         console.log("switch");
 

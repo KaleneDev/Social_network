@@ -11,15 +11,36 @@ const auth = async (req, res, next) => {
 
         if (token) {
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+            if (req.body.userId && req.body.userId !== userId) {
+                throw "User ID non valable !";
+            } else {
+                next();
+            }
+        } else {
+            throw "Token non trouvé dans les cookies !";
+        }
+    } catch (error) {
+        res.status(401).json({ error: error || "Requête non authentifiée !" });
+    }
+};
+const authArticles = async (req, res, next) => {
+    try {
+        const token = req.cookies.jwt;
+
+        if (token) {
+            const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
             const { userId, role } = decodedToken;
             const articleId = req.params.id;
-
-            if (articleId !== undefined) {
-                const userArticle = await Articles.findByPk(articleId);
-                if (userArticle.user_id !== userId && role !== "admin") {
-                    return res.status(400).json({
-                        error: "Vous n'avez pas les droits pour modifier cet article.",
-                    });
+            console.log("articleId", articleId);
+            if (articleId) {
+                if (articleId !== undefined) {
+                    const userArticle = await Articles.findByPk(articleId);
+                    if (userArticle.user_id !== userId && role !== "admin") {
+                        return res.status(400).json({
+                            error: "Vous n'avez pas les droits pour modifier cet article.",
+                        });
+                    }
                 }
             }
 
@@ -72,4 +93,4 @@ const requireAdmin = (req, res, next) => {
         res.redirect("/login");
     }
 };
-module.exports = { auth, requireAuth };
+module.exports = { auth, requireAuth, requireAdmin, authArticles };

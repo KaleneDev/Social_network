@@ -2,6 +2,16 @@
 
 .container-home {
     .articles-container {
+        .article-animation {
+            transition: transform 0.5s ease;
+            transform: translateY(0);
+        }
+
+        .article-animation.animate {
+            transform: translateY(100%);
+        }
+        max-width: 1024px;
+        margin: auto;
         .article {
             display: flex;
             flex-direction: column;
@@ -10,9 +20,13 @@
             background-color: $white;
             border-radius: 5px;
             transition: transform 0.3s;
-            button {
+            .btn-update {
                 margin-top: 1rem;
                 @include buttonPrimary($primary-color);
+            }
+            .btn-delete {
+                margin-top: 1rem;
+                @include buttonPrimary($danger-color);
             }
             .article-buttons {
                 display: flex;

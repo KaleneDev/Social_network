@@ -3,18 +3,18 @@ import { Dispatch } from "redux";
 import { deleteArticles } from "../../redux/articles/articles.action";
 
 function DELETE_Articles(props: any) {
-    const articlesData = useSelector((state: any) => state.articlesReducer);
-    console.log(articlesData);
-
+    // const articlesData = useSelector((state: any) => state.articlesReducer);
     const dispatch = useDispatch<Dispatch<any>>();
+
     const handleDeleteArticles = (e: any, id: string) => {
         e.preventDefault();
+        // const parentDiv = e.target.closest(".article");
         dispatch(deleteArticles(id));
     };
 
     return (
         <>
-            <button onClick={(e) => handleDeleteArticles(e, props.propsParent)}>
+            <button className="btn-delete" onClick={(e) => handleDeleteArticles(e, props.propsParent)}>
                 Supprimer
             </button>
         </>

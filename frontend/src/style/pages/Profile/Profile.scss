@@ -1,75 +1,115 @@
 @import "../../variables.scss";
-.profile {
+.container-profile {
     background-color: $secondary-color;
-    min-height: calc(100vh - 60px - 2rem);
-    display: grid;
     padding: 1rem;
-    gap: 1rem;
-    & > div {
-        background-color: $white;
-        padding: 1rem;
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .container-avatar {
-        .container-image {
-            height: 100px;
-            width: 100px;
-            position: relative;
-            margin: auto;
-            cursor: pointer;
-            &.is-drop {
-                img {
-                    display: none;
+    .profile {
+        min-height: calc(100vh - 60px - 2rem);
+        display: grid;
+        gap: 1rem;
+        max-width: 1024px;
+        margin: auto;
+        & > div {
+            background-color: $white;
+            padding: 1rem;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 1024px;
+            // margin: auto;
+        }
+        .container-avatar {
+            .container-image {
+                height: 100px;
+                width: 100px;
+                position: relative;
+                margin: auto;
+                cursor: pointer;
+                &.is-drop {
+                    img {
+                        display: none;
+                    }
+                }
+                .preview {
+                    height: 101px;
+                    width: 101px;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: cover;
+                    border-radius: 100%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    &.is-highlight {
+                        background-color: rgba(#4aa0ea, 0.5);
+                        opacity: 0.5;
+                    }
+                    .icon {
+                        color: $primary-color;
+                        font-size: 2rem;
+                        cursor: pointer;
+                    }
                 }
             }
-            .preview {
-                height: 101px;
-                width: 101px;
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: cover;
-                border-radius: 100%;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                &.is-highlight {
-                    background-color: rgba(#4aa0ea, 0.5);
-                    opacity: 0.5;
-                }
-                .icon {
-                    color: $primary-color;
-                    font-size: 2rem;
-                    cursor: pointer;
+            img {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+            .upload-picture-container {
+                .upload-picture {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    .label-file {
+                        cursor: pointer;
+                        color: $primary-color;
+                        font-weight: bold;
+                    }
+                    input#file {
+                        display: none;
+                    }
+                    .label-file:hover {
+                        color: $primary-color-dark;
+                    }
+                    .submit-button {
+                        background-color: $primary-color;
+                        color: white;
+                        padding: 10px 20px;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    }
+                    .submit-button:hover {
+                        background-color: $primary-color-dark;
+                    }
                 }
             }
         }
-        img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .upload-picture-container {
-            .upload-picture {
+        .container-profile-Up {
+            form {
                 display: flex;
                 flex-direction: column;
-                align-items: center;
-
-                .label-file {
-                    cursor: pointer;
-                    color: $primary-color;
+                justify-content: center;
+                width: 100%;
+                margin-bottom: 1rem;
+                label {
                     font-weight: bold;
+                    margin-bottom: 0.5rem;
                 }
-                input#file {
-                    display: none;
-                }
-                .label-file:hover {
-                    color: $primary-color-dark;
+                input {
+                    padding: 0.5rem;
+                    border: 1px solid $primary-color;
+                    border-radius: 4px;
+                    outline: none;
+                    margin-bottom: 1rem;
+                    &:focus {
+                        border: 1px solid $primary-color-dark;
+                    }
                 }
                 .submit-button {
                     background-color: $primary-color;
@@ -84,84 +124,50 @@
                 }
             }
         }
-    }
-    .container-profile-Up {
-        form {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            width: 100%;
-            margin-bottom: 1rem;
-            label {
-                font-weight: bold;
-                margin-bottom: 0.5rem;
-            }
-            input {
-                padding: 0.5rem;
-                border: 1px solid $primary-color;
-                border-radius: 4px;
-                outline: none;
-                margin-bottom: 1rem;
-                &:focus {
-                    border: 1px solid $primary-color-dark;
+        .container-bio {
+            .bio-update {
+                button {
+                    background-color: $primary-color;
+                    color: white;
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+                button:hover {
+                    background-color: $primary-color-dark;
+                }
+                textarea {
+                    width: calc(100% - 1rem);
+                    border: 1px solid $primary-color;
+                    border-radius: 4px;
+                    padding: 0.5rem;
+                    margin-bottom: 1rem;
+                    height: 100px;
+                    resize: vertical;
+                }
+                .bio-inactive {
+                    border: 1px solid $primary-color;
+                    border-radius: 4px;
+                    opacity: 0.3;
+                }
+                h3 {
+                    text-align: center;
+                }
+                form {
+                    display: flex;
+                    flex-direction: column;
+                }
+                width: 100%;
+                p {
+                    background-color: red;
+                    width: 100%;
                 }
             }
-            .submit-button {
-                background-color: $primary-color;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .submit-button:hover {
-                background-color: $primary-color-dark;
-            }
         }
-    }
-    .container-bio {
-        .bio-update {
-            button {
-                background-color: $primary-color;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            button:hover {
-                background-color: $primary-color-dark;
-            }
-            textarea {
-                width: calc(100% - 1rem);
-                border: 1px solid $primary-color;
-                border-radius: 4px;
-                padding: 0.5rem;
-                margin-bottom: 1rem;
-                height: 100px;
-                resize: vertical;
-            }
-            .bio-inactive {
-                border: 1px solid $primary-color;
-                border-radius: 4px;
-                opacity: 0.3;
-            }
-            h3 {
-                text-align: center;
-            }
-            form {
-                display: flex;
-                flex-direction: column;
-            }
-            width: 100%;
-            p {
-                background-color: red;
-                width: 100%;
-            }
+        h1 {
+            text-align: center;
+            margin-top: 0;
         }
-    }
-    h1 {
-        text-align: center;
-        margin-top: 0;
     }
 }

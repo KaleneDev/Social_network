@@ -22,7 +22,7 @@ function UPDATE_Articles(props: any) {
     };
     return (
         <div>
-            <button onClick={(e) => handleUpdateArticles(e, props.propsParent)}>
+            <button className="btn-update" onClick={(e) => handleUpdateArticles(e, props.propsParent)}>
                 Modifier
             </button>
         </div>

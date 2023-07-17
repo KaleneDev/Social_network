@@ -1,24 +1,25 @@
 @import "../../main.scss";
 .post-articles-container {
+    max-width: 1024px;
+
     display: flex;
     flex-direction: column;
+    margin: auto;
     .post-articles-form {
         display: flex;
         flex-direction: column;
         input {
             @include inputPrimary($primary-color);
             margin-bottom: 1rem;
-            
         }
         textarea {
             @include inputPrimary($primary-color);
-          
+
             resize: none;
         }
         button {
             margin: 1rem 0;
             @include buttonPrimary($primary-color);
-          
         }
     }
 }

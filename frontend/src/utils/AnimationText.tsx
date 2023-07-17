@@ -406,30 +406,47 @@ import { useEffect, ReactNode } from "react";
 //         </div>
 //     );
 // };
-type ZoomOutProps = {
+
+interface ZoomOutProps {
     children: ReactNode;
     duration?: number;
     delay?: number;
-    scroll?: string;
-};
-
+    scrolltop?: string;
+    elementref?: any;
+  
+}
 const ZoomOut = ({
     children,
     duration,
     delay,
-    scroll,
-}: ZoomOutProps): JSX.Element => {
+    scrolltop,
+    elementref,
+}: ZoomOutProps) => {
     const className = `ZoomOut`;
     const delays = delay || 0;
     const animationDurations = duration || 1;
-    const ScrollTopAndBot = scroll || "off";
+    const ScrollTopAndBot = scrolltop || "off";
+    const refElement = elementref || null;
 
     useEffect(() => {
         const textElement = document.querySelectorAll(`.${className}`);
-
-        window.addEventListener("scroll", checkContent);
+        const triggerBottom = (window.innerHeight / 5) * 4 + 250;
 
         textElement.forEach((element) => {
+            const observerOptions = {
+                root: null,
+                rootMargin: "0px",
+                threshold: 0.5,
+            };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        checkContent();
+                    }
+                });
+            }, observerOptions);
+
+            observer.observe(element);
             element.childNodes.forEach((child: any) => {
                 child.style.opacity = "0";
                 child.style.transform = `scale(0.5)`;
@@ -437,26 +454,37 @@ const ZoomOut = ({
         });
 
         function checkContent() {
-            const triggerBottom = (window.innerHeight / 5) * 4 + 150;
-
             textElement.forEach((element) => {
                 const elementTop = element.getBoundingClientRect().top;
                 let elementBot = element.getBoundingClientRect().bottom;
+
                 const keyAnimationDuration = element.getAttribute(
-                    "data-duration"
+                    "duration"
                 ) as string;
                 const keyAnimationDelay = element.getAttribute(
-                    "data-delay"
+                    "delay"
                 ) as string;
                 const keyAnimationScroll = element.getAttribute(
-                    "data-scroll"
+                    "scrolltop"
                 ) as string;
 
                 function animation(
                     opacity: number,
-                    transform: number,
-                    duration: number
+                    transformScale: number,
+                    duration: number,
+                    transformTranslateY: number
                 ) {
+                    const htmlElement = element as HTMLElement;
+
+                    htmlElement.style.transition = `transform ${
+                        Number(keyAnimationDuration) * duration
+                    }s ease ${Number(keyAnimationDelay)}s, opacity ${
+                        Number(keyAnimationDuration) * duration
+                    }s ease`;
+                    htmlElement.style.opacity = opacity.toString();
+                    htmlElement.style.transform = `scale(${transformScale})`;
+                    htmlElement.style.transform = `translateY(${transformTranslateY}px)`;
+
                     element.childNodes.forEach((child: any) => {
                         if (child.tagName.toLowerCase() === "span") {
                             child.style.display = "inline-block";
@@ -467,7 +495,7 @@ const ZoomOut = ({
                         }s ease ${Number(keyAnimationDelay)}s, opacity ${
                             Number(keyAnimationDuration) * duration
                         }s ease`;
-                        child.style.transform = `scale(${transform})`;
+                        child.style.transform = `scale(${transformScale})`;
                     });
                 }
 
@@ -480,15 +508,16 @@ const ZoomOut = ({
                 }
 
                 if (elementTop > triggerBottom || elementBot < 0) {
-                    animation(0.5, 0.9, 0.1);
+                    animation(0, 0.5, 0.1, 0);
                 } else {
-                    animation(1, 1, 0.7);
+                    animation(1, 1, 0.7, 0);
                 }
             });
         }
 
         checkContent();
 
+        window.addEventListener("scroll", checkContent);
         return () => {
             window.removeEventListener("scroll", checkContent);
         };
@@ -497,9 +526,10 @@ const ZoomOut = ({
     return (
         <div
             className={className}
-            data-duration={animationDurations}
-            data-delay={delays}
-            data-scroll={ScrollTopAndBot}
+            duration={animationDurations}
+            delay={delays}
+            scrolltop={ScrollTopAndBot}
+            elementref={refElement}
         >
             {children}
         </div>

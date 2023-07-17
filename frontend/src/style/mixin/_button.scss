@@ -9,6 +9,6 @@
     cursor: pointer;
 
     &:hover {
-        background-color: $primary-color-dark;
+        background-color: darken($color, 20%);
     }
 }

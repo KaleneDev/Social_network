@@ -29,6 +29,7 @@ function ContainerProfileUp() {
     // SUCCESS
     const successRef = useRef(success);
     const errorRef = useRef(error);
+    console.log(success);
 
     useEffect(() => {
         successRef.current = success;
@@ -44,11 +45,10 @@ function ContainerProfileUp() {
             newPassword1: newPassword,
             newPassword2: confirmPassword,
         };
-        console.log(data);
 
         await dispatch(updateUser(profile.id, data));
 
-        if (successRef.current) {
+        if (successRef) {
             if (oldPassword === "" || oldPassword === undefined) {
                 setOldPasswordError(false);
             }
@@ -67,16 +67,6 @@ function ContainerProfileUp() {
     };
 
     useEffect(() => {
-        // if (oldPassword === "") {
-        //     setOldPassword(undefined);
-        // }
-        // if (newPassword === "") {
-        //     setNewPassword(undefined);
-        // }
-        // if (confirmPassword === "") {
-        //     setConfirmPassword(undefined);
-        // }
-
         if (error.errors) {
             if (error.errors.oldPassword && success === false) {
                 setOldPasswordError(true);

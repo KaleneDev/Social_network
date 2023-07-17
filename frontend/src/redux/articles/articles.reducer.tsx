@@ -13,7 +13,9 @@ const initialStateArticles = {
     articles: [],
     article: {},
     error: "",
-    errorArticle: "",
+    deleteError: "",
+    postSuccess: false,
+    deleteSuccess: false,
 };
 
 export default function articlesReducer(
@@ -47,12 +49,18 @@ export default function articlesReducer(
                 articles: [...state.articles, action.payload],
                 article: action.payload,
                 error: "",
+                postSuccess: true,
+                deleteSuccess: false,
+                deleteError: "",
             };
         case POST_ARTICLES_ERROR:
             return {
                 ...state,
                 isLoading: false,
                 error: action.payload,
+                postSuccess: false,
+                deleteSuccess: false,
+                deleteError: "",
             };
 
         case DELETE_ARTICLE_SUCCESS:
@@ -62,13 +70,18 @@ export default function articlesReducer(
                 articles: state.articles.filter(
                     (article: any) => article.id !== action.payload
                 ),
-                error: "",
+                deleteError: "",
+                deleteSuccess: true,
+                postSuccess: false,
             };
         case DELETE_ARTICLE_ERROR:
             return {
                 ...state,
                 isLoading: false,
-                errorArticle: action.payload,
+                deleteError: action.payload,
+                deleteSuccess: false,
+                postSuccess: false,
+
             };
 
         default:

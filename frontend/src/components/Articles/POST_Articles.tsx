@@ -21,7 +21,6 @@ function POST_Articles() {
     
     const handlePostArticles = async (e: any) => {
         e.preventDefault();
-        console.log(articlesDataRef.current.article.id);
         
         const data = {
             title: title,

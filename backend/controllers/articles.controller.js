@@ -211,7 +211,7 @@ exports.delete = async (req, res) => {
                 message: "Cet article n'existe pas.",
             });
         }
-        // await article.destroy();
+        await article.destroy();
         res.status(200).json({
             message: "L'article a bien été supprimé.",
         });

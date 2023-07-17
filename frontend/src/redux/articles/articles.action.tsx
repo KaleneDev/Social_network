@@ -7,6 +7,8 @@ import {
     POST_ARTICLES_ERROR,
     DELETE_ARTICLE_SUCCESS,
     DELETE_ARTICLE_ERROR,
+    PUT_ARTICLE_SUCCESS,
+    PUT_ARTICLE_ERROR,
 } from "./articles.type";
 
 const loadArticles = () => {
@@ -52,13 +54,13 @@ const deleteArticleError = (error: any) => {
 };
 const updateArticleSuccess = (article: any) => {
     return {
-        type: DELETE_ARTICLE_SUCCESS,
+        type: PUT_ARTICLE_SUCCESS,
         payload: article,
     };
 };
 const updateArticleError = (error: any) => {
     return {
-        type: DELETE_ARTICLE_ERROR,
+        type: PUT_ARTICLE_ERROR,
         payload: error,
     };
 };
@@ -123,8 +125,6 @@ export const deleteArticles = (id: string) => {
                 dispatch(deleteArticleSuccess(id));
             })
             .catch((err) => {
-                console.log(err.response.data.error);
-                
                 dispatch(deleteArticleError(err.response.data));
             });
     };
