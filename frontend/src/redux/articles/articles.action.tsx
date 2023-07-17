@@ -10,7 +10,6 @@ import {
     PUT_ARTICLE_SUCCESS,
     PUT_ARTICLE_ERROR,
 } from "./articles.type";
-import { log } from "console";
 
 const loadArticles = () => {
     return {
@@ -29,10 +28,11 @@ const loadArticlesError = (error: any) => {
         payload: error,
     };
 };
-const postArticlesSuccess = (article: any) => {
+const postArticlesSuccess = (article: any, message: string) => {
     return {
         type: POST_ARTICLES_SUCCESS,
         payload: article,
+        message: message,
     };
 };
 const postArticlesError = (error: any) => {
@@ -41,10 +41,11 @@ const postArticlesError = (error: any) => {
         payload: error,
     };
 };
-const deleteArticleSuccess = (id: string) => {
+const deleteArticleSuccess = (id: string, message: string) => {
     return {
         type: DELETE_ARTICLE_SUCCESS,
         payload: id,
+        message: message,
     };
 };
 const deleteArticleError = (error: any) => {
@@ -53,10 +54,11 @@ const deleteArticleError = (error: any) => {
         payload: error,
     };
 };
-const updateArticleSuccess = (article: any) => {
+const updateArticleSuccess = (article: any, message: string) => {
     return {
         type: PUT_ARTICLE_SUCCESS,
         payload: article,
+        message: message,
     };
 };
 const updateArticleError = (error: any) => {
@@ -77,11 +79,10 @@ export const getArticles = () => {
                 const sortedArticles = res.data.sort((a: any, b: any) =>
                     a.createdAt > b.createdAt ? -1 : 1
                 );
-
                 dispatch(loadArticlesSuccess(sortedArticles));
             })
             .catch((err) => {
-                dispatch(loadArticlesError(err.message));
+                dispatch(loadArticlesError(err.response.data.message));
             });
     };
 };
@@ -93,10 +94,10 @@ export const getArticlesByUserId = (uid: string) => {
                 withCredentials: true,
             })
             .then((res) => {
-                dispatch(postArticlesSuccess(res.data));
+                dispatch(postArticlesSuccess(res.data.article, res.data.message));
             })
             .catch((err) => {
-                dispatch(postArticlesError(err.message));
+                dispatch(postArticlesError(err.response.data.message));
             });
     };
 };
@@ -110,10 +111,10 @@ export const postArticles = (data: any) => async (dispatch: any) => {
             withCredentials: true,
         })
         .then((res) => {
-            dispatch(postArticlesSuccess(res.data));
+            dispatch(postArticlesSuccess(res.data.article, res.data.message));
         })
         .catch((err) => {
-            dispatch(postArticlesError(err.message));
+            dispatch(postArticlesError(err.response.data.message));
         });
 };
 export const deleteArticles = (id: string) => {
@@ -122,12 +123,11 @@ export const deleteArticles = (id: string) => {
             .delete(`${import.meta.env.VITE_APP_URL}articles/id/${id}`, {
                 withCredentials: true,
             })
-            .then(() => {
-                dispatch(deleteArticleSuccess(id));
+            .then((res) => {
+                dispatch(deleteArticleSuccess(id, res.data.message));
             })
             .catch((err) => {
-                
-                dispatch(deleteArticleError(err.response.data.error));
+                dispatch(deleteArticleError(err.response.data.message));
             });
     };
 };
@@ -138,10 +138,10 @@ export const updateArticles = (id: string, data: any) => {
                 withCredentials: true,
             })
             .then((res) => {
-                dispatch(updateArticleSuccess(res.data));
+                dispatch(updateArticleSuccess(res.data.article, res.data.message));
             })
             .catch((err) => {
-                dispatch(updateArticleError(err.response.data.error));
+                dispatch(updateArticleError(err.response.data.message));
             });
     };
 };

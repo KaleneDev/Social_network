@@ -38,7 +38,7 @@ const authArticles = async (req, res, next) => {
                     const userArticle = await Articles.findByPk(articleId);
                     if (userArticle.user_id !== userId && role !== "admin") {
                         return res.status(400).json({
-                            error: "Vous n'avez pas les droits pour modifier cet article.",
+                            message: "Vous n'avez pas les droits pour modifier cet article.",
                         });
                     }
                 }

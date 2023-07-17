@@ -100,10 +100,11 @@ exports.create = async (req, res) => {
             }
         }
         const article = await Articles.create(newArticle);
-        res.status(200).json(article);
+        res.status(200).json({
+            message: "L'article a été créé avec succès.",
+            article: article,
+        });
     } catch (err) {
-        // If error, return error
-        console.error(err);
         res.status(500).json({
             message: "Erreur lors de la création de l'article.",
         });
@@ -168,7 +169,10 @@ exports.update = async (req, res) => {
         }
 
         await article.update(updatedArticle);
-        res.status(200).json(updatedArticle);
+        res.status(200).json({
+            message: "L'article a été mis à jour avec succès.",
+            article: updatedArticle,
+        });
     } catch (err) {
         res.status(500).json({
             message: "Erreur lors de la modification de l'article.",

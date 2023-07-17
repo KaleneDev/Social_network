@@ -53,7 +53,7 @@ export default function articlesReducer(
                 isLoading: false,
                 articles: [...state.articles, action.payload],
                 article: action.payload,
-                successMessage: "Votre article a bien été posté",
+                successMessage: action.message,
             };
         case POST_ARTICLES_ERROR:
             return {
@@ -69,7 +69,7 @@ export default function articlesReducer(
                 articles: state.articles.filter(
                     (article: any) => article.id !== action.payload
                 ),
-                successMessage: "Votre article a bien été supprimé",
+                successMessage: action.message,
             };
         case DELETE_ARTICLE_ERROR:
             return {
@@ -82,7 +82,7 @@ export default function articlesReducer(
                 ...state,
                 isLoading: false,
                 article: action.payload,
-                successMessage: "Votre article a bien été modifié",
+                successMessage: action.message,
             };
         case PUT_ARTICLE_ERROR:
             return {
