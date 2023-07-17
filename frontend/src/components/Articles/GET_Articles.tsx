@@ -6,32 +6,21 @@ import Info from "../Infos/info";
 
 import "../../style/pages/Home/GET_Articles.home.scss";
 import { useRef, useState, useEffect } from "react";
+import { log } from "console";
 
 function Articles() {
     const articlesData = useSelector((state: any) => state.articlesReducer);
     const containerInfoRef = useRef<any>(null);
-    const errorDelete = useSelector(
-        (state: any) => state.articlesReducer.deleteError
+    const errorMessages = useSelector(
+        (state: any) => state.articlesReducer.errorMessage
     );
-    const successDelete = useSelector(
-        (state: any) => state.articlesReducer.deleteSuccess
+    const successMessages = useSelector(
+        (state: any) => state.articlesReducer.successMessage
     );
-    const successPost = useSelector(
-        (state: any) => state.articlesReducer.postSuccess
-    );
-
-    const errorRef = useRef(errorDelete);
-    const successRef = useRef(successDelete);
-    const successPostRef = useRef(successPost);
 
     const [message, setMessage] = useState<string>("");
     const [colorInfo, setColorInfo] = useState<string>("primary-color");
 
-    useEffect(() => {
-        successRef.current = successDelete;
-        errorRef.current = errorDelete;
-        successPostRef.current = successPost;
-    }, [successDelete, errorDelete, successPost]);
     useEffect(() => {
         const animation = () => {
             containerInfoRef.current.style.visibility = "visible";
@@ -43,25 +32,20 @@ function Articles() {
                 }, 1000);
             }, 8000);
         };
-        console.log(successDelete);
-
-        if (successPost) {
-            setMessage("Votre article a bien été posté");
-            setColorInfo("success-color");
-            animation();
-        }
-        if (successDelete) {
-            setMessage("Votre article a bien été supprimé");
+        if (successMessages) {
+            setMessage(successMessages);
             setColorInfo("success-color");
             animation();
         }
 
-        if (errorDelete) {
-            setMessage(errorDelete.error);
+        if (errorMessages) {
+            console.log(errorMessages);
+
+            setMessage(errorMessages);
             setColorInfo("danger-color");
             animation();
         }
-    }, [articlesData, errorDelete, successDelete, successPost]);
+    }, [articlesData]);
 
     const containerRef = useRef(null);
     const elementRef = useRef(null);
@@ -97,7 +81,7 @@ function Articles() {
         <div className="articles-container" ref={containerRef}>
             <h1>Liste des Postes</h1>
             {displayData}
-            {(errorDelete || successPost || successDelete) && (
+            {(errorMessages || successMessages) && (
                 <Info text={message} color={colorInfo} ref={containerInfoRef} />
             )}
         </div>

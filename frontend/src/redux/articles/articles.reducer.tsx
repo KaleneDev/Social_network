@@ -6,6 +6,8 @@ import {
     POST_ARTICLES_ERROR,
     DELETE_ARTICLE_SUCCESS,
     DELETE_ARTICLE_ERROR,
+    PUT_ARTICLE_SUCCESS,
+    PUT_ARTICLE_ERROR,
 } from "./articles.type";
 
 const initialStateArticles = {
@@ -13,9 +15,12 @@ const initialStateArticles = {
     articles: [],
     article: {},
     error: "",
-    deleteError: "",
+    errorMessage: "",
+    successMessage: "",
+
     postSuccess: false,
     deleteSuccess: false,
+    putSuccess: false,
 };
 
 export default function articlesReducer(
@@ -48,19 +53,13 @@ export default function articlesReducer(
                 isLoading: false,
                 articles: [...state.articles, action.payload],
                 article: action.payload,
-                error: "",
-                postSuccess: true,
-                deleteSuccess: false,
-                deleteError: "",
+                successMessage: "Votre article a bien été posté",
             };
         case POST_ARTICLES_ERROR:
             return {
                 ...state,
                 isLoading: false,
-                error: action.payload,
-                postSuccess: false,
-                deleteSuccess: false,
-                deleteError: "",
+                errorMessage: action.payload,
             };
 
         case DELETE_ARTICLE_SUCCESS:
@@ -70,18 +69,26 @@ export default function articlesReducer(
                 articles: state.articles.filter(
                     (article: any) => article.id !== action.payload
                 ),
-                deleteError: "",
-                deleteSuccess: true,
-                postSuccess: false,
+                successMessage: "Votre article a bien été supprimé",
             };
         case DELETE_ARTICLE_ERROR:
             return {
                 ...state,
                 isLoading: false,
-                deleteError: action.payload,
-                deleteSuccess: false,
-                postSuccess: false,
-
+                errorMessage: action.payload,
+            };
+        case PUT_ARTICLE_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                article: action.payload,
+                successMessage: "Votre article a bien été modifié",
+            };
+        case PUT_ARTICLE_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                errorMessage: action.payload,
             };
 
         default:

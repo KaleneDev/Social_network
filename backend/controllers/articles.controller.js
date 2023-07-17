@@ -112,17 +112,10 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     // PUT an article
     try {
-        const { title, user_id, content } = req.body;
+        const { title, content } = req.body;
         const files = req.files;
         const article = await Articles.findByPk(req.params.id);
-
-        // check if user is admin or user is the owner of the article
-        const user = await Users.findByPk(user_id);
-        if (article.user_id !== user_id && user.role !== "admin") {
-            return res.status(400).json({
-                error: "Vous n'avez pas les droits pour modifier cet article.",
-            });
-        }
+   
         function deleteFile() {
             if (files) {
                 for (let index = 0; index < files.length; index++) {
@@ -177,7 +170,6 @@ exports.update = async (req, res) => {
         await article.update(updatedArticle);
         res.status(200).json(updatedArticle);
     } catch (err) {
-        console.error(err);
         res.status(500).json({
             message: "Erreur lors de la modification de l'article.",
         });
@@ -186,15 +178,8 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     // DELETE an article
     try {
-        const { user_id } = req.body;
+      
         const article = await Articles.findByPk(req.params.id);
-        console.log(req.cookies.jwt);
-        // const user = await Users.findByPk(user_id);
-        // if (article.user_id !== user_id && user.role !== "admin") {
-        //     return res.status(400).json({
-        //         error: "Vous n'avez pas les droits pour modifier cet article.",
-        //     });
-        // }
         if (article.file) {
             const elements = article.file.split(" + ");
             for (let index = 0; index < elements.length; index++) {

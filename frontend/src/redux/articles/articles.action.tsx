@@ -10,6 +10,7 @@ import {
     PUT_ARTICLE_SUCCESS,
     PUT_ARTICLE_ERROR,
 } from "./articles.type";
+import { log } from "console";
 
 const loadArticles = () => {
     return {
@@ -125,7 +126,8 @@ export const deleteArticles = (id: string) => {
                 dispatch(deleteArticleSuccess(id));
             })
             .catch((err) => {
-                dispatch(deleteArticleError(err.response.data));
+                
+                dispatch(deleteArticleError(err.response.data.error));
             });
     };
 };
