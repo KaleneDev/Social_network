@@ -6,9 +6,11 @@
     padding: 1rem;
     .container-home {
         margin: auto;
-    }
-    .ZoomOut {
-        animation: ZoomOut 1s;
-        z-index: -100;
+        .ZoomIn {
+            transform: scale(0.5) !important;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out !important;
+            opacity: 0 !important;
+            visibility: 0.5s ease-in-out;
+        }
     }
 }

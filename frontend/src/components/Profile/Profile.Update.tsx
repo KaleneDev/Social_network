@@ -29,7 +29,6 @@ function ContainerProfileUp() {
     // SUCCESS
     const successRef = useRef(success);
     const errorRef = useRef(error);
-    console.log(success);
 
     useEffect(() => {
         successRef.current = success;

@@ -127,8 +127,6 @@ export const deleteArticles = (id: string) => {
                 dispatch(deleteArticleSuccess(id, res.data));
             })
             .catch((err) => {
-                console.log(err.response.data);
-                
                 dispatch(deleteArticleError(err.response.data));
             });
     };

@@ -525,6 +525,7 @@ const ZoomOut = ({ children, duration, delay, scrolltop }: ZoomOutProps) => {
         </div>
     );
 };
+
 const ZoomOutPopup = ({
     children,
     duration,

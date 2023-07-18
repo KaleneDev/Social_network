@@ -11,6 +11,8 @@ import { useRef, useState, useEffect } from "react";
 
 function Articles() {
     const articlesData = useSelector((state: any) => state.articlesReducer);
+    const user = useSelector((state: any) => state.userReducer.user);
+    console.log(user);
 
     const containerInfoRef = useRef<any>(null);
     const errorMessages = useSelector(
@@ -42,8 +44,6 @@ function Articles() {
         }
 
         if (errorMessages) {
-            console.log(errorMessages);
-
             setMessage(errorMessages);
             setColorInfo("danger-color");
             animation();
@@ -124,8 +124,8 @@ function Articles() {
                 <ZoomOut key={article.id || index}>
                     <div className="article" ref={elementRef}>
                         <h3>Titre : {article.title}</h3>
-                        <p>Content : {article.content}</p>
-                        {article.user && <p>Author: {article.user.username}</p>}
+                        <p>Contenu : {article.content}</p>
+                        {article.user && <p>Auteur: {article.user.username}</p>}
                         <p>Date de publication : {article.createdAt}</p>
                         <div className="article-buttons">
                             <UPDATE_Articles
@@ -134,7 +134,15 @@ function Articles() {
                                 index={index}
                                 data={article}
                             />
-                            <DELETE_Articles propsParent={article.id} />
+
+                            {(user.id === article.user.id ||
+                                user.role === "admin") && (
+                                <DELETE_Articles propsParent={article.id} />
+                            )}
+
+                            {user.userId === article.user.id && (
+                                <UPDATE_Articles propsParent={article.id} />
+                            )}
                         </div>
                     </div>
                 </ZoomOut>
@@ -165,7 +173,7 @@ function Articles() {
                                     articlesData.articles[index].title
                                 }
                             />
-                            <h3>Content : </h3>
+                            <h3>Contenu : </h3>
                             <textarea
                                 onChange={(e) => setNewContent(e.target.value)}
                                 defaultValue={
