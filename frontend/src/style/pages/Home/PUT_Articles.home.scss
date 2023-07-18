@@ -1,0 +1,64 @@
+@import "../../main.scss";
+.blur-effect {
+    filter: blur(5px); // Ajustez la valeur pour l'effet de flou souhaité
+    // pointer-events: none; // Permet de cliquer sur les éléments situés en dessous
+}
+.blur-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(
+        0,
+        0,
+        0,
+        0.5
+    ); // Ajustez la couleur et la transparence souhaitées
+    z-index: 999; // Assurez-vous que le z-index est supérieur à celui de la fenêtre popup
+}
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out,
+        visibility 0.5s ease-in-out;
+
+    transform: translate(-50%, -50%) scale(0.2);
+    width: 100%;
+    height: 100%;
+    max-width: 600px;
+    max-height: 600px;
+    z-index: 1000;
+    background-color: $white;
+    padding: 1rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    .btn {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    button {
+        @include buttonPrimary($primary-color);
+    }
+    input {
+        @include inputPrimary($primary-color);
+        margin-bottom: 1rem;
+    }
+    textarea {
+        @include inputPrimary($primary-color);
+        margin-bottom: 1rem;
+        resize: none;
+        height: 400px;
+    }
+}
+.popup.active {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    visibility: visible;
+}

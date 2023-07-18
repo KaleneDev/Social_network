@@ -82,7 +82,7 @@ export const getArticles = () => {
                 dispatch(loadArticlesSuccess(sortedArticles));
             })
             .catch((err) => {
-                dispatch(loadArticlesError(err.response.data.message));
+                dispatch(loadArticlesError(err.response.data));
             });
     };
 };
@@ -94,10 +94,10 @@ export const getArticlesByUserId = (uid: string) => {
                 withCredentials: true,
             })
             .then((res) => {
-                dispatch(postArticlesSuccess(res.data.article, res.data.message));
+                dispatch(postArticlesSuccess(res.data.article, res.data));
             })
             .catch((err) => {
-                dispatch(postArticlesError(err.response.data.message));
+                dispatch(postArticlesError(err.response.data));
             });
     };
 };
@@ -111,10 +111,10 @@ export const postArticles = (data: any) => async (dispatch: any) => {
             withCredentials: true,
         })
         .then((res) => {
-            dispatch(postArticlesSuccess(res.data.article, res.data.message));
+            dispatch(postArticlesSuccess(res.data.article, res.data));
         })
         .catch((err) => {
-            dispatch(postArticlesError(err.response.data.message));
+            dispatch(postArticlesError(err.response.data));
         });
 };
 export const deleteArticles = (id: string) => {
@@ -124,10 +124,12 @@ export const deleteArticles = (id: string) => {
                 withCredentials: true,
             })
             .then((res) => {
-                dispatch(deleteArticleSuccess(id, res.data.message));
+                dispatch(deleteArticleSuccess(id, res.data));
             })
             .catch((err) => {
-                dispatch(deleteArticleError(err.response.data.message));
+                console.log(err.response.data);
+                
+                dispatch(deleteArticleError(err.response.data));
             });
     };
 };
@@ -138,10 +140,10 @@ export const updateArticles = (id: string, data: any) => {
                 withCredentials: true,
             })
             .then((res) => {
-                dispatch(updateArticleSuccess(res.data.article, res.data.message));
+                dispatch(updateArticleSuccess(res.data.article, res.data));
             })
             .catch((err) => {
-                dispatch(updateArticleError(err.response.data.message));
+                dispatch(updateArticleError(err.response.data));
             });
     };
 };

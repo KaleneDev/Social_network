@@ -54,6 +54,7 @@ export default function articlesReducer(
                 articles: [...state.articles, action.payload],
                 article: action.payload,
                 successMessage: action.message,
+                errorMessage: "",
             };
         case POST_ARTICLES_ERROR:
             return {
@@ -70,6 +71,7 @@ export default function articlesReducer(
                     (article: any) => article.id !== action.payload
                 ),
                 successMessage: action.message,
+                errorMessage: "",
             };
         case DELETE_ARTICLE_ERROR:
             return {
@@ -83,6 +85,7 @@ export default function articlesReducer(
                 isLoading: false,
                 article: action.payload,
                 successMessage: action.message,
+                errorMessage: "",
             };
         case PUT_ARTICLE_ERROR:
             return {

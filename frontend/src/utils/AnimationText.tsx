@@ -412,21 +412,12 @@ interface ZoomOutProps {
     duration?: number;
     delay?: number;
     scrolltop?: string;
-    elementref?: any;
-  
 }
-const ZoomOut = ({
-    children,
-    duration,
-    delay,
-    scrolltop,
-    elementref,
-}: ZoomOutProps) => {
+const ZoomOut = ({ children, duration, delay, scrolltop }: ZoomOutProps) => {
     const className = `ZoomOut`;
     const delays = delay || 0;
     const animationDurations = duration || 1;
     const ScrollTopAndBot = scrolltop || "off";
-    const refElement = elementref || null;
 
     useEffect(() => {
         const textElement = document.querySelectorAll(`.${className}`);
@@ -471,8 +462,7 @@ const ZoomOut = ({
                 function animation(
                     opacity: number,
                     transformScale: number,
-                    duration: number,
-                    transformTranslateY: number
+                    duration: number
                 ) {
                     const htmlElement = element as HTMLElement;
 
@@ -481,9 +471,8 @@ const ZoomOut = ({
                     }s ease ${Number(keyAnimationDelay)}s, opacity ${
                         Number(keyAnimationDuration) * duration
                     }s ease`;
-                    htmlElement.style.opacity = opacity.toString();
-                    htmlElement.style.transform = `scale(${transformScale})`;
-                    htmlElement.style.transform = `translateY(${transformTranslateY}px)`;
+
+                    // htmlElement.style.opacity = opacity.toString();
 
                     element.childNodes.forEach((child: any) => {
                         if (child.tagName.toLowerCase() === "span") {
@@ -495,6 +484,8 @@ const ZoomOut = ({
                         }s ease ${Number(keyAnimationDelay)}s, opacity ${
                             Number(keyAnimationDuration) * duration
                         }s ease`;
+
+                        // child.style.transform = `none`;
                         child.style.transform = `scale(${transformScale})`;
                     });
                 }
@@ -508,9 +499,9 @@ const ZoomOut = ({
                 }
 
                 if (elementTop > triggerBottom || elementBot < 0) {
-                    animation(0, 0.5, 0.1, 0);
+                    animation(0, 0.5, 0.1);
                 } else {
-                    animation(1, 1, 0.7, 0);
+                    animation(1, 1, 0.7);
                 }
             });
         }
@@ -529,7 +520,102 @@ const ZoomOut = ({
             duration={animationDurations}
             delay={delays}
             scrolltop={ScrollTopAndBot}
-            elementref={refElement}
+        >
+            {children}
+        </div>
+    );
+};
+const ZoomOutPopup = ({
+    children,
+    duration,
+    delay,
+    scrolltop,
+}: ZoomOutProps) => {
+    const className = `ZoomOutPopup`;
+    const delays = delay || 0;
+    const animationDurations = duration || 1;
+    const ScrollTopAndBot = scrolltop || "off";
+
+    useEffect(() => {
+        const textElement = document.querySelectorAll(`.${className}`);
+        textElement.forEach((element) => {
+            const observerOptions = {
+                root: null,
+                rootMargin: "0px",
+                threshold: 0.5,
+            };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        checkContent();
+                    }
+                });
+            }, observerOptions);
+
+            observer.observe(element);
+            element.childNodes.forEach((child: any) => {
+                // child.style.opacity = "0";
+                child.style.transform = `translate(-50%, -50%) scale(0)`;
+            });
+        });
+
+        function checkContent() {
+            textElement.forEach((element) => {
+                console.log(element.childNodes);
+
+                const keyAnimationDuration = element.getAttribute(
+                    "duration"
+                ) as string;
+                const keyAnimationDelay = element.getAttribute(
+                    "delay"
+                ) as string;
+
+                function animation(
+                    opacity: number,
+                    transformScale: number,
+                    duration: number
+                ) {
+                    const htmlElement = element as HTMLElement;
+
+                    // htmlElement.style.transition = `transform ${
+                    //     Number(keyAnimationDuration) * duration
+                    // }s ease ${Number(keyAnimationDelay)}s, opacity ${
+                    //     Number(keyAnimationDuration) * duration
+                    // }s ease`;
+
+                    element.childNodes.forEach((child: any) => {
+                        if (child.tagName.toLowerCase() === "span") {
+                            child.style.display = "inline-block";
+                        }
+                        child.style.opacity = opacity.toString();
+                        // child.style.transition = `transform ${
+                        //     Number(keyAnimationDuration) * duration
+                        // }s ease ${Number(keyAnimationDelay)}s, opacity ${
+                        //     Number(keyAnimationDuration) * duration
+                        // }s ease`;
+                        child.style.transition = `transform 1s ease`;
+                        child.style.transform = `translate(-50%, -50%) scale(${transformScale})`;
+                    });
+                }
+                console.log(element.childNodes.length);
+                if (!element.childNodes) {
+                    animation(0, 0, 0.7);
+                }
+                setTimeout(() => {
+                    animation(1, 1, 0.7);
+                }, 0);
+            });
+        }
+
+        checkContent();
+    }, []);
+
+    return (
+        <div
+            className={className}
+            duration={animationDurations}
+            delay={delays}
+            scrolltop={ScrollTopAndBot}
         >
             {children}
         </div>
@@ -544,4 +630,5 @@ export {
     // SlideInFromTop,
     // SlideInFromBot,
     ZoomOut,
+    ZoomOutPopup,
 };

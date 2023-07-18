@@ -116,7 +116,7 @@ exports.update = async (req, res) => {
         const { title, content } = req.body;
         const files = req.files;
         const article = await Articles.findByPk(req.params.id);
-   
+
         function deleteFile() {
             if (files) {
                 for (let index = 0; index < files.length; index++) {
@@ -182,7 +182,6 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     // DELETE an article
     try {
-      
         const article = await Articles.findByPk(req.params.id);
         if (article.file) {
             const elements = article.file.split(" + ");

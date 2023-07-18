@@ -13,6 +13,7 @@
         max-width: 1024px;
         margin: auto;
         .article {
+            position: relative;
             display: flex;
             flex-direction: column;
             margin: 1rem 0;
