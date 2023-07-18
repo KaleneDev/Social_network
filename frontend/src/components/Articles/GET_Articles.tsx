@@ -128,20 +128,19 @@ function Articles() {
                         {article.user && <p>Auteur: {article.user.username}</p>}
                         <p>Date de publication : {article.createdAt}</p>
                         <div className="article-buttons">
-                            <UPDATE_Articles
-                                propsParent={article.id}
-                                onPopupOpenChange={handlePopupOpenChange}
-                                index={index}
-                                data={article}
-                            />
-
                             {(user.id === article.user.id ||
                                 user.role === "admin") && (
-                                <DELETE_Articles propsParent={article.id} />
-                            )}
-
-                            {user.userId === article.user.id && (
-                                <UPDATE_Articles propsParent={article.id} />
+                                <>
+                                    <DELETE_Articles propsParent={article.id} />
+                                    <UPDATE_Articles
+                                        propsParent={article.id}
+                                        onPopupOpenChange={
+                                            handlePopupOpenChange
+                                        }
+                                        index={index}
+                                        data={article}
+                                    />
+                                </>
                             )}
                         </div>
                     </div>
