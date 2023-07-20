@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { ZoomOut, ZoomOutPopup } from "../../utils/AnimationText";
+import { ZoomOut, SlideInFromRight } from "../../utils/AnimationText";
 import DELETE_Articles from "./DELETE_Articles";
 import UPDATE_Articles from "./UPDATE_Articles";
 import Info from "../Infos/info";
@@ -122,26 +122,28 @@ function Articles() {
         articlesData.articles.map((article: any, index: number) => {
             return (
                 <ZoomOut key={article.id || index}>
-                    <div className="article" ref={elementRef}>
+                    <div className="article">
                         <h3>Titre : {article.title}</h3>
                         <p>Contenu : {article.content}</p>
                         {article.user && <p>Auteur: {article.user.username}</p>}
                         <p>Date de publication : {article.createdAt}</p>
                         <div className="article-buttons">
-                            {(user.id === article.user.id ||
-                                user.role === "admin") && (
-                                <>
-                                    <DELETE_Articles propsParent={article.id} />
-                                    <UPDATE_Articles
-                                        propsParent={article.id}
-                                        onPopupOpenChange={
-                                            handlePopupOpenChange
-                                        }
-                                        index={index}
-                                        data={article}
-                                    />
-                                </>
-                            )}
+                            {article.user &&
+                                (user.id === article.user.id ||
+                                    user.role === "admin") && (
+                                    <>
+                                        <UPDATE_Articles
+                                            propsParent={article.id}
+                                            onPopupOpenChange={
+                                                handlePopupOpenChange
+                                            }
+                                            index={index}
+                                        />
+                                        <DELETE_Articles
+                                            propsParent={article.id}
+                                        />
+                                    </>
+                                )}
                         </div>
                     </div>
                 </ZoomOut>
@@ -152,8 +154,9 @@ function Articles() {
     return (
         <div className="articles-container" ref={containerRef}>
             {applyBlur && <div className="blur-overlay blur-effect "></div>}
-
-            <h1>Liste des Postes</h1>
+            <SlideInFromRight>
+                <h1>Liste des Postes</h1>
+            </SlideInFromRight>
 
             {displayData}
             {popupOpenRefs.current.map((isOpen, index) => (

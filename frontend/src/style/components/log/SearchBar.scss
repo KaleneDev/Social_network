@@ -6,7 +6,7 @@
     input[type="text"] {
         padding: 10px;
         font-size: 16px;
-        border-radius: 4px 0 0 4px;
+        border-radius: 10px 0 0 10px;
         border: 1px solid #ccc;
         width: 100%;
     }
@@ -18,8 +18,9 @@
         color: #fff;
         font-size: 16px;
         border: none;
-        border-radius: 0 4px 4px 0;
+        border-radius: 0 10px 10px 0;
         height: 40.39px;
+        transition: all 0.3s ease-in-out;
 
         cursor: pointer;
         span:nth-child(2) {

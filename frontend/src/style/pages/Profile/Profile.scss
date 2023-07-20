@@ -3,6 +3,7 @@
     background-color: $secondary-color;
     padding: 1rem;
     .profile {
+        margin-top: 60px !important;
         min-height: calc(100vh - 60px - 2rem);
         display: grid;
         gap: 1rem;

@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "redux";
-import {
-    postArticles,
-} from "../../redux/articles/articles.action";
+import { postArticles } from "../../redux/articles/articles.action";
 
 import "../../style/pages/Home/POST_Articles.home.scss";
+import { ZoomOut, SlideInFromRight } from "../../utils/AnimationText";
 
 function POST_Articles() {
     const profile = useSelector((state: any) => state.userReducer.user);
@@ -16,12 +15,12 @@ function POST_Articles() {
     const [content, setContent] = useState("");
     const articlesDataRef = useRef(articlesData);
     useEffect(() => {
-        articlesDataRef.current = articlesData; 
-      }, [articlesData]);
-    
+        articlesDataRef.current = articlesData;
+    }, [articlesData]);
+
     const handlePostArticles = async (e: any) => {
         e.preventDefault();
-        
+
         const data = {
             title: title,
             content: content,
@@ -52,29 +51,33 @@ function POST_Articles() {
     };
     return (
         <div className="post-articles-container">
-            <h1>Poster un article</h1>
-            <form
-                className="post-articles-form"
-                action=""
-                onSubmit={(e) => handlePostArticles(e)}
-            >
-                <input
-                    type="text"
-                    placeholder="Titre"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <textarea
-                    name=""
-                    id=""
-                    cols={30}
-                    rows={10}
-                    placeholder="Contenu"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                ></textarea>
-                <button type="submit">Poster</button>
-            </form>
+            <SlideInFromRight>
+                <h1>Poster un article</h1>
+            </SlideInFromRight>
+            <ZoomOut>
+                <form
+                    className="post-articles-form"
+                    action=""
+                    onSubmit={(e) => handlePostArticles(e)}
+                >
+                    <input
+                        type="text"
+                        placeholder="Titre ..."
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <textarea
+                        name=""
+                        id=""
+                        cols={30}
+                        rows={10}
+                        placeholder="Contenu ..."
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                    ></textarea>
+                    <button type="submit">Poster</button>
+                </form>
+            </ZoomOut>
         </div>
     );
 }

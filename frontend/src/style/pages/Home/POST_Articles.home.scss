@@ -1,25 +1,37 @@
 @import "../../main.scss";
 .post-articles-container {
     max-width: 1024px;
-
     display: flex;
     flex-direction: column;
     margin: auto;
     .post-articles-form {
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        max-width: 1024;
         input {
             @include inputPrimary($primary-color);
             margin-bottom: 1rem;
+            width: 100%;
+            border-radius: 10px;
+            border: none;
+            box-sizing: border-box;
         }
         textarea {
             @include inputPrimary($primary-color);
-
+            width: 100%;
             resize: none;
+            border-radius: 10px;
+            border: none;
+            box-sizing: border-box;
         }
         button {
             margin: 1rem 0;
+            // width: 100%;
+            max-width: 200px;
             @include buttonPrimary($primary-color);
+            border-radius: 15px;
         }
     }
 }

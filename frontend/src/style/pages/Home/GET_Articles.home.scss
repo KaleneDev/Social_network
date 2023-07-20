@@ -19,15 +19,17 @@
             margin: 1rem 0;
             padding: 1rem;
             background-color: $white;
-            border-radius: 5px;
+            border-radius: 15px;
             transition: transform 0.3s;
             .btn-update {
                 margin-top: 1rem;
                 @include buttonPrimary($primary-color);
+                border-radius: 15px;
             }
             .btn-delete {
                 margin-top: 1rem;
                 @include buttonPrimary($danger-color);
+                border-radius: 15px;
             }
             .article-buttons {
                 display: flex;
