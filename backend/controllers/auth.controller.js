@@ -90,7 +90,6 @@ exports.signIn = async (req, res) => {
             httpOnly: true,
             maxAge,
             domain: process.env.DOMAIN,
-            SameSite: "none",
             Secure: true,
         });
 
