@@ -25,7 +25,7 @@ function SignInForm() {
                 }
             )
             .then(() => {
-                window.location.href = "/";
+                // window.location.href = "/";
             })
             .catch((error) => {
                 if (error.response.data.errors.email) {
