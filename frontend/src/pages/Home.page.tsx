@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../style/pages/Home/home.scss";
+import "../style/pages/Home/Home.scss";
 import GET_Articles from "../components/Articles/GET_Articles";
 import POST_Articles from "../components/Articles/POST_Articles";
 
