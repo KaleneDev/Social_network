@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { signUpErrors, signInErrors } = require("../utils/errors.utils");
 require("dotenv").config();
+
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 exports.signUp = async (req, res) => {
@@ -88,7 +89,7 @@ exports.signIn = async (req, res) => {
         res.cookie("jwt", token, {
             httpOnly: true,
             maxAge,
-            domain: process.env.CLIENT_URL,
+            domain: process.env.DOMAIN,
         });
 
         res.status(200).json({
