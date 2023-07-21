@@ -86,8 +86,9 @@ exports.signIn = async (req, res) => {
         );
 
         res.cookie("jwt", token, {
-            // httpOnly: true,
+            httpOnly: true,
             maxAge,
+            domain: process.env.CLIENT_URL,
         });
 
         res.status(200).json({
