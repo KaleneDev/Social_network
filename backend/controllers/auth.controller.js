@@ -84,10 +84,9 @@ exports.signIn = async (req, res) => {
                 expiresIn: maxAge,
             }
         );
-        res.setHeader("Authorization", `Bearer ${token}`);
 
         res.cookie("jwt", token, {
-            httpOnly: true,
+            // httpOnly: true,
             maxAge,
         });
 

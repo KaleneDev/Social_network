@@ -25,11 +25,9 @@ function SignInForm() {
                 }
             )
             .then(() => {
-          
-                window.location.href = "/";
+                // window.location.href = "/";
             })
             .catch((error) => {
-                console.log(error.response);
                 if (error.response.data.errors.email) {
                     setErrorEmail(true);
                 } else {
