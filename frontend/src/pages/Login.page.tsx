@@ -1,6 +1,6 @@
 import { useContext, useRef } from "react";
 import { UserIdContext } from "../components/AppContext";
-import Log from "../components/Log/Login";
+import Log from "../components/log/Login";
 import Profile from "./Profile.page";
 import Header from "../components/Header/Header";
 import "../style/pages/Login/Login.scss";
