@@ -1,5 +1,5 @@
 import UpdateProfile from "../components/Profile/UpdateProfile";
-import "../style/pages//profile/Profile.scss";
+import "../style/pages/Profile/Profile.scss";
 
 function Profile() {
     return (
