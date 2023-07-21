@@ -89,7 +89,7 @@ exports.signIn = async (req, res) => {
         res.cookie("jwt", token, {
             httpOnly: true,
             maxAge,
-            domain: process.env.DOMAIN,
+            domain: ".social-network-kalene.netlify.app",
         });
 
         res.status(200).json({
