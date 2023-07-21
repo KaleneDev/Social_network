@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { UserIdContext } from "../AppContext";
-import Logout from "../log/Logout.tsx";
-import SearchBar from "../log/SearchBar.tsx";
+import Logout from "../Log/Logout.tsx";
+import SearchBar from "../Log/SearchBar.tsx";
 import "../../style/components/Navbar.scss";
 import { SlideInFromTop } from "../../utils/AnimationText";
 function Navbar() {
