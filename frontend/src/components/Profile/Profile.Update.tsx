@@ -4,6 +4,7 @@ import { Dispatch } from "redux";
 import { updateUser } from "../../redux/user/user.action";
 import Success from "../Infos/success";
 import "../../style/pages/Profile/Profile.Update.scss";
+import { ZoomOut } from "../../utils/AnimationText";
 
 function ContainerProfileUp() {
     const profile = useSelector((state: any) => state.userReducer.user);
@@ -26,6 +27,7 @@ function ContainerProfileUp() {
     // ERRORS
     const [oldPasswordError, setOldPasswordError] = useState<boolean>(false);
     const [newPasswordError, setNewPasswordError] = useState<boolean>(false);
+    const [usernameError, setUsernameError] = useState<boolean>(false);
     // SUCCESS
     const successRef = useRef(success);
     const errorRef = useRef(error);
@@ -77,6 +79,11 @@ function ContainerProfileUp() {
             } else {
                 setNewPasswordError(false);
             }
+            if (error.errors.username && success === false) {
+                setUsernameError(true);
+            } else {
+                setUsernameError(false);
+            }
         }
     }, [
         oldPassword,
@@ -87,76 +94,87 @@ function ContainerProfileUp() {
         profile.username,
     ]);
     return (
-        <div className="container-profile-Up">
-            <h3>Modifier votre profil</h3>
-            <form action="">
-                <label htmlFor="username">Nom d'utilisateur</label>
-                <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    defaultValue={profile.username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    autoComplete="off"
-                />
-                <label htmlFor="email">Email</label>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    defaultValue={profile.email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="off"
-                />
-                <label htmlFor="oldPassword">Ancien mot de passe</label>
-                <input
-                    type="password"
-                    name="oldPassword"
-                    id="oldPassword"
-                    onChange={(e) => {
-                        setOldPassword(e.target.value);
-                    }}
-                    autoComplete="new-password"
-                />
+        <>
+            <ZoomOut>
+                <div className="container-profile-Up">
+                    <h3>Modifier votre profil</h3>
+                    <form action="">
+                        <label htmlFor="username">Nom d'utilisateur</label>
+                        <input
+                            type="text"
+                            name="username"
+                            id="username"
+                            defaultValue={profile.username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            autoComplete="off"
+                        />
+                        {usernameError && error.errors && (
+                            <p className="error">{error.errors.username}</p>
+                        )}
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            defaultValue={profile.email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            autoComplete="off"
+                        />
+                        <label htmlFor="oldPassword">Ancien mot de passe</label>
+                        <input
+                            type="password"
+                            name="oldPassword"
+                            id="oldPassword"
+                            onChange={(e) => {
+                                setOldPassword(e.target.value);
+                            }}
+                            autoComplete="new-password"
+                        />
 
-                {oldPasswordError && (
-                    <p className="error">{error.errors.oldPassword}</p>
-                )}
-                <label htmlFor="newPassword1">Nouveau mot de passe</label>
-                <input
-                    type="password"
-                    name="newPassword1"
-                    id="newPassword1"
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    autoComplete="off"
-                />
-                {newPasswordError && (
-                    <p className="error">{error.errors.newPassword}</p>
-                )}
-                <label htmlFor="NewPassword2">Confirmer mot de passe</label>
-                <input
-                    type="password"
-                    name="NewPassword2"
-                    id="NewPassword2"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    autoComplete="off"
-                />
-                <input
-                    className="submit-button"
-                    type="submit"
-                    value="Envoyer"
-                    onClick={(e) => {
-                        handleProfile(e);
-                    }}
-                />
-            </form>
+                        {oldPasswordError && error.errors && (
+                            <p className="error">{error.errors.oldPassword}</p>
+                        )}
+                        <label htmlFor="newPassword1">
+                            Nouveau mot de passe
+                        </label>
+                        <input
+                            type="password"
+                            name="newPassword1"
+                            id="newPassword1"
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            autoComplete="off"
+                        />
+                        {newPasswordError && error.errors && (
+                            <p className="error">{error.errors.newPassword}</p>
+                        )}
+                        <label htmlFor="NewPassword2">
+                            Confirmer mot de passe
+                        </label>
+                        <input
+                            type="password"
+                            name="NewPassword2"
+                            id="NewPassword2"
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            autoComplete="off"
+                        />
+                        <input
+                            className="submit-button"
+                            type="submit"
+                            value="Envoyer"
+                            onClick={(e) => {
+                                handleProfile(e);
+                            }}
+                        />
+                    </form>
+                </div>
+            </ZoomOut>
             {success && (
                 <Success
                     text="Votre profile a bien été mis à jour"
                     ref={containerSuccessRef}
                 />
             )}
-        </div>
+        </>
     );
 }
 

@@ -13,6 +13,7 @@
         input {
             @include inputPrimary($primary-color);
             margin-bottom: 1rem;
+            margin-top: 1rem;
             width: 100%;
             border-radius: 10px;
             border: none;

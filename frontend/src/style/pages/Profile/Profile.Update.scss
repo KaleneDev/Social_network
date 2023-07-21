@@ -1,4 +1,8 @@
 @import "../../main.scss";
 .container-profile-Up {
     @include success;
+    .error {
+        margin-top: 0;
+        color: $danger-color;
+    }
 }

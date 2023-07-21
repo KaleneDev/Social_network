@@ -27,8 +27,6 @@ function SignUpForm() {
         message: "",
     });
 
-    const [errorMessage, setErrorMessage] = useState(false);
-
     const handleRegister = async (e: any) => {
         e.preventDefault();
 
@@ -44,8 +42,7 @@ function SignUpForm() {
                     withCredentials: true,
                 }
             )
-            .then((response) => {
-                console.log(response);
+            .then(() => {
                 setFormSubmitted(true);
                 // connexion automatique après inscription
                 axios
@@ -104,7 +101,6 @@ function SignUpForm() {
                 } else {
                     setErrorUsername({ isErrorUsername: false, message: "" });
                 }
-                setErrorMessage(true);
             });
     };
 

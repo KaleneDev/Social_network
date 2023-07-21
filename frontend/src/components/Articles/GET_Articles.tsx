@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { ZoomOut, SlideInFromRight } from "../../utils/AnimationText";
+import { ZoomOut, TextAnimationBtoT } from "../../utils/AnimationText";
 import DELETE_Articles from "./DELETE_Articles";
 import UPDATE_Articles from "./UPDATE_Articles";
 import Info from "../Infos/info";
@@ -9,10 +9,9 @@ import { updateArticles } from "../../redux/articles/articles.action";
 import "../../style/pages/Home/GET_Articles.home.scss";
 import { useRef, useState, useEffect } from "react";
 
-function Articles() {
+function Articles(props: any) {
     const articlesData = useSelector((state: any) => state.articlesReducer);
     const user = useSelector((state: any) => state.userReducer.user);
-    console.log(user);
 
     const containerInfoRef = useRef<any>(null);
     const errorMessages = useSelector(
@@ -53,6 +52,23 @@ function Articles() {
     const containerRef = useRef(null);
     const elementRef = useRef(null);
     const [ref, setRef] = useState(elementRef);
+
+    // article down to add new article
+    const [clickPost, setClickPost] = useState(false);
+    useEffect(() => {
+        setClickPost(props.propsParent);
+    }, [clickPost, props.propsParent]);
+
+    if (clickPost) {
+        // const lastArticle = document.querySelector(
+        //     ".container-home .articles-container .ZoomOut:last-child"
+        // );
+
+        // const posts = document.querySelectorAll(
+        //     ".container-home .articles-container .ZoomOut"
+        // );
+        // const newPost = elementRef.current;
+    }
 
     const popupRef = useRef(null);
     const [popup, setPopup] = useState(popupRef);
@@ -122,7 +138,7 @@ function Articles() {
         articlesData.articles.map((article: any, index: number) => {
             return (
                 <ZoomOut key={article.id || index}>
-                    <div className="article">
+                    <div className="article" ref={elementRef}>
                         <h3>Titre : {article.title}</h3>
                         <p>Contenu : {article.content}</p>
                         {article.user && <p>Auteur: {article.user.username}</p>}
@@ -154,9 +170,9 @@ function Articles() {
     return (
         <div className="articles-container" ref={containerRef}>
             {applyBlur && <div className="blur-overlay blur-effect "></div>}
-            <SlideInFromRight>
+            <TextAnimationBtoT>
                 <h1>Liste des Postes</h1>
-            </SlideInFromRight>
+            </TextAnimationBtoT>
 
             {displayData}
             {popupOpenRefs.current.map((isOpen, index) => (

@@ -24,7 +24,7 @@ function SignInForm() {
                     withCredentials: true,
                 }
             )
-            .then((response) => {
+            .then(() => {
           
                 window.location.href = "/";
             })

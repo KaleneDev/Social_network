@@ -5,6 +5,7 @@ import "moment/locale/fr";
 import { Dispatch } from "redux";
 import { updateBio } from "../../redux/user/user.action";
 import Success from "../Infos/success";
+import { ZoomOut } from "../../utils/AnimationText";
 
 function ContainerBio() {
     const profile = useSelector((state: any) => state.userReducer.user);
@@ -20,26 +21,20 @@ function ContainerBio() {
     const date = moment(dateStr).locale("fr");
     const dateFr = date.format("DD/MM/YYYY à HH:mm:ss");
     // SUCCESS
-
+    const successRef = useRef(success);
+    useEffect(() => {
+        successRef.current = success;
+    }, [success]);
     // REF
     const containerSuccessRef = useRef<any>(null);
-    const handleUpdate = (e: any) => {
+    const handleUpdate = async (e: any) => {
         e.preventDefault();
-
-        if (upForm === false) {
-            setUpForm(!upForm);
-        }
-        if (upForm === true) {
-            setUpForm(!upForm);
-        }
         const data = {
             bio: bio,
         };
+        await dispatch(updateBio(profile.id, data));
 
-        dispatch(updateBio(profile.id, data));
-    };
-    useEffect(() => {
-        if (success) {
+        if (successRef) {
             containerSuccessRef.current.style.visibility = "visible";
             containerSuccessRef.current.style.opacity = "1";
             setTimeout(() => {
@@ -49,7 +44,14 @@ function ContainerBio() {
                 }, 1000);
             }, 8000);
         }
-    }, [success, containerSuccessRef]);
+        if (upForm === false) {
+            setUpForm(!upForm);
+        }
+        if (upForm === true) {
+            setUpForm(!upForm);
+        }
+    };
+    useEffect(() => {}, [success, containerSuccessRef]);
     const handleSwitch = () => {
         console.log("switch");
 
@@ -66,47 +68,54 @@ function ContainerBio() {
     };
 
     return (
-        <div className="container-bio">
-            <div className="bio-update">
-                <h3>Bio</h3>
-                <textarea
-                    typeof="text"
-                    name="bio"
-                    id="bio"
-                    onChange={(e) => handleChange(e)}
-                    onClick={() => handleSwitch()}
-                    defaultValue={profile.bio}
-                    className={`${
-                        upForm ? " bio-active" : !upForm ? " bio-inactive" : ""
-                    }`}
-                />
-                {!upForm && (
-                    <>
-                        <button
-                            type="submit"
-                            onClick={() => setUpForm(!upForm)}
-                        >
-                            Modifier
-                        </button>
-                    </>
-                )}
-                {upForm && (
-                    <>
-                        <button type="submit" onClick={handleUpdate}>
-                            Valider
-                        </button>
-                    </>
-                )}
-            </div>
-            <p className="createAt">Membre depuis le : {dateFr}</p>
-
+        <>
+            <ZoomOut>
+                <div className="container-bio">
+                    <div className="bio-update">
+                        <h3>Bio</h3>
+                        <textarea
+                            typeof="text"
+                            name="bio"
+                            id="bio"
+                            onChange={(e) => handleChange(e)}
+                            onClick={() => handleSwitch()}
+                            defaultValue={profile.bio}
+                            className={`${
+                                upForm
+                                    ? " bio-active"
+                                    : !upForm
+                                    ? " bio-inactive"
+                                    : ""
+                            }`}
+                        />
+                        {!upForm && (
+                            <>
+                                <button
+                                    type="submit"
+                                    onClick={() => setUpForm(!upForm)}
+                                >
+                                    Modifier
+                                </button>
+                            </>
+                        )}
+                        {upForm && (
+                            <>
+                                <button type="submit" onClick={handleUpdate}>
+                                    Valider
+                                </button>
+                            </>
+                        )}
+                    </div>
+                    <p className="createAt">Membre depuis le : {dateFr}</p>
+                </div>
+            </ZoomOut>
             {success && (
                 <Success
                     text="Votre bio a bien été mis à jour"
                     ref={containerSuccessRef}
                 />
             )}
-        </div>
+        </>
     );
 }
 

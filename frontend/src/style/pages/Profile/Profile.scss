@@ -9,7 +9,10 @@
         gap: 1rem;
         max-width: 1024px;
         margin: auto;
-        & > div {
+        .container-avatar,
+        .container-bio,
+        .container-profile-Up,
+        .container-delete {
             background-color: $white;
             padding: 1rem;
             border-radius: 10px;

@@ -2,16 +2,28 @@
 
 .container-home {
     .articles-container {
+        max-width: 1024px;
+        margin: auto;
+        position: relative;
+
         .article-animation {
             transition: transform 0.5s ease;
             transform: translateY(0);
         }
-
         .article-animation.animate {
             transform: translateY(100%);
         }
-        max-width: 1024px;
-        margin: auto;
+        .new-article {
+            position: static;
+            width: 100%;
+        }
+        .ZoomOut {
+            // transform: scale(0.5) ;
+            transition: transform 0.5s ease;
+        }
+        .old-article01 {
+            transform: translateY(296.52px + 32px) !important;
+        }
         .article {
             position: relative;
             display: flex;
@@ -20,7 +32,10 @@
             padding: 1rem;
             background-color: $white;
             border-radius: 15px;
-            transition: transform 0.3s;
+
+            opacity: 1;
+            transform: translateY(0);
+            // transition: opacity 0.5s ease, transform 0.5s ease;
             .btn-update {
                 margin-top: 1rem;
                 @include buttonPrimary($primary-color);
@@ -40,4 +55,5 @@
 }
 h1 {
     margin-top: 0;
+    margin-bottom: 0;
 }

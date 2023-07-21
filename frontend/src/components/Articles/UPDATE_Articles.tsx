@@ -17,11 +17,11 @@ function UPDATE_Articles(props: any) {
     //     content: "test",
     //     user_id: profileData.user.id,
     // };
-    const handleUpdateArticles = (e: any, id: string) => {
+    const handleUpdateArticles = (e: any, data: any) => {
         e.preventDefault();
         props.onPopupOpenChange(props.index, true);
-        
-      
+        console.log(data);
+
         // dispatch(updateArticles(id, data));
     };
 

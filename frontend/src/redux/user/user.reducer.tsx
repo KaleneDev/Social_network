@@ -51,6 +51,7 @@ export default function userReducer(state = initialState, action: any) {
             return {
                 ...state,
                 successUpdateUser: true,
+                error: "",
             };
         case UPDATE_USER_ERROR:
             return {

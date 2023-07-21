@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { uploadPicture } from "../../redux/user/user.action";
 import { Dispatch } from "redux";
+import { ZoomOut } from "../../utils/AnimationText";
 
 function ContainerAvatar() {
     const dispatch = useDispatch<Dispatch<any>>();
@@ -9,9 +10,7 @@ function ContainerAvatar() {
     const [file, setFile] = useState<any>(null);
     const uid = useSelector((state: any) => state.userReducer);
 
-    const handlePicture = (e: any) => {
-        e.preventDefault();
-
+    const handlePicture = () => {
         if (file && uid.user.id && uid.user.username) {
             console.log(uid.user.id);
             console.log(uid.user.username);
@@ -103,6 +102,7 @@ function ContainerAvatar() {
         }
     };
     return (
+        <ZoomOut>
         <div className="container-avatar">
             <h1 ref={usernameRef}>Profile de {usernameDisplay}</h1>
 
@@ -126,7 +126,7 @@ function ContainerAvatar() {
                 <br />
                 <form
                     action=""
-                    onSubmit={(e) => handlePicture(e)}
+                    onSubmit={() => handlePicture()}
                     className="upload-picture"
                     id="upload-form"
                 >
@@ -152,6 +152,7 @@ function ContainerAvatar() {
                 <br />
             </div>
         </div>
+        </ZoomOut>
     );
 }
 

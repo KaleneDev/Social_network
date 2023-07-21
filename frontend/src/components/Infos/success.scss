@@ -11,6 +11,8 @@
     padding: 1rem 1.5rem;
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
+    z-index: 100;
+
     .success {
         font-weight: 600;
         font-size: 1rem;

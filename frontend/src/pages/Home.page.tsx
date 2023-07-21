@@ -1,21 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "../style/pages/Home/home.scss";
 import GET_Articles from "../components/Articles/GET_Articles";
-import ADD_Articles from "../components/Articles/POST_Articles";
+import POST_Articles from "../components/Articles/POST_Articles";
 
 function Home() {
-    const [applyBlur, setApplyBlur] = useState(false);
+    const [posted, setPosted] = useState(false);
 
-    useEffect(() => {
-        console.log(applyBlur);
-    }, [applyBlur]);
-        
+    const handleArticlePostedCallback = (newArticleData: any) => {
+        setPosted(newArticleData);
+    };
+
     return (
         <>
             <div className="home">
                 <div className="container-home">
-                    <ADD_Articles />
-                    <GET_Articles />
+                    <POST_Articles
+                        onArticlePosted={handleArticlePostedCallback}
+                    />
+                    <GET_Articles propsParent={posted} />
                 </div>
             </div>
         </>

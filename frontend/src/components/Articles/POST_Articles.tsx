@@ -4,9 +4,12 @@ import { Dispatch } from "redux";
 import { postArticles } from "../../redux/articles/articles.action";
 
 import "../../style/pages/Home/POST_Articles.home.scss";
-import { ZoomOut, SlideInFromRight } from "../../utils/AnimationText";
+import {
+    ZoomOut,
+    TextAnimationBtoT,
+} from "../../utils/AnimationText";
 
-function POST_Articles() {
+function POST_Articles(props: any) {
     const profile = useSelector((state: any) => state.userReducer.user);
     const dispatch = useDispatch<Dispatch<any>>();
     const articlesData = useSelector((state: any) => state.articlesReducer);
@@ -20,15 +23,30 @@ function POST_Articles() {
 
     const handlePostArticles = async (e: any) => {
         e.preventDefault();
-
         const data = {
             title: title,
             content: content,
             user_id: profile.id,
         };
-
         try {
+            setTimeout(() => {
+                updateArticleAnimation();
+            }, 100);
             await dispatch(postArticles(data));
+
+            function updateArticleAnimation() {
+                const articles = document.querySelectorAll(
+                    ".articles-container .article"
+                );
+                articles.forEach((article: any) => {
+                    article.style.opacity = "1";
+                    article.style.transform = `translateY(${50}px)`;
+                    article.style.transition = `opacity 0.5s ease, transform 0.5s ease`;
+                });
+            }
+            props.onArticlePosted(true);
+
+
             const newArticle = {
                 title,
                 content,
@@ -45,15 +63,15 @@ function POST_Articles() {
             setContent("");
         } catch (error) {
             console.log(error);
-
-            // Gérer les erreurs si nécessaire
         }
     };
+
     return (
         <div className="post-articles-container">
-            <SlideInFromRight>
+            <TextAnimationBtoT>
                 <h1>Poster un article</h1>
-            </SlideInFromRight>
+            </TextAnimationBtoT>
+
             <ZoomOut>
                 <form
                     className="post-articles-form"
@@ -75,7 +93,9 @@ function POST_Articles() {
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                     ></textarea>
-                    <button type="submit">Poster</button>
+                    <button type="submit" id="addPost">
+                        Poster
+                    </button>
                 </form>
             </ZoomOut>
         </div>
