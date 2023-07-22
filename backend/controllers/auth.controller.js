@@ -90,7 +90,7 @@ exports.signIn = async (req, res) => {
             httpOnly: true,
             maxAge,
             domain: process.env.DOMAIN,
-            Secure: true,
+            // Secure: true,
         });
 
         res.status(200).json({
