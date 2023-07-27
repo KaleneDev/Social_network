@@ -31,9 +31,19 @@ Le projet "Social Network" est une application de réseau social conçue pour pe
 - Pour démarrer le backend, exécutez la commande **`npm start`** ou node **`server.js`** depuis le répertoire du backend.
 - Pour démarrer le frontend, exécutez la commande **`npm run dev`** depuis le répertoire du frontend.
 Accédez à l'URL indiquée dans votre navigateur pour utiliser l'application "Social Network".
+## Technologies utilisées
+### Front-end:
+- Vite: Frontend Tooling
+- React: JavaScript library for building user interfaces.
+- HTML5 and CSS3: Markup and styling of the project.
+- JavaScript: Logic and interactivity of the application.
+- Webpack: Module bundler for building the project.
+### Back-end:
+- Node js
+- Express
+- Multer
 ## Contribution
 Les contributions à l'application "Social Network" sont les bienvenues ! Si vous souhaitez contribuer, veuillez suivre les étapes suivantes :
-
 1. Fork du projet depuis le référentiel principal.
 2. Créez une branche pour votre contribution (**`git checkout -b ma-contribution`**).
 3. Effectuez les modifications ou ajouts nécessaires.
