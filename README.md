@@ -24,7 +24,7 @@ Le projet "Social Network" est une application de réseau social conçue pour pe
 - Assurez-vous d'avoir Node.js installé sur votre machine.
 - Naviguez jusqu'au répertoire du frontend dans votre terminal.
 - Exécutez la commande **`npm install`** pour installer toutes les dépendances.
-- Créez un fichier **`env.js`** à la racine du frontend et ajoutez les variables d'environnement nécessaires. Consultez le fichier **`.env.example`** pour connaître les variables requises.
+- Créez un fichier **`.env`** à la racine du frontend et ajoutez les variables d'environnement nécessaires. Consultez le fichier **`.env.example`** pour connaître les variables requises.
 #### 3. Base de données:
 - Configurez votre base de données selon les besoins du projet. Assurez-vous d'obtenir les informations de connexion (hôte, nom d'utilisateur, mot de passe, etc.) nécessaires.
 #### 4. Exécution du projet:
