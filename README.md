@@ -21,7 +21,6 @@ Le projet "Social Network" est une application de réseau social conçue pour pe
 - Exécutez la commande **`npm install`** pour installer toutes les dépendances.
 - Créez un fichier **`.env`** à la racine du backend et ajoutez les variables d'environnement nécessaires. Consultez le fichier **`.env.example`** pour connaître les variables requises.
 #### 2. Frontend avec React:
-- Assurez-vous d'avoir Node.js installé sur votre machine.
 - Naviguez jusqu'au répertoire du frontend dans votre terminal.
 - Exécutez la commande **`npm install`** pour installer toutes les dépendances.
 - Créez un fichier **`.env`** à la racine du frontend et ajoutez les variables d'environnement nécessaires. Consultez le fichier **`.env.example`** pour connaître les variables requises.
