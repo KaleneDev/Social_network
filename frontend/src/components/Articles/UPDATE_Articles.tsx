@@ -20,8 +20,6 @@ function UPDATE_Articles(props: any) {
     const handleUpdateArticles = (e: any, data: any) => {
         e.preventDefault();
         props.onPopupOpenChange(props.index, true);
-        console.log(data);
-
         // dispatch(updateArticles(id, data));
     };
 

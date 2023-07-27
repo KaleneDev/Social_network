@@ -63,7 +63,6 @@ function Articles(props: any) {
         // const lastArticle = document.querySelector(
         //     ".container-home .articles-container .ZoomOut:last-child"
         // );
-
         // const posts = document.querySelectorAll(
         //     ".container-home .articles-container .ZoomOut"
         // );
@@ -117,12 +116,37 @@ function Articles(props: any) {
     ) => {
         e.preventDefault();
         const updatedArticle = {
-            ...articlesData.articles[index],
+            // ...articlesData.articles[index],
             title: newTitle,
             content: newContent,
         };
+
         dispatch(updateArticles(id, updatedArticle));
 
+        console.log(updatedArticle);
+        console.log(index);
+
+        // const articleElement = document.querySelector(
+        //     `.container-home .articles-container .ZoomOut:nth-child(${
+        //         index + 1
+        //     }) .article`
+        // );
+        const articleElement = document
+            .querySelectorAll(`.container-home .articles-container .ZoomOut`)
+            [index].querySelector(".article");
+        if (articleElement) {
+            const titleElement = articleElement.querySelector("h3");
+            const contentElement =
+                articleElement.querySelector("p:nth-of-type(1)");
+
+            if (titleElement) {
+                titleElement.textContent = `Titre : ${newTitle}`;
+            }
+
+            if (contentElement) {
+                contentElement.textContent = `Contenu : ${newContent}`;
+            }
+        }
         setApplyBlur(false);
         setPopupOpen(false);
         setTimeout(() => {

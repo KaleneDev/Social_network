@@ -12,6 +12,11 @@
     max-width: 1025px;
     overflow-x: hidden;
     padding: 1rem;
+    &.home-page {
+        padding: 0;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
     .connection-form,
     .register-form {
         padding: 1rem;
@@ -26,7 +31,6 @@
                 color: darken($primary-color, 10%);
             }
         }
-
         .form-container {
             form {
                 display: flex;

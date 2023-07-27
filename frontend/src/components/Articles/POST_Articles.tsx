@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { UserIdContext } from "../AppContext";
 import { Dispatch } from "redux";
 import { postArticles } from "../../redux/articles/articles.action";
-
+import SignInForm from "../Log/SignInForm";
 import "../../style/pages/Home/POST_Articles.home.scss";
-import {
-    ZoomOut,
-    TextAnimationBtoT,
-} from "../../utils/AnimationText";
+import "../../style/pages/Login/Login.scss";
+import { ZoomOut } from "../../utils/AnimationText";
 
 function POST_Articles(props: any) {
     const profile = useSelector((state: any) => state.userReducer.user);
     const dispatch = useDispatch<Dispatch<any>>();
     const articlesData = useSelector((state: any) => state.articlesReducer);
+    const uid = useContext(UserIdContext);
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -46,7 +46,6 @@ function POST_Articles(props: any) {
             }
             props.onArticlePosted(true);
 
-
             const newArticle = {
                 title,
                 content,
@@ -68,36 +67,41 @@ function POST_Articles(props: any) {
 
     return (
         <div className="post-articles-container">
-            <TextAnimationBtoT>
-                <h1>Poster un article</h1>
-            </TextAnimationBtoT>
-
-            <ZoomOut>
-                <form
-                    className="post-articles-form"
-                    action=""
-                    onSubmit={(e) => handlePostArticles(e)}
-                >
-                    <input
-                        type="text"
-                        placeholder="Titre ..."
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <textarea
-                        name=""
-                        id=""
-                        cols={30}
-                        rows={10}
-                        placeholder="Contenu ..."
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                    ></textarea>
-                    <button type="submit" id="addPost">
-                        Poster
-                    </button>
-                </form>
-            </ZoomOut>
+            {uid ? (
+                <ZoomOut>
+                    <form
+                        className="post-articles-form"
+                        action=""
+                        onSubmit={(e) => handlePostArticles(e)}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Titre ..."
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                        <textarea
+                            name=""
+                            id=""
+                            cols={30}
+                            rows={10}
+                            placeholder="Contenu ..."
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                        ></textarea>
+                        <button type="submit" id="addPost">
+                            Poster
+                        </button>
+                    </form>
+                </ZoomOut>
+            ) : (
+                <div className="login-container home-page">
+                    <div className="connection-form ">
+                        <p>Connectez-vous pour poster un article</p>
+                        <SignInForm />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
