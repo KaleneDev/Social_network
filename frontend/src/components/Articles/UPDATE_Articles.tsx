@@ -19,8 +19,9 @@ function UPDATE_Articles(props: any) {
     // };
     const handleUpdateArticles = (e: any, data: any) => {
         e.preventDefault();
+        console.log(data);
+        
         props.onPopupOpenChange(props.index, true);
-        // dispatch(updateArticles(id, data));
     };
 
     return (
