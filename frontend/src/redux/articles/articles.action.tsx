@@ -104,6 +104,8 @@ export const getArticlesByUserId = (uid: string) => {
 export const postArticles = (data: any) => async (dispatch: any) => {
     const headers = {
         "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+
     };
     await axios
         .post(`${import.meta.env.VITE_APP_URL}articles`, data, {
@@ -121,6 +123,9 @@ export const deleteArticles = (id: string) => {
     return (dispatch: any) => {
         axios
             .delete(`${import.meta.env.VITE_APP_URL}articles/id/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                },
                 withCredentials: true,
             })
             .then((res) => {
@@ -135,6 +140,9 @@ export const updateArticles = (id: string, data: any) => {
     return (dispatch: any) => {
         axios
             .put(`${import.meta.env.VITE_APP_URL}articles/id/${id}`, data, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                },
                 withCredentials: true,
             })
             .then((res) => {

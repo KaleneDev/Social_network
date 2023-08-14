@@ -7,8 +7,8 @@ const Articles = require("../models/Articles.model");
 
 const auth = async (req, res, next) => {
     try {
-        const token = req.cookies.jwt;
-
+        const authHeader = req.headers["authorization"];
+        const token = authHeader && authHeader.split(" ")[1];
         if (token) {
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -26,8 +26,8 @@ const auth = async (req, res, next) => {
 };
 const authArticles = async (req, res, next) => {
     try {
-        const token = req.cookies.jwt;
-
+        const authHeader = req.headers["authorization"];
+        const token = authHeader && authHeader.split(" ")[1];
         if (token) {
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
             const { userId, role } = decodedToken;
@@ -59,7 +59,6 @@ const authArticles = async (req, res, next) => {
 };
 
 const requireAuth = (req, res, next) => {
-    // res.header("Access-Control-Allow-Headers", "authorization");
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 

@@ -25,7 +25,13 @@ function SignInForm() {
                 }
             )
             .then((res) => {
+                const maxAge = 3 * 24 * 60 * 60 * 1000;
+                const expirationDate = new Date().getTime() + maxAge;
                 localStorage.setItem("jwt", res.data.token);
+                localStorage.setItem(
+                    "jwtExpiration",
+                    expirationDate.toString()
+                );
                 window.location.href = "/";
             })
             .catch((error) => {
@@ -47,14 +53,15 @@ function SignInForm() {
     return (
         <div className="form-container">
             <div>Bienvenue sur mon réseau social</div>
-            <form action="" 
-            >
+            <form action="">
                 <label htmlFor="email">Email</label>
                 <input
                     type="email"
                     name="email"
                     id="email"
-                    onChange={(e) => {setEmail(e.target.value)} }
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                    }}
                     value={email}
                 />
                 {errorEmail && (
@@ -73,7 +80,9 @@ function SignInForm() {
                         Mot de passe incorrect.
                     </span>
                 )}
-                <button onClick={handleLogin} type="submit">Connexion</button>
+                <button onClick={handleLogin} type="submit">
+                    Connexion
+                </button>
             </form>
             {errorMessage && (
                 <span className="email error">

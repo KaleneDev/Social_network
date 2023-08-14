@@ -1,22 +1,20 @@
 import axios from "axios";
-import cookie from "js-cookie";
 import "../../style/components/Log/Logout.scss";
 
 function Logout() {
-    const removeCookie = (key: any) => {
-        if (typeof window !== "undefined") {
-            cookie.remove(key, { expires: 1 });
-        }
-    };
-
     const logout = async () => {
         await axios({
             method: "get",
             url: `${import.meta.env.VITE_APP_URL}users/logout`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
             withCredentials: true,
         })
             .then(() => {
-                removeCookie("jwt");
+                if (typeof localStorage !== "undefined") {
+                    localStorage.removeItem("jwt");
+                }
                 window.location.reload();
             })
             .catch((err) => {
