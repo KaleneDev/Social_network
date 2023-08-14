@@ -38,7 +38,8 @@ const authArticles = async (req, res, next) => {
                     const userArticle = await Articles.findByPk(articleId);
                     if (userArticle.user_id !== userId && role !== "admin") {
                         return res.status(400).json({
-                            message: "Vous n'avez pas les droits pour modifier cet article.",
+                            message:
+                                "Vous n'avez pas les droits pour modifier cet article.",
                         });
                     }
                 }
@@ -58,12 +59,17 @@ const authArticles = async (req, res, next) => {
 };
 
 const requireAuth = (req, res, next) => {
-    const token = req.cookies.jwt;
+    // res.header("Access-Control-Allow-Headers", "authorization");
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    // const token = req.cookies.jwt;
+
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
             if (err) {
                 console.log(err.message);
-                res.redirect("/login");
+                // res.redirect("/login");
             } else {
                 res.locals.user = decodedToken;
                 next();

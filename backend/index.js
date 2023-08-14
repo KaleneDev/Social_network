@@ -14,8 +14,8 @@ const app = express();
 const corsOptions = {
     origin: process.env.CLIENT_URL,
     credentials: true,
-    allowedHeaders: ["sessionId", "Content-Type"],
-    exposedHeaders: ["sessionId"],
+    allowedHeaders: ["sessionId", "Content-Type", "Authorization"],
+    exposedHeaders: 'authorization',
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue: false,
 };
@@ -44,10 +44,6 @@ app.use(cookieParser());
 // Routes
 app.get("/", (req, res) => {
     res.send("Salut, c'est moi le serveur !");
-});
-app.get("/test", (req, res) => {
-    const token = req.cookies.jwt;
-    res.send({ token });
 });
 app.get("/setcookie", (req, res) => {
     res.cookie(`Cookie token name`, `encrypted cookie string Value`);

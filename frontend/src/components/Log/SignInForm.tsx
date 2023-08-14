@@ -24,7 +24,8 @@ function SignInForm() {
                     withCredentials: true,
                 }
             )
-            .then(() => {
+            .then((res) => {
+                localStorage.setItem("jwt", res.data.token);
                 window.location.href = "/";
             })
             .catch((error) => {

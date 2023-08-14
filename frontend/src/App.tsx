@@ -24,6 +24,9 @@ function App() {
         const getUid = async () => {
             await axios
                 .get(`${import.meta.env.VITE_APP_URL}jwtid`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                    },
                     withCredentials: true,
                 })
                 .then((response) => {

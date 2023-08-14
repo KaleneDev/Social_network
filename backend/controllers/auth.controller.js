@@ -86,12 +86,12 @@ exports.signIn = async (req, res) => {
             }
         );
 
-        res.cookie("jwt", token, {
-            httpOnly: true,
-            maxAge,
-            domain: process.env.DOMAIN,
-            // Secure: true,
-        });
+        // res.cookie("jwt", token, {
+        //     httpOnly: true,
+        //     maxAge,
+        //     domain: process.env.DOMAIN,
+        //     Secure: true,
+        // });
 
         res.status(200).json({
             message: "Authentification réussie",
