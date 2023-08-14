@@ -102,7 +102,9 @@ exports.signIn = async (req, res) => {
     }
 };
 exports.signOut = (req, res) => {
-    res.cookie("jwt", "", { maxAge: 1 });
+    if (typeof localStorage !== "undefined") {
+        localStorage.removeItem("jwt");
+    }
     res.status(200).json({
         message: "Déconnexion réussie",
     });
