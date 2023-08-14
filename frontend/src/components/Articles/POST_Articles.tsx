@@ -4,6 +4,7 @@ import { UserIdContext } from "../AppContext";
 import { Dispatch } from "redux";
 import { postArticles } from "../../redux/articles/articles.action";
 import SignInForm from "../Log/SignInForm";
+import SignUpForm from "../Log/SignUpForm";
 import "../../style/pages/Home/POST_Articles.home.scss";
 import "../../style/pages/Login/Login.scss";
 import { ZoomOut } from "../../utils/AnimationText";
@@ -17,6 +18,14 @@ function POST_Articles(props: any) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const articlesDataRef = useRef(articlesData);
+
+    const [isSignInActive, setSignInActive] = useState(true);
+    const [isSignUpActive, setSignUpActive] = useState(false);
+    const toggleModals = () => {
+        setSignInActive(!isSignInActive);
+        setSignUpActive(!isSignUpActive);
+    };
+
     useEffect(() => {
         articlesDataRef.current = articlesData;
     }, [articlesData]);
@@ -98,7 +107,18 @@ function POST_Articles(props: any) {
                 <div className="login-container home-page">
                     <div className="connection-form ">
                         <p>Connectez-vous pour poster un article</p>
-                        <SignInForm />
+                        {isSignInActive && <SignInForm />}
+                        {isSignInActive && (
+                            <a onClick={toggleModals}>
+                                Vous n'avez toujours pas de compte ?
+                            </a>
+                        )}
+                        {isSignUpActive && <SignUpForm />}
+                        {isSignUpActive && (
+                            <a onClick={toggleModals}>
+                                Vous avez déjà un compte ?
+                            </a>
+                        )}
                     </div>
                 </div>
             )}

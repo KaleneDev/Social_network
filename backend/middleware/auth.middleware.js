@@ -70,7 +70,7 @@ const requireAuth = (req, res, next) => {
             }
         });
     } else {
-        res.redirect("/login");
+        // res.redirect("/login");
     }
 };
 const requireAdmin = (req, res, next) => {

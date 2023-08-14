@@ -3,7 +3,7 @@
     position: fixed;
     background-color: $white;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     color: $primary-color;
     height: 60px;
@@ -11,7 +11,13 @@
     width: 100%;
     z-index: 100;
     // border-bottom: 1px solid $primary-color;
-    
+    .block-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1024px;
+    }
     .nav-links {
         display: flex;
         justify-content: space-between;

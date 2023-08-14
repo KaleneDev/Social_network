@@ -38,8 +38,8 @@ app.use(cookieParser());
 // app.use('/assets',express.static(path.join(dirname, "frontend/public/assets")));
 
 // Rate Limiting
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
-app.use(limiter);
+// const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+// app.use(limiter);
 
 // Routes
 app.get("/", (req, res) => {

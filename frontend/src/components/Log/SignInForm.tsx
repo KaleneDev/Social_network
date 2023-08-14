@@ -46,7 +46,8 @@ function SignInForm() {
     return (
         <div className="form-container">
             <div>Bienvenue sur mon réseau social</div>
-            <form action="" onSubmit={handleLogin}>
+            <form action="" 
+            >
                 <label htmlFor="email">Email</label>
                 <input
                     type="email"
@@ -71,7 +72,7 @@ function SignInForm() {
                         Mot de passe incorrect.
                     </span>
                 )}
-                <button type="submit">Connexion</button>
+                <button onClick={handleLogin} type="submit">Connexion</button>
             </form>
             {errorMessage && (
                 <span className="email error">
