@@ -5,6 +5,8 @@ import {
     GET_USER_SUCCESS,
     GET_USER_ERROR,
     UPLOAD_PICTURE,
+    UPLOAD_PICTURE_SUCCESS,
+    UPLOAD_PICTURE_ERROR,
     UPDATE_BIO,
     DELETE_USER,
     UPDATE_USER_SUCCESS,
@@ -41,6 +43,23 @@ const updateUserError = (error: any) => {
         payload: error,
     };
 };
+export const uploadPictureSuccess = (data: any) => {
+    return {
+        type: UPLOAD_PICTURE_SUCCESS,
+        payload: data,
+    };
+};
+export const uploadPictureError = (error: any) => {
+    return {
+        type: UPLOAD_PICTURE_ERROR,
+        payload: error,
+    };
+};
+export const uploadLoading = () => {
+    return {
+        type: UPLOAD_PICTURE,
+    };
+};
 
 export const getUser = (uid: string) => async (dispatch: Dispatch) => {
     dispatch(loadUser());
@@ -63,18 +82,21 @@ export const uploadPicture = (data: any) => async (dispatch: Dispatch) => {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         "Content-Type": "multipart/form-data",
     };
+    dispatch(uploadLoading());
+
     await axios
         .post(`${import.meta.env.VITE_APP_URL}users/upload`, data, {
             headers,
             withCredentials: true,
         })
         .then((res) => {
-            dispatch({ type: UPLOAD_PICTURE, payload: res.data });
+            dispatch(uploadPictureSuccess(res.data));
         })
         .catch((err) => {
-            console.log(err);
+            dispatch(uploadPictureError(err.message));
         });
 };
+
 export const updateBio =
     (userId: string, data: any) => async (dispatch: Dispatch) => {
         await axios

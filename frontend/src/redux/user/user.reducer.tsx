@@ -7,7 +7,8 @@ import {
     DELETE_USER,
     UPDATE_USER_SUCCESS,
     UPDATE_USER_ERROR,
-
+    UPLOAD_PICTURE_SUCCESS,
+    UPLOAD_PICTURE_ERROR,
 } from "./user.type";
 const initialState = {
     isLoading: false,
@@ -15,6 +16,7 @@ const initialState = {
     error: "",
     successUpdateUser: false,
     successUpdateBio: false,
+    upload: undefined,
 };
 
 export default function userReducer(state = initialState, action: any) {
@@ -40,7 +42,19 @@ export default function userReducer(state = initialState, action: any) {
         case UPLOAD_PICTURE:
             return {
                 ...state,
+                upload: true,
+            };
+        case UPLOAD_PICTURE_SUCCESS:
+            return {
+                ...state,
                 avatar: action.payload,
+                upload: false,
+            };
+        case UPLOAD_PICTURE_ERROR:
+            return {
+                ...state,
+                error: action.payload,
+                upload: false,
             };
         case UPDATE_BIO:
             return {
@@ -56,7 +70,7 @@ export default function userReducer(state = initialState, action: any) {
         case UPDATE_USER_ERROR:
             return {
                 ...state,
-            
+
                 error: action.payload,
                 successUpdateUser: false,
             };
@@ -64,7 +78,6 @@ export default function userReducer(state = initialState, action: any) {
             return {
                 ...state,
             };
-
 
         default:
             return state;

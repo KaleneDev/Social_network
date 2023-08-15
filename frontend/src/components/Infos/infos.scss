@@ -4,8 +4,9 @@
     position: fixed;
     bottom: 1rem;
     right: 1rem;
-    visibility: hidden;
+    // visibility: hidden;
     background-color: $success-color;
+    z-index: 9999;
     &.container-infos.danger-color {
         background-color: $danger-color;
     }

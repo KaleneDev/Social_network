@@ -7,18 +7,29 @@ import { ZoomOut } from "../../utils/AnimationText";
 function ContainerAvatar() {
     const dispatch = useDispatch<Dispatch<any>>();
     const profile = useSelector((state: any) => state.userReducer.user);
+    const upload = useSelector((state: any) => state.userReducer.upload);
+
     const [file, setFile] = useState<any>(null);
     const uid = useSelector((state: any) => state.userReducer);
 
-    const handlePicture = (e: any) => {
+    const [isLoadingFinish, setIsLoadingFinish] = useState(false);
+
+    const handlePicture = async (e: any) => {
         e.preventDefault();
         if (file && uid.user.id && uid.user.username) {
             const data = new FormData();
             data.append("userId", uid.user.id);
             data.append("username", uid.user.username);
             data.append("file", file);
-
-            dispatch(uploadPicture(data));
+            try {
+                await dispatch(uploadPicture(data));
+            } catch (error) {
+                console.log(error);
+            }
+            setIsLoadingFinish(true);
+            setTimeout(() => {
+                setIsLoadingFinish(false);
+            }, 2000);
         }
     };
     const [highlight, setHighlight] = useState(false);
@@ -58,6 +69,7 @@ function ContainerAvatar() {
     const handleUpload = (e: any) => {
         e.preventDefault();
         e.stopPropagation();
+
         console.log("drop upload!");
         setHighlight(false);
         setDrop(true);
@@ -100,7 +112,7 @@ function ContainerAvatar() {
         <ZoomOut>
             <div className="container-avatar">
                 <h1 ref={usernameRef}>Profil de {usernameDisplay}</h1>
-
+                <br />
                 <div className="upload-picture-container">
                     <div
                         className={`container-image${drop ? " is-drop" : ""}`}
@@ -147,8 +159,17 @@ function ContainerAvatar() {
                         />
                     </form>
                     <br />
+                    {upload && (
+                        <div className="">Téléchargement en cours...</div>
+                    )}
                 </div>
             </div>
+    
+            {isLoadingFinish && (
+                <div className="loading-indicator finish">
+                    Téléchargement en fini
+                </div>
+            )}
         </ZoomOut>
     );
 }

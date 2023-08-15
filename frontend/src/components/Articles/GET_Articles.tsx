@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { ZoomOut, TextAnimationBtoT } from "../../utils/AnimationText";
 import DELETE_Articles from "./DELETE_Articles";
 import UPDATE_Articles from "./UPDATE_Articles";
-import Info from "../Infos/info";
+import Info from "../Infos/infos";
 import { Dispatch } from "redux";
 import { updateArticles } from "../../redux/articles/articles.action";
 

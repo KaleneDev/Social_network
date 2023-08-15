@@ -175,3 +175,17 @@
         }
     }
 }
+.loading-indicator {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 9999;
+    background-color: $warning-color;
+    padding: 1rem 2rem;
+    border-radius: 15px;
+    color: $white;
+    margin: 1rem;
+}
+.loading-indicator.finish {
+    background-color: $success-color;
+}

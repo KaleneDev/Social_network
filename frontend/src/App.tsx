@@ -8,17 +8,27 @@ import Routes from "./components/routes";
 import { UserIdContext } from "./components/AppContext";
 import Navbar from "./components/Navbar/Navbar";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./redux/user/user.action";
-
 import { Dispatch } from "redux";
+import Infos from "./components/Infos/infos";
 // import store from "./redux/store";
 function App() {
     const [uid, setUid] = useState(null);
     const location = useLocation();
     const isLoginPage = location.pathname === "/login";
     const dispatch = useDispatch<Dispatch<any>>();
+    const upload = useSelector((state: any) => state.userReducer.upload);
+    const [isLoadingFinish, setIsLoadingFinish] = useState(false);
+
+    useEffect(() => {
+        if (!upload && upload !== undefined) {
+            setIsLoadingFinish(true);
+            setTimeout(() => {
+                setIsLoadingFinish(false);
+            }, 2000);
+        }
+    }, [upload]);
 
     useEffect(() => {
         const getUid = async () => {
@@ -30,7 +40,6 @@ function App() {
                     withCredentials: true,
                 })
                 .then((response) => {
-                    
                     setUid(response.data);
                 })
                 .catch((error) => {
@@ -46,6 +55,18 @@ function App() {
 
     return (
         <UserIdContext.Provider value={uid}>
+            {upload && (
+                <Infos
+                    text="Téléchargement en cours..."
+                    color="warning-color"
+                />
+            )}
+            {isLoadingFinish && (
+                <Infos
+                    text="Téléchargement en fini"
+                    color="warning-success"
+                />
+            )}
             {!isLoginPage && <Navbar />}
             {isLoginPage && uid && <Navbar />}
             <Routes />

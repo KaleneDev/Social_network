@@ -1,4 +1,4 @@
-import "./info.scss";
+import "./infos.scss";
 
 import { forwardRef } from "react";
 
