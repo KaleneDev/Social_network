@@ -15,7 +15,7 @@ const storageFile = multer.diskStorage({
             file.mimetype === "image/jpg" ||
             file.mimetype === "image/jpeg"
         ) {
-            cb(null, path.join(dirname, "frontend/public/upload/articles"));
+            cb(null, path.join(dirname, "backend/uploads/articles"));
         } else {
             return cb(
                 new Error("Seuls les formats PNG, JPG et JPEG sont acceptés.")
@@ -41,7 +41,7 @@ const storageUser = multer.diskStorage({
             file.mimetype === "image/jpg" ||
             file.mimetype === "image/jpeg"
         ) {
-            cb(null, path.join(dirname, "frontend/public/upload/users"));
+            cb(null, path.join(dirname, "backend/uploads/users"));
         } else {
             return cb(
                 new Error("Seuls les formats PNG, JPG et JPEG sont acceptés.")

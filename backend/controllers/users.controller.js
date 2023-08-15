@@ -166,13 +166,9 @@ exports.delete = async (req, res) => {
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index];
             if (element !== "default.png" && elements) {
-                console.log(dirname);
-                fs.unlink(
-                    `${dirname}\\frontend\\${element}`,
-                    () => {
-                        return;
-                    }
-                );
+                fs.unlink(`${element}`, () => {
+                    return;
+                });
             }
         }
         const user = await Users.destroy({ where: { id: req.params.id } });

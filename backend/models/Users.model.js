@@ -46,7 +46,8 @@ const Users = sequelize.define("users", {
     },
     avatar: {
         type: DataTypes.STRING,
-        defaultValue: "\\upload\\users\\default.png",
+        defaultValue:
+            process.env.SERVER_BASE_URL + "/uploads/users/default.png",
         allowNull: true,
     },
     createdAt: {

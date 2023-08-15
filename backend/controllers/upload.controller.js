@@ -2,7 +2,6 @@ const Users = require("../models/Users.model");
 const Articles = require("../models/Articles.model");
 const fs = require("fs");
 const path = require("path");
-
 exports.uploadUser = async (req, res) => {
     try {
         const { userId, username } = req.body;
@@ -44,8 +43,8 @@ exports.uploadUser = async (req, res) => {
         }
         const User = {};
         if (req.file) {
-            console.log(file);
-            User.avatar = path.join("public/upload/users/" + file.filename);
+            const serverBaseUrl = `${req.protocol}://${req.get("host")}`;
+            User.avatar = serverBaseUrl + "/uploads/users/" + file.filename;
         }
         // add avatarPath to existingUsername
         await Users.update(User, {
@@ -104,10 +103,11 @@ exports.uploadArticle = async (req, res) => {
                     Article.file = "";
                 }
                 Article.file += files[index].filename;
-                Article.filePath = path.join(
-                    "../frontend/public/upload/articles/" +
-                        files[index].filename
-                );
+                const serverBaseUrl = `${req.protocol}://${req.get("host")}`;
+                Article.filePath =
+                    serverBaseUrl +
+                    "/uploads/articles/" +
+                    files[index].filename;
                 if (index < files.length - 1) {
                     Article.file += " + ";
                 }

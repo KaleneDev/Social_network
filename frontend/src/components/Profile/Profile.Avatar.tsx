@@ -12,10 +12,6 @@ function ContainerAvatar() {
 
     const handlePicture = () => {
         if (file && uid.user.id && uid.user.username) {
-            console.log(uid.user.id);
-            console.log(uid.user.username);
-
-            console.log(file);
             const data = new FormData();
             data.append("userId", uid.user.id);
             data.append("username", uid.user.username);
@@ -35,8 +31,6 @@ function ContainerAvatar() {
 
     useEffect(() => {
         setUsernameDisplay(profile.username);
-
-      
     }, [preview, drop, highlight, profile.username]);
     const handleEnter = (e: any) => {
         e.preventDefault();
@@ -103,55 +97,57 @@ function ContainerAvatar() {
     };
     return (
         <ZoomOut>
-        <div className="container-avatar">
-            <h1 ref={usernameRef}>Profile de {usernameDisplay}</h1>
+            <div className="container-avatar">
+                <h1 ref={usernameRef}>Profil de {usernameDisplay}</h1>
 
-            <div className="upload-picture-container">
-                <div
-                    className={`container-image${drop ? " is-drop" : ""}`}
-                    onClick={handleContainerImageClick}
-                    onDrop={(e) => handleUpload(e)}
-                    onDragEnter={(e) => handleEnter(e)}
-                    onDragOver={(e) => handleOver(e)}
-                    onDragLeave={(e) => handleLeave(e)}
-                    onChange={(e) => handleUploadOver(e)}
-                >
+                <div className="upload-picture-container">
                     <div
-                        className={`preview${highlight ? " is-highlight" : ""}`}
-                        style={{ backgroundImage: `url(${preview})` }}
-                    ></div>
+                        className={`container-image${drop ? " is-drop" : ""}`}
+                        onClick={handleContainerImageClick}
+                        onDrop={(e) => handleUpload(e)}
+                        onDragEnter={(e) => handleEnter(e)}
+                        onDragOver={(e) => handleOver(e)}
+                        onDragLeave={(e) => handleLeave(e)}
+                        onChange={(e) => handleUploadOver(e)}
+                    >
+                        <div
+                            className={`preview${
+                                highlight ? " is-highlight" : ""
+                            }`}
+                            style={{ backgroundImage: `url(${preview})` }}
+                        ></div>
 
-                    <img src={profile.avatar} alt="" />
-                </div>
-                <br />
-                <form
-                    action=""
-                    onSubmit={() => handlePicture()}
-                    className="upload-picture"
-                    id="upload-form"
-                >
-                    <label htmlFor="file" className="label-file">
-                        Changer d'image
-                    </label>
+                        <img src={profile.avatar} alt="" />
+                    </div>
                     <br />
-                    <input
-                        type="file"
-                        name="file"
-                        id="file"
-                        className="inputfile btn-file__input"
-                        accept="image/*"
-                        onChange={(e) => handleUpload(e)}
-                        ref={refInputFile}
-                    />
-                    <input
-                        type="submit"
-                        className="submit-button"
-                        value="Envoyer"
-                    />
-                </form>
-                <br />
+                    <form
+                        action=""
+                        onSubmit={() => handlePicture()}
+                        className="upload-picture"
+                        id="upload-form"
+                    >
+                        <label htmlFor="file" className="label-file">
+                            Changer d'image
+                        </label>
+                        <br />
+                        <input
+                            type="file"
+                            name="file"
+                            id="file"
+                            className="inputfile btn-file__input"
+                            accept="image/*"
+                            onChange={(e) => handleUpload(e)}
+                            ref={refInputFile}
+                        />
+                        <input
+                            type="submit"
+                            className="submit-button"
+                            value="Envoyer"
+                        />
+                    </form>
+                    <br />
+                </div>
             </div>
-        </div>
         </ZoomOut>
     );
 }

@@ -52,12 +52,20 @@ function SignUpForm() {
                             email,
                             password,
                         },
+
                         {
+
                             withCredentials: true,
                         }
                     )
                     .then((response) => {
-                        console.log(response);
+                        const maxAge = 3 * 24 * 60 * 60 * 1000;
+                        const expirationDate = new Date().getTime() + maxAge;
+                        localStorage.setItem("jwt", response.data.token);
+                        localStorage.setItem(
+                            "jwtExpiration",
+                            expirationDate.toString()
+                        );
                         localStorage.setItem("token", response.data);
                         window.location.href = "/";
                     })

@@ -7,7 +7,7 @@ const morgan = require("morgan");
 const bodyparser = require("body-parser");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
-const { auth } = require("./middleware/auth.middleware");
+const path = require('path')
 
 // SERVER
 const app = express();
@@ -15,7 +15,7 @@ const corsOptions = {
     origin: process.env.CLIENT_URL,
     credentials: true,
     allowedHeaders: ["sessionId", "Content-Type", "Authorization"],
-    exposedHeaders: 'authorization',
+    exposedHeaders: "authorization",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue: false,
 };
@@ -32,15 +32,13 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyparser.json({ extended: true }));
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cookieParser());
-// app.use('/assets',express.static(path.join(dirname, "frontend/public/assets")));
+app.use('/uploads/users', express.static(path.join(__dirname, 'uploads/users')));
 
-// Rate Limiting
-// const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
-// app.use(limiter);
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use(limiter);
 
 // Routes
 app.get("/", (req, res) => {
@@ -49,9 +47,6 @@ app.get("/", (req, res) => {
 app.get("/setcookie", (req, res) => {
     res.cookie(`Cookie token name`, `encrypted cookie string Value`);
 });
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-  });
 
 app.get("/jwtid", requireAuth, (req, res) => {
     res.status(200).send(res.locals.user.userId);
