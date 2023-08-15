@@ -26,6 +26,7 @@ function App() {
             setIsLoadingFinish(true);
             setTimeout(() => {
                 setIsLoadingFinish(false);
+                window.location.reload();
             }, 2000);
         }
     }, [upload]);
