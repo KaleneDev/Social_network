@@ -10,7 +10,9 @@ function ContainerAvatar() {
     const [file, setFile] = useState<any>(null);
     const uid = useSelector((state: any) => state.userReducer);
 
-    const handlePicture = () => {
+    const handlePicture = (e: any) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (file && uid.user.id && uid.user.username) {
             const data = new FormData();
             data.append("userId", uid.user.id);
@@ -122,7 +124,7 @@ function ContainerAvatar() {
                     <br />
                     <form
                         action=""
-                        onSubmit={() => handlePicture()}
+                        onSubmit={(e) => handlePicture(e)}
                         className="upload-picture"
                         id="upload-form"
                     >
