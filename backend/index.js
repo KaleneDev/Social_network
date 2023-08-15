@@ -7,7 +7,7 @@ const morgan = require("morgan");
 const bodyparser = require("body-parser");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
-const path = require('path')
+const path = require("path");
 
 // SERVER
 const app = express();
@@ -35,8 +35,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyparser.json({ extended: true }));
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/uploads/users', express.static(path.join(__dirname, 'uploads/users')));
-
+app.use(
+    "/uploads/users",
+    express.static(path.join(__dirname, "uploads/users"))
+);
+console.log(path.join(__dirname, "uploads/users"));
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 app.use(limiter);
 
