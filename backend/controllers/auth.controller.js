@@ -104,6 +104,7 @@ exports.signIn = async (req, res) => {
 exports.signOut = (req, res) => {
     if (typeof localStorage !== "undefined") {
         localStorage.removeItem("jwt");
+        localStorage.removeItem("jwtExpiration");
     }
     res.status(200).json({
         message: "Déconnexion réussie",

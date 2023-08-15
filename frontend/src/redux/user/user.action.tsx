@@ -46,6 +46,9 @@ export const getUser = (uid: string) => async (dispatch: Dispatch) => {
     dispatch(loadUser());
     await axios
         .get(`${import.meta.env.VITE_APP_URL}users/id/${uid}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
             withCredentials: true,
         })
         .then((res) => {
@@ -57,6 +60,7 @@ export const getUser = (uid: string) => async (dispatch: Dispatch) => {
 };
 export const uploadPicture = (data: any) => async (dispatch: Dispatch) => {
     const headers = {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         "Content-Type": "multipart/form-data",
     };
     await axios
@@ -77,7 +81,12 @@ export const updateBio =
             .put(
                 `${import.meta.env.VITE_APP_URL}users/id/${userId}`,
                 { data },
-                { withCredentials: true }
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                    },
+                    withCredentials: true,
+                }
             )
             .then((res) => {
                 dispatch({ type: UPDATE_BIO, payload: res.data });
@@ -88,7 +97,12 @@ export const updateBio =
     };
 export const deleteUser = (userId: string) => async (dispatch: Dispatch) => {
     await axios
-        .delete(`${import.meta.env.VITE_APP_URL}users/id/${userId}`)
+        .delete(`${import.meta.env.VITE_APP_URL}users/id/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+            withCredentials: true,
+        })
         .then((res) => {
             dispatch({ type: DELETE_USER, payload: res.data });
         })
@@ -104,7 +118,12 @@ export const updateUser =
                 {
                     data,
                 },
-                { withCredentials: true }
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                    },
+                    withCredentials: true,
+                }
             )
             .then((res) => {
                 dispatch(updateUserSuccess(res.data));

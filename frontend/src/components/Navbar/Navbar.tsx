@@ -28,6 +28,7 @@ function Navbar() {
                                         <div>Profile</div>
                                     </NavLink>
                                 </li>
+                
                                 <li>
                                     <NavLink end to="/login">
                                         <Logout />
@@ -36,6 +37,7 @@ function Navbar() {
                             </ul>
                         ) : (
                             <ul className="nav-links">
+                         
                                 <li>
                                     <NavLink end to="/login">
                                         <svg
@@ -54,11 +56,6 @@ function Navbar() {
                                         </svg>
                                     </NavLink>
                                 </li>
-                                {/* <li>
-                            <NavLink end to="/register">
-                                <div>Register</div>
-                            </NavLink>
-                        </li> */}
                             </ul>
                         )}
                     </div>

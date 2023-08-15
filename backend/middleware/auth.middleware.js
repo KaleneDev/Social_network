@@ -1,6 +1,3 @@
-// const authHeader = req.headers["authorization"];
-// const token = authHeader && authHeader.split(" ")[1];
-
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const Articles = require("../models/Articles.model");
@@ -10,8 +7,6 @@ const auth = async (req, res, next) => {
         const authHeader = req.headers["authorization"];
         const token = authHeader && authHeader.split(" ")[1];
         if (token) {
-            const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-
             if (req.body.userId && req.body.userId !== userId) {
                 throw "User ID non valable !";
             } else {
@@ -32,7 +27,6 @@ const authArticles = async (req, res, next) => {
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
             const { userId, role } = decodedToken;
             const articleId = req.params.id;
-            console.log("articleId", articleId);
             if (articleId) {
                 if (articleId !== undefined) {
                     const userArticle = await Articles.findByPk(articleId);

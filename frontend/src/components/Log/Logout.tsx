@@ -14,6 +14,7 @@ function Logout() {
             .then(() => {
                 if (typeof localStorage !== "undefined") {
                     localStorage.removeItem("jwt");
+                    localStorage.removeItem("jwtExpiration");
                 }
                 window.location.reload();
             })

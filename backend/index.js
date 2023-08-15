@@ -32,6 +32,7 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyparser.json({ extended: true }));
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -48,7 +49,9 @@ app.get("/", (req, res) => {
 app.get("/setcookie", (req, res) => {
     res.cookie(`Cookie token name`, `encrypted cookie string Value`);
 });
-// app.get("*", auth);
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
 
 app.get("/jwtid", requireAuth, (req, res) => {
     res.status(200).send(res.locals.user.userId);
