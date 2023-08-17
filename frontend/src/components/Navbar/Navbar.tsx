@@ -25,7 +25,7 @@ function Navbar() {
                             <ul className="nav-links">
                                 <li>
                                     <NavLink end to="/profile">
-                                        <div>Profile</div>
+                                        <div>Profil</div>
                                     </NavLink>
                                 </li>
                 

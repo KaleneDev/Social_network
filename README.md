@@ -53,8 +53,12 @@ Veuillez noter que toutes les contributions sont soumises au respect du **`Code 
 ## Auteurs
 Kalene A PIOU <apiou.kalene@gmail.com>
 
+Voir le GitHub : https://github.com/KaleneDev/Social_network
+
+Voir le projet : https://www.socialnetwork.kalene-apiou.com/
+
 ## Licence
 Ce projet est sous licence MIT. Vous pouvez consulter le fichier **LICENSE** pour plus d'informations.
 
 Ceci est un modèle de fichier README pour le projet "Social Network". Vous pouvez personnaliser ce fichier en fonction des détails spécifiques à votre projet.
->>>>>>> experimental
+
