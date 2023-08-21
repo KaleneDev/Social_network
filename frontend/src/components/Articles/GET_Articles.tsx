@@ -5,6 +5,7 @@ import UPDATE_Articles from "./UPDATE_Articles";
 import Info from "../Infos/infos";
 import { Dispatch } from "redux";
 import { updateArticles } from "../../redux/articles/articles.action";
+import { Link } from 'react-router-dom'; 
 
 import "../../style/pages/Home/GET_Articles.home.scss";
 import { useRef, useState, useEffect } from "react";
@@ -59,16 +60,6 @@ function Articles(props: any) {
         setClickPost(props.propsParent);
     }, [clickPost, props.propsParent]);
 
-    if (clickPost) {
-        // const lastArticle = document.querySelector(
-        //     ".container-home .articles-container .ZoomOut:last-child"
-        // );
-        // const posts = document.querySelectorAll(
-        //     ".container-home .articles-container .ZoomOut"
-        // );
-        // const newPost = elementRef.current;
-    }
-
     const popupRef = useRef(null);
     const [popup, setPopup] = useState(popupRef);
 
@@ -83,25 +74,18 @@ function Articles(props: any) {
 
     const popupOpenRefs = useRef<boolean[]>([]);
     const [popupOpen, setPopupOpen] = useState(false);
-
-    const handlePopupOpenChange = (index: number, isOpen: boolean) => {
-        popupOpenRefs.current[index] = isOpen;
-        const initialTitle = articlesData.articles[index]?.title || "";
-        const initialContent = articlesData.articles[index]?.content || "";
-        setNewTitle(initialTitle);
-        setNewContent(initialContent);
-        setApplyBlur(true);
-
+    const dataChildren = (data: any) => {
+        setApplyBlur(data.blur);
+        setNewContent(data.content);
+        setNewTitle(data.title);
+        popupOpenRefs.current[data.index] = data.isOpen;
         setPopup(popupRef);
-        if (isOpen) {
-            setTimeout(() => {
-                setPopupOpen(true);
-            }, 0);
-        }
+        setTimeout(() => {
+            setPopupOpen(true);
+        }, 0);
     };
     const handleClosePopup = (index: number, isClose: boolean) => {
         setApplyBlur(false);
-
         setPopupOpen(false);
         setTimeout(() => {
             popupOpenRefs.current[index] = isClose;
@@ -116,21 +100,11 @@ function Articles(props: any) {
     ) => {
         e.preventDefault();
         const updatedArticle = {
-            // ...articlesData.articles[index],
             title: newTitle,
             content: newContent,
         };
 
         dispatch(updateArticles(id, updatedArticle));
-
-        console.log(updatedArticle);
-        console.log(index);
-
-        // const articleElement = document.querySelector(
-        //     `.container-home .articles-container .ZoomOut:nth-child(${
-        //         index + 1
-        //     }) .article`
-        // );
         const articleElement = document
             .querySelectorAll(`.container-home .articles-container .ZoomOut`)
             [index].querySelector(".article");
@@ -163,9 +137,14 @@ function Articles(props: any) {
             return (
                 <ZoomOut key={article.id || index}>
                     <div className="article" ref={elementRef}>
+                    {article.user && (
+                        <p>
+                            Auteur: <Link to={`/profile/${article.user.id}`}>{article.user.username}</Link>
+                        </p>
+                    )}
+                        {/* {article.user && <p>Auteur: {article.user.username}</p>} */}
                         <h3>Titre : {article.title}</h3>
                         <p>Contenu : {article.content}</p>
-                        {article.user && <p>Auteur: {article.user.username}</p>}
                         <p>Date de publication : {article.createdAt}</p>
                         <div className="article-buttons">
                             {article.user &&
@@ -174,9 +153,7 @@ function Articles(props: any) {
                                     <>
                                         <UPDATE_Articles
                                             propsParent={article.id}
-                                            onPopupOpenChange={
-                                                handlePopupOpenChange
-                                            }
+                                            onPopupOpenChange={dataChildren}
                                             index={index}
                                         />
                                         <DELETE_Articles

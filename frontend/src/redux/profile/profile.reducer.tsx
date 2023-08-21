@@ -1,9 +1,8 @@
 import {
-    GET_USERS,
-    GET_USER,
-    GET_USER_SUCCES,
-    GET_USER_ERROR,
-} from "./users.type";
+    GET_PROFILE,
+    GET_PROFILE_SUCCESS,
+    GET_PROFILE_ERROR,
+} from "./profile.type";
 
 const initialState = {
     users: [],
@@ -14,15 +13,12 @@ const initialState = {
 
 export default function userReducer(state = initialState, action: any) {
     switch (action.type) {
-        case GET_USERS:
-            return action.payload;
-        case GET_USER:
-            return { ...state,  isLoading: true };
-        case GET_USER_SUCCES:
+        case GET_PROFILE:
+            return { ...state, isLoading: true };
+        case GET_PROFILE_SUCCESS:
             return { profile: action.payload, isLoading: false };
-        case GET_USER_ERROR:
+        case GET_PROFILE_ERROR:
             return { ...state, error: action.payload, isLoading: false };
-
         default:
             return state;
     }

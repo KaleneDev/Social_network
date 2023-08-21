@@ -1,41 +1,27 @@
 import axios from "axios";
 import {
-    GET_USERS,
-    GET_USER,
-    GET_USER_SUCCES,
-    GET_USER_ERROR,
-} from "./users.type";
+    GET_PROFILE,
+    GET_PROFILE_SUCCESS,
+    GET_PROFILE_ERROR,
+} from "./profile.type";
 
 export const loadGetUser = () => {
     return {
-        type: GET_USER,
+        type: GET_PROFILE,
     };
 };
 
 export const loadGetUserSuccess = (user: any) => {
     return {
-        type: GET_USER_SUCCES,
+        type: GET_PROFILE_SUCCESS,
         payload: user,
     };
 };
 
 export const loadGetUserError = (error: any) => {
     return {
-        type: GET_USER_ERROR,
+        type: GET_PROFILE_ERROR,
         payload: error,
-    };
-};
-
-export const getUsers = () => {
-    return (dispatch: any) => {
-        axios
-            .get(`${import.meta.env.VITE_APP_URL}users`)
-            .then((res) => {
-                dispatch({ type: GET_USERS, payload: res.data });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
     };
 };
 

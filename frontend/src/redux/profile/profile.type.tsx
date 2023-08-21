@@ -1,0 +1,3 @@
+export const GET_PROFILE = "GET_USER";
+export const GET_PROFILE_SUCCESS = "LOAD_POST_USER";
+export const GET_PROFILE_ERROR = "LOAD_POST_USER_ERROR";
