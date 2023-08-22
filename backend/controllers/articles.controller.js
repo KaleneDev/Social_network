@@ -42,7 +42,17 @@ exports.getOne = async (req, res) => {
             include: [
                 {
                     model: Users,
-                    as: "users",
+                    as: "user",
+                },
+                {
+                    model: Comments,
+                    as: "comments",
+                    include: [
+                        {
+                            model: Users,
+                            as: "user",
+                        },
+                    ],
                 },
             ],
         });

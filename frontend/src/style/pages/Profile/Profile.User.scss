@@ -1,0 +1,124 @@
+@import "../../variables.scss";
+@import "../../main.scss";
+
+.container-profile-user {
+    // background-color: $gray-light;
+    max-width: 1024px;
+    margin: auto;
+    padding-top: 67px;
+    .back {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        span {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: $gray;
+        }
+    }
+    .container-background {
+        height: 300px;
+        width: 100%;
+        background-color: red;
+        background-image: url("../../../assets/banner.jpg");
+        background-size: cover;
+    }
+    .container {
+        margin: 1rem;
+    }
+    .container-avatar {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+        position: relative;
+        .follow {
+            @include buttonPrimary($color: $primary-color);
+            font-size: 1.2rem;
+            border-radius: 1rem;
+            cursor: not-allowed;
+        }
+
+        .avatar {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            bottom: 0;
+        }
+    }
+    .container-infos-profile {
+        .email {
+            font-size: 1rem;
+            font-weight: 500;
+            color: $gray;
+        }
+        .bio {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .date {
+            font-size: 1rem;
+            font-weight: 500;
+            color: $gray;
+        }
+    }
+}
+.container-posts-profile {
+    background-color: $white;
+    // border-radius: 1rem;
+    // border-top: 1px solid $gray-light;
+  
+    .container-posts {
+        padding: 1rem;
+        border-top: 1px solid $gray-light;
+        .block-post {
+            gap: 1rem;
+            display: flex;
+            flex-direction: column;
+            .block-post-author {
+                display: flex;
+                .post-date {
+                    .date {
+                        font-size: 1rem;
+                        font-weight: 500;
+                        color: $gray;
+                    }
+                    .author {
+                        font-size: 1rem;
+                        font-weight: 700;
+                    }
+                }
+                img {
+                    width: 50px;
+                    height: 50px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    margin-right: 0.7rem;
+                }
+            }
+            .block-post-image {
+                img {
+                    border-radius: 1.5rem;
+                    width: 100%;
+                    max-width: 600px;
+                    height: 350px;
+                }
+            }
+            .block-post-buttons {
+                .btn-update{
+                    @include buttonPrimary($color: $primary-color);
+                    font-size: 0.7rem;
+                    border-radius: 1rem;
+                    margin-right: 1rem;
+                }
+                .btn-delete {
+                    @include buttonPrimary($color: $danger-color);
+                    font-size: 0.7rem;
+                    border-radius: 1rem;
+                }
+            }
+        }
+    }
+}

@@ -39,9 +39,8 @@ app.use(
     "/uploads/users",
     express.static(path.join(__dirname, "uploads/users"))
 );
-console.log(path.join(__dirname, "uploads/users"));
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10000 });
-app.use(limiter);
+// const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10000 });
+// app.use(limiter);
 
 // Routes
 app.get("/", (req, res) => {

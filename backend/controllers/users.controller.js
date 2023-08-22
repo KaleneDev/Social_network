@@ -6,9 +6,6 @@ const Follow = require("../models/Follow.model");
 const Likes = require("../models/Likes.model");
 
 const fs = require("fs");
-const path = require("path");
-const filename = path.resolve();
-const dirname = path.dirname(filename);
 
 exports.getAll = async (req, res) => {
     try {
@@ -54,6 +51,14 @@ exports.getOne = async (req, res) => {
                     include: {
                         model: Comments,
                         as: "comments",
+                    },
+                },
+                {
+                    model: Articles,
+                    as: "articles",
+                    include: {
+                        model: Users,
+                        as: "user",
                     },
                 },
                 {

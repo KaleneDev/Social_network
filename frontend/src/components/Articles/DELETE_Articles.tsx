@@ -3,19 +3,19 @@ import { Dispatch } from "redux";
 import { deleteArticles } from "../../redux/articles/articles.action";
 
 function DELETE_Articles(props: any) {
-    // const articlesData = useSelector((state: any) => state.articlesReducer);
     const dispatch = useDispatch<Dispatch<any>>();
 
     const handleDeleteArticles = async (e: any, id: string) => {
         e.preventDefault();
-
-        const parentDiv = e.target.closest(".article");
-        parentDiv.classList.add("ZoomIn");
-        await new Promise((resolve: any) => {
-            setTimeout(() => {
-                resolve();
-            }, 500);
-        });
+        if (e.target.closest(".article")) {
+            const parentDiv = e.target.closest(".article");
+            parentDiv.classList.add("ZoomIn");
+            await new Promise((resolve: any) => {
+                setTimeout(() => {
+                    resolve();
+                }, 500);
+            });
+        }
         await dispatch(deleteArticles(id));
     };
 

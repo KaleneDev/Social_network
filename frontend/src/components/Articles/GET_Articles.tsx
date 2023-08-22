@@ -1,19 +1,25 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { ZoomOut, TextAnimationBtoT } from "../../utils/AnimationText";
 import DELETE_Articles from "./DELETE_Articles";
 import UPDATE_Articles from "./UPDATE_Articles";
+import Popup from "../../pages/components/popup";
 import Info from "../Infos/infos";
-import { Dispatch } from "redux";
-import { updateArticles } from "../../redux/articles/articles.action";
-import { Link } from 'react-router-dom'; 
-
+import { Link } from "react-router-dom";
+import { parseISO, format } from "date-fns";
+import { fr } from "date-fns/locale";
 import "../../style/pages/Home/GET_Articles.home.scss";
+
 import { useRef, useState, useEffect } from "react";
 
-function Articles(props: any) {
+function Articles() {
     const articlesData = useSelector((state: any) => state.articlesReducer);
     const user = useSelector((state: any) => state.userReducer.user);
-
+    const [articles, setArticles] = useState(articlesData.articles);
+    useEffect(() => {
+        if (articlesData && articlesData.articles) {
+            setArticles(articlesData.articles);
+        }
+    }, [articlesData]);
     const containerInfoRef = useRef<any>(null);
     const errorMessages = useSelector(
         (state: any) => state.articlesReducer.errorMessage.message
@@ -25,9 +31,9 @@ function Articles(props: any) {
     const [message, setMessage] = useState<string>("");
     const [colorInfo, setColorInfo] = useState<string>("primary-color");
 
-    const dispatch = useDispatch<Dispatch<any>>();
     useEffect(() => {
         const animation = () => {
+            if (!containerInfoRef.current) return;
             containerInfoRef.current.style.visibility = "visible";
             containerInfoRef.current.style.opacity = "1";
             setTimeout(() => {
@@ -52,100 +58,83 @@ function Articles(props: any) {
 
     const containerRef = useRef(null);
     const elementRef = useRef(null);
-    const [ref, setRef] = useState(elementRef);
-
-    // article down to add new article
-    const [clickPost, setClickPost] = useState(false);
-    useEffect(() => {
-        setClickPost(props.propsParent);
-    }, [clickPost, props.propsParent]);
-
-    const popupRef = useRef(null);
-    const [popup, setPopup] = useState(popupRef);
-
-    useEffect(() => {
-        setRef(elementRef);
-        setPopup(popupRef);
-    }, [elementRef, ref, popupRef, popup]);
     // POPUP
-    const [applyBlur, setApplyBlur] = useState(false);
-    const [newTitle, setNewTitle] = useState("");
-    const [newContent, setNewContent] = useState("");
+    const [index, setIndex] = useState(0);
+    const [dataChildrenArticles, setDataChildrenArticles] = useState<any>({});
 
-    const popupOpenRefs = useRef<boolean[]>([]);
-    const [popupOpen, setPopupOpen] = useState(false);
     const dataChildren = (data: any) => {
-        setApplyBlur(data.blur);
-        setNewContent(data.content);
-        setNewTitle(data.title);
-        popupOpenRefs.current[data.index] = data.isOpen;
-        setPopup(popupRef);
-        setTimeout(() => {
-            setPopupOpen(true);
-        }, 0);
-    };
-    const handleClosePopup = (index: number, isClose: boolean) => {
-        setApplyBlur(false);
-        setPopupOpen(false);
-        setTimeout(() => {
-            popupOpenRefs.current[index] = isClose;
-        }, 0);
-    };
+        setIndex(data.index);
 
-    const handleUpdateArticles = (
-        e: any,
-        id: string,
-        isClose: boolean,
-        index: number
-    ) => {
-        e.preventDefault();
-        const updatedArticle = {
-            title: newTitle,
-            content: newContent,
+        const dataArticles = {
+            blur: true,
+            isOpen: true,
+            article_id: data.article_id,
         };
 
-        dispatch(updateArticles(id, updatedArticle));
-        const articleElement = document
-            .querySelectorAll(`.container-home .articles-container .ZoomOut`)
-            [index].querySelector(".article");
-        if (articleElement) {
-            const titleElement = articleElement.querySelector("h3");
-            const contentElement =
-                articleElement.querySelector("p:nth-of-type(1)");
-
-            if (titleElement) {
-                titleElement.textContent = `Titre : ${newTitle}`;
-            }
-
-            if (contentElement) {
-                contentElement.textContent = `Contenu : ${newContent}`;
-            }
-        }
-        setApplyBlur(false);
-        setPopupOpen(false);
-        setTimeout(() => {
-            popupOpenRefs.current[index] = isClose;
-        }, 500);
+        setDataChildrenArticles(dataArticles);
     };
-
+    function formatDatePost(date: string) {
+        const originalDate = date;
+        const parsedDate = parseISO(originalDate);
+        const formattedDate = format(parsedDate, "dd MMMM yyyy", {
+            locale: fr,
+        });
+        return formattedDate;
+    }
     const displayData = articlesData.isLoading ? (
         <p>Loading ...</p>
     ) : articlesData.error ? (
         <p>{articlesData.error}</p>
     ) : (
-        articlesData.articles.map((article: any, index: number) => {
+        articles &&
+        articles.map((article: any, index: number) => {
             return (
                 <ZoomOut key={article.id || index}>
                     <div className="article" ref={elementRef}>
-                    {article.user && (
-                        <p>
-                            Auteur: <Link to={`/profile/${article.user.id}`}>{article.user.username}</Link>
-                        </p>
-                    )}
-                        {/* {article.user && <p>Auteur: {article.user.username}</p>} */}
-                        <h3>Titre : {article.title}</h3>
-                        <p>Contenu : {article.content}</p>
-                        <p>Date de publication : {article.createdAt}</p>
+                        {article.user && (
+                            <div className="container-posts">
+                                <div className="container-posts">
+                                    <div className="block-post">
+                                        <div className="block-post-author">
+                                            <Link
+                                                to={`/profile/${article.user.id}`}
+                                            >
+                                                <img
+                                                    className="avatar"
+                                                    src={article.user.avatar}
+                                                    alt="avatar"
+                                                />
+                                            </Link>
+                                            <p className="post-date">
+                                                <span className="author">
+                                                    <Link
+                                                        to={`/profile/${article.user.id}`}
+                                                    >
+                                                        {article.user.username}
+                                                    </Link>
+                                                </span>{" "}
+                                                ·{" "}
+                                                <span className="date">
+                                                    {" "}
+                                                    {formatDatePost(
+                                                        article.createdAt
+                                                    )}
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div className="block-post-content">
+                                            <h3 className="post-title">
+                                                {article.title}
+                                            </h3>
+                                            <p className="post-description">
+                                                {article.content}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="article-buttons">
                             {article.user &&
                                 (user.id === article.user.id ||
@@ -170,63 +159,12 @@ function Articles(props: any) {
 
     return (
         <div className="articles-container" ref={containerRef}>
-            {applyBlur && <div className="blur-overlay blur-effect "></div>}
             <TextAnimationBtoT>
                 <h1>Liste des Postes</h1>
             </TextAnimationBtoT>
 
             {displayData}
-            {popupOpenRefs.current.map((isOpen, index) => (
-                <div key={index}>
-                    {isOpen && (
-                        <div
-                            ref={popupRef}
-                            className={`popup ${popupOpen ? "active" : ""}`}
-                        >
-                            <h1>Modifier un article</h1>
-                            <h3>Titre : </h3>
-                            <input
-                                type="text"
-                                onChange={(e) => setNewTitle(e.target.value)}
-                                defaultValue={
-                                    articlesData.articles[index].title
-                                }
-                            />
-                            <h3>Contenu : </h3>
-                            <textarea
-                                onChange={(e) => setNewContent(e.target.value)}
-                                defaultValue={
-                                    articlesData.articles[index].content
-                                }
-                            ></textarea>
-                            <div className="btn">
-                                <button
-                                    className="btn-save"
-                                    onClick={(e) =>
-                                        handleUpdateArticles(
-                                            e,
-                                            articlesData.articles[index].id,
-                                            false,
-                                            index
-                                        )
-                                    }
-                                >
-                                    Enregistrer
-                                </button>
-                                <button
-                                    className="btn-close"
-                                    onClick={() =>
-                                        handleClosePopup(index, false)
-                                    }
-                                >
-                                    Fermer
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            ))}
-
+            <Popup index={index} dataChildrenArticles={dataChildrenArticles} />
             {(errorMessages || successMessages) && (
                 <Info text={message} color={colorInfo} ref={containerInfoRef} />
             )}
