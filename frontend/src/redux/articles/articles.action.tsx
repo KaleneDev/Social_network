@@ -9,6 +9,7 @@ import {
     DELETE_ARTICLE_ERROR,
     PUT_ARTICLE_SUCCESS,
     PUT_ARTICLE_ERROR,
+    UPDATE_ARTICLES_SUCCESS
 } from "./articles.type";
 
 const loadArticles = () => {
@@ -136,7 +137,7 @@ export const deleteArticles = (id: string) => {
             });
     };
 };
-export const updateArticles = (id: string, data: any) => {
+export const updateArticle = (id: string, data: any) => {
     return (dispatch: any) => {
         axios
             .put(`${import.meta.env.VITE_APP_URL}articles/id/${id}`, data, {
@@ -153,3 +154,7 @@ export const updateArticles = (id: string, data: any) => {
             });
     };
 };
+export const updateArticlesSuccess = (updatedArticles: any) => ({
+    type: UPDATE_ARTICLES_SUCCESS,
+    payload: updatedArticles,
+});

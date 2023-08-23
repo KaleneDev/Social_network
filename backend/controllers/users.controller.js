@@ -14,6 +14,10 @@ exports.getAll = async (req, res) => {
                 {
                     model: Articles,
                     as: "articles",
+                    include: {
+                        model: Comments,
+                        as: "comments",
+                    },
                 },
                 {
                     model: Follow,

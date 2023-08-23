@@ -17,7 +17,7 @@ function Home() {
                     <POST_Articles
                         onArticlePosted={handleArticlePostedCallback}
                     />
-                    <GET_Articles  />
+                    <GET_Articles propsParent={posted} />
                 </div>
             </div>
         </>

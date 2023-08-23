@@ -60,8 +60,6 @@ function ProfileUser() {
 
     const dataChildren = (data: any) => {
         setIndex(data.index);
-        // console.log(data.article_id);
-
         const dataArticles = {
             blur: true,
             isOpen: true,

@@ -1,15 +1,15 @@
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateArticles } from "../../redux/articles/articles.action";
+import {
+    updateArticle,
+    updateArticlesSuccess,
+} from "../../redux/articles/articles.action";
 import { Dispatch } from "redux";
 
 function popup(props: any) {
-    const articlesData = useSelector((state: any) => state.articlesReducer);
-    const articleData = useSelector(
-        (state: any) => state.articlesReducer.article
-    );
-    console.log(articleData);
+    console.log(props);
 
+    const articlesData = useSelector((state: any) => state.articlesReducer);
     const popupOpenRefs = useRef<boolean[]>([]);
     const popupRef = useRef(null);
     const [popupOpen, setPopupOpen] = useState(false);
@@ -31,16 +31,14 @@ function popup(props: any) {
         setApplyBlur(props.dataChildrenArticles.blur);
 
         const initialTitle = articlesData.articles[articleIndex]?.title;
-        const initialContent =
-            articlesData.article?.content ||
-            articlesData.articles[articleIndex]?.content;
-
+        const initialContent = articlesData.articles[articleIndex]?.content;
         setNewTitle(initialTitle);
         setNewContent(initialContent);
     }, [props.dataChildrenArticles]);
 
     const handleUpdateArticles = (e: any, id: string, isClose: boolean) => {
         e.preventDefault();
+
         const updatedArticle = {
             title: newTitle,
             content: newContent,
@@ -54,15 +52,27 @@ function popup(props: any) {
             const contentElement =
                 articleElement.querySelector(".post-description");
             if (titleElement) {
-                console.log(titleElement);
-
                 titleElement.textContent = `${newTitle}`;
             }
             if (contentElement) {
                 contentElement.textContent = `${newContent}`;
             }
         }
-        dispatch(updateArticles(id, updatedArticle));
+        dispatch(updateArticle(id, updatedArticle));
+        const updatedArticles = articlesData.articles.map(
+            (article: any, i: number) => {
+                if (i === indexArticles) {
+                    return {
+                        ...article, // Keep all other properties unchanged
+                        content: updatedArticle.content, // Update only content
+                        title: updatedArticle.title, // Update only title
+                    };
+                }
+                return article; // Keep other articles unchanged
+            }
+        );
+
+        dispatch(updateArticlesSuccess(updatedArticles));
 
         setApplyBlur(false);
         setPopupOpen(false);
@@ -71,11 +81,11 @@ function popup(props: any) {
             popupOpenRefs.current[indexArticles] = isClose;
         }, 500);
     };
-    const handleClosePopup = (isClose: boolean) => {
+    const handleClosePopup = (index: number, isClose: boolean) => {
         setApplyBlur(false);
         setPopupOpen(false);
         setTimeout(() => {
-            popupOpenRefs.current[indexArticles] = isClose;
+            popupOpenRefs.current[index] = isClose;
         }, 0);
     };
     return (
@@ -119,7 +129,9 @@ function popup(props: any) {
                                 </button>
                                 <button
                                     className="btn-close"
-                                    onClick={() => handleClosePopup(false)}
+                                    onClick={() =>
+                                        handleClosePopup(index, false)
+                                    }
                                 >
                                     Fermer
                                 </button>

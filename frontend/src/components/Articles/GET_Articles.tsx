@@ -11,10 +11,9 @@ import "../../style/pages/Home/GET_Articles.home.scss";
 
 import { useRef, useState, useEffect } from "react";
 
-function Articles() {
-    
-    
+function Articles(props: any) {
     const articlesData = useSelector((state: any) => state.articlesReducer);
+
     const user = useSelector((state: any) => state.userReducer.user);
     const [articles, setArticles] = useState(articlesData.articles);
     useEffect(() => {
@@ -63,10 +62,13 @@ function Articles() {
     // POPUP
     const [index, setIndex] = useState(0);
     const [dataChildrenArticles, setDataChildrenArticles] = useState<any>({});
-
+    // article down to add new article
+    const [clickPost, setClickPost] = useState(false);
+    useEffect(() => {
+        setClickPost(props.propsParent);
+    }, [clickPost, props.propsParent]);
     const dataChildren = (data: any) => {
         setIndex(data.index);
-
         const dataArticles = {
             blur: true,
             isOpen: true,
@@ -134,19 +136,28 @@ function Articles() {
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* <div className="container-comments">
+                                    {article.comments.map(
+                                        (comment: any, index: number) => {
+                                            return <p key={index}>{comment.content}</p>;
+                                        }
+                                    )}
+                                </div> */}
                             </div>
                         )}
 
                         <div className="article-buttons">
+                            <UPDATE_Articles
+                                propsParent={article.id}
+                                onPopupOpenChange={dataChildren}
+                                index={index}
+                                comments={article.comments}
+                            />
                             {article.user &&
                                 (user.id === article.user.id ||
                                     user.role === "admin") && (
                                     <>
-                                        <UPDATE_Articles
-                                            propsParent={article.id}
-                                            onPopupOpenChange={dataChildren}
-                                            index={index}
-                                        />
                                         <DELETE_Articles
                                             propsParent={article.id}
                                         />

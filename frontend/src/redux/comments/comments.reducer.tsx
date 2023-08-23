@@ -1,108 +1,101 @@
 import {
-    LOAD_ARTICLES,
-    LOAD_ARTICLES_SUCCESS,
-    LOAD_ARTICLES_ERROR,
-    POST_ARTICLES_SUCCESS,
-    POST_ARTICLES_ERROR,
-    DELETE_ARTICLE_SUCCESS,
-    DELETE_ARTICLE_ERROR,
-    PUT_ARTICLE_SUCCESS,
-    PUT_ARTICLE_ERROR,
-    UPDATE_ARTICLES_SUCCESS,
-} from "./articles.type";
+    // POST_COMMENT_LOADING,
+    POST_COMMENT_SUCCESS,
+    POST_COMMENT_ERROR,
+    // DELETE_COMMENT_LOADING,
+    DELETE_COMMENT_SUCCESS,
+    DELETE_COMMENT_ERROR,
+    // PUT_COMMENT_LOADING,
+    PUT_COMMENT_SUCCESS,
+    PUT_COMMENT_ERROR,
+    GET_COMMENTS_LOADING,
+    GET_COMMENTS_SUCCESS,
+    GET_COMMENTS_ERROR,
+} from "./comments.type";
 
-const initialStateArticles = {
+const initialStateComments = {
     isLoading: false,
-    articles: [],
-    article: {},
-    error: "",
-    errorMessage: "",
+    comments: [],
+    comment: {},
     successMessage: "",
-
-    postSuccess: false,
-    deleteSuccess: false,
-    putSuccess: false,
+    errorMessage: "",
 };
 
-export default function articlesReducer(
-    state = initialStateArticles,
-    action: any
-) {
+const commentsReducer = (state = initialStateComments, action: any) => {
     switch (action.type) {
-        case LOAD_ARTICLES:
+        case GET_COMMENTS_LOADING:
             return {
                 ...state,
                 isLoading: true,
             };
-        case LOAD_ARTICLES_SUCCESS:
+        case GET_COMMENTS_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
-                articles: action.payload,
+                comments: action.payload,
                 error: "",
             };
-        case LOAD_ARTICLES_ERROR:
+        case GET_COMMENTS_ERROR:
             return {
                 ...state,
                 isLoading: false,
-                articles: [],
+                comments: [],
                 error: action.payload,
             };
-        case POST_ARTICLES_SUCCESS:
+        case POST_COMMENT_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
-                articles: [...state.articles, action.payload],
-                article: action.payload,
+                comments: [...state.comments, action.payload],
+                comment: action.payload,
                 successMessage: action.message,
                 errorMessage: "",
             };
-        case POST_ARTICLES_ERROR:
+        case POST_COMMENT_ERROR:
             return {
                 ...state,
                 isLoading: false,
                 errorMessage: action.payload,
             };
 
-        case DELETE_ARTICLE_SUCCESS:
+        case DELETE_COMMENT_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
-                articles: state.articles.filter(
-                    (article: any) => article.id !== action.payload
+                comments: state.comments.filter(
+                    (comment: any) => comment.id !== action.payload
                 ),
                 successMessage: action.message,
                 errorMessage: "",
             };
-        case DELETE_ARTICLE_ERROR:
+        case DELETE_COMMENT_ERROR:
             return {
                 ...state,
                 isLoading: false,
                 errorMessage: action.payload,
             };
-        case PUT_ARTICLE_SUCCESS:
+        case PUT_COMMENT_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
-                article: action.payload,
+                comment: action.payload,
                 successMessage: action.message,
                 errorMessage: "",
             };
-        case PUT_ARTICLE_ERROR:
+        case PUT_COMMENT_ERROR:
             return {
                 ...state,
                 isLoading: false,
                 errorMessage: action.payload,
-            };
-        case UPDATE_ARTICLES_SUCCESS:
-            return {
-                ...state,
-                isLoading: false,
-                articles: action.payload,
-                successMessage: "Articles updated successfully.",
-                errorMessage: "",
             };
         default:
             return state;
     }
 }
+
+export default commentsReducer;
+
+
+
+
+
