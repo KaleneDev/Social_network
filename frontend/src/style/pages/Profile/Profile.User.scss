@@ -9,8 +9,17 @@
     .back {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 1rem;
         margin-bottom: 1rem;
+        svg {
+            width: 30px;
+            height: 30px;
+            color: $primary-color;
+            &:hover {
+                cursor: pointer;
+                color: darken($primary-color, 20%);
+            }
+        }
         span {
             font-size: 1.2rem;
             font-weight: 500;
@@ -69,7 +78,7 @@
     background-color: $white;
     // border-radius: 1rem;
     // border-top: 1px solid $gray-light;
-  
+
     .container-posts {
         padding: 1rem;
         border-top: 1px solid $gray-light;
@@ -107,7 +116,7 @@
                 }
             }
             .block-post-buttons {
-                .btn-update{
+                .btn-update {
                     @include buttonPrimary($color: $primary-color);
                     font-size: 0.7rem;
                     border-radius: 1rem;
