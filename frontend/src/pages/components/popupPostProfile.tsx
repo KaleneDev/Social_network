@@ -5,9 +5,10 @@ import { Dispatch } from "redux";
 
 function popup(props: any) {
     const articlesData = useSelector((state: any) => state.articlesReducer);
-    const articleData = useSelector((state: any) => state.articlesReducer.article);
+    const articleData = useSelector(
+        (state: any) => state.articlesReducer.article
+    );
     console.log(articleData);
-    
 
     const popupOpenRefs = useRef<boolean[]>([]);
     const popupRef = useRef(null);
@@ -38,12 +39,7 @@ function popup(props: any) {
         setNewContent(initialContent);
     }, [props.dataChildrenArticles]);
 
-    const handleUpdateArticles = (
-        e: any,
-        id: string,
-        isClose: boolean,
-        index: number
-    ) => {
+    const handleUpdateArticles = (e: any, id: string, isClose: boolean) => {
         e.preventDefault();
         const updatedArticle = {
             title: newTitle,
@@ -75,7 +71,7 @@ function popup(props: any) {
             popupOpenRefs.current[indexArticles] = isClose;
         }, 500);
     };
-    const handleClosePopup = (index: number, isClose: boolean) => {
+    const handleClosePopup = (isClose: boolean) => {
         setApplyBlur(false);
         setPopupOpen(false);
         setTimeout(() => {
@@ -115,8 +111,7 @@ function popup(props: any) {
                                         handleUpdateArticles(
                                             e,
                                             articlesData.articles[index].id,
-                                            false,
-                                            index
+                                            false
                                         )
                                     }
                                 >
@@ -124,9 +119,7 @@ function popup(props: any) {
                                 </button>
                                 <button
                                     className="btn-close"
-                                    onClick={() =>
-                                        handleClosePopup(index, false)
-                                    }
+                                    onClick={() => handleClosePopup(false)}
                                 >
                                     Fermer
                                 </button>
