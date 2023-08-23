@@ -12,6 +12,8 @@ import "../../style/pages/Home/GET_Articles.home.scss";
 import { useRef, useState, useEffect } from "react";
 
 function Articles() {
+    
+    
     const articlesData = useSelector((state: any) => state.articlesReducer);
     const user = useSelector((state: any) => state.userReducer.user);
     const [articles, setArticles] = useState(articlesData.articles);
