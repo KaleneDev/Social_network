@@ -181,15 +181,17 @@ exports.delete = async (req, res) => {
     // DELETE a comment
     try {
         const comment = await Comments.findByPk(req.params.id);
-        const elements = comment.file.split(" + ");
-        for (let index = 0; index < elements.length; index++) {
-            const element = elements[index];
-            fs.unlink(
-                `${dirname}\\frontend\\public\\upload\\articles\\${element}`,
-                () => {
-                    return;
-                }
-            );
+        if (comment.file) {
+            const elements = comment.file.split(" + ");
+            for (let index = 0; index < elements.length; index++) {
+                const element = elements[index];
+                fs.unlink(
+                    `${dirname}\\frontend\\public\\upload\\articles\\${element}`,
+                    () => {
+                        return;
+                    }
+                );
+            }
         }
         if (!comment) {
             return res.status(404).json({

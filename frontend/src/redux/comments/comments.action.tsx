@@ -6,9 +6,9 @@ import {
     POST_COMMENT_LOADING,
     POST_COMMENT_SUCCESS,
     POST_COMMENT_ERROR,
-    // DELETE_COMMENT_LOADING,
-    // DELETE_COMMENT_SUCCESS,
-    // DELETE_COMMENT_ERROR,
+    DELETE_COMMENT_LOADING,
+    DELETE_COMMENT_SUCCESS,
+    DELETE_COMMENT_ERROR,
     // PUT_COMMENT_LOADING,
     // PUT_COMMENT_SUCCESS,
     // PUT_COMMENT_ERROR,
@@ -49,24 +49,24 @@ const postCommentError = (error: any) => {
         payload: error,
     };
 };
-// const deleteCommentLoading = () => {
-//     return {
-//         type: DELETE_COMMENT_LOADING,
-//     };
-// };
-// const deleteCommentSuccess = (id: string, message: string) => {
-//     return {
-//         type: DELETE_COMMENT_SUCCESS,
-//         payload: id,
-//         message: message,
-//     };
-// };
-// const deleteCommentError = (error: any) => {
-//     return {
-//         type: DELETE_COMMENT_ERROR,
-//         payload: error,
-//     };
-// };
+const deleteCommentLoading = () => {
+    return {
+        type: DELETE_COMMENT_LOADING,
+    };
+};
+const deleteCommentSuccess = (id: string, message: string) => {
+    return {
+        type: DELETE_COMMENT_SUCCESS,
+        payload: id,
+        message: message,
+    };
+};
+const deleteCommentError = (error: any) => {
+    return {
+        type: DELETE_COMMENT_ERROR,
+        payload: error,
+    };
+};
 // const putCommentLoading = () => {
 //     return {
 //         type: PUT_COMMENT_LOADING,
@@ -93,7 +93,10 @@ export const getComments = () => {
             .get(`${import.meta.env.VITE_APP_URL}comments`)
             .then((response) => {
                 const comments = response.data;
-                dispatch(getCommentsSuccess(comments));
+                const sortedComments = comments.sort((a: any, b: any) =>
+                    a.createdAt < b.createdAt ? 1 : -1
+                );
+                dispatch(getCommentsSuccess(sortedComments));
             })
             .catch((error) => {
                 dispatch(getCommentsError(error.message));
@@ -122,3 +125,23 @@ export const postComment = (data: any) => {
             });
     };
 };
+
+export const deleteComment = (id: string) => {
+    const headers = {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    };
+    return (dispatch: any) => {
+        dispatch(deleteCommentLoading());
+        axios
+            .delete(`${import.meta.env.VITE_APP_URL}comments/id/${id}`, {
+                headers,
+                withCredentials: true,
+            })
+            .then((res) => {
+                dispatch(deleteCommentSuccess(id, res.data));
+            })
+            .catch((error) => {
+                dispatch(deleteCommentError(error.message));
+            });
+    };
+}

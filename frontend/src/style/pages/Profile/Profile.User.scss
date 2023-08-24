@@ -116,6 +116,8 @@
                 }
             }
             .block-post-buttons {
+                display: flex;
+                gap: 1rem;
                 .btn-update {
                     @include buttonPrimary($color: $primary-color);
                     font-size: 0.7rem;

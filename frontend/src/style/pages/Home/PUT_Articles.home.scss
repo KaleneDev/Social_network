@@ -33,107 +33,153 @@
         background-color: darken($primary-color, 10%);
     }
 }
-.popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out,
-        visibility 0.5s ease-in-out;
-
-    transform: translate(-50%, -50%) scale(0.2);
-    width: 100%;
-    // height: 100%;
-    max-width: 680px;
-
-    z-index: 1000;
-    background-color: $white;
-    padding: 1rem;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    opacity: 0;
-    visibility: hidden;
-    box-sizing: border-box;
+.container-popup {
     .close {
-        display: flex;
-        justify-content: space-between;
-    }
-    .btn {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-    button {
-        @include buttonPrimary($primary-color);
-    }
-    input {
-        @include inputPrimary($primary-color);
-        margin-bottom: 1rem;
-    }
-    textarea {
-        @include inputPrimary($primary-color);
-        margin-bottom: 1rem;
-        resize: none;
-    }
-    .post-description {
-        @include inputPrimary($primary-color);
-        margin-bottom: 1rem;
-        resize: none;
-        height: 200px;
-    }
-    .container-comments {
-        width: 100%;
-        border-bottom: 1px solid $primary-color;
-        .add-comment {
-            display: flex;
-
-            flex-direction: column;
-            margin-bottom: 1rem;
-            position: relative;
-            .comment {
-                height: 100px;
-            }
-            .btn-comment {
-                position: absolute;
-                bottom: 1.5rem;
-                right: 0.5rem;
-                width: 30px;
-                height: 30px;
-                cursor: pointer;
-                stroke: $primary-color;
-                &:hover {
-                    stroke : darken($primary-color, 10%);
-                }
-            }
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        fill: $white;
+        color: $primary-color;
+        transition: all 0.3s ease-in-out;
+        position: absolute;
+        top: -22.5rem;
+        right: -0.5rem;
+        z-index: 2000;
+        &:hover {
+            color: $danger-color;
         }
-        .block-comment {
+        opacity: 0;
+        visibility: hidden;
+    }
+    .popup {
+        position: fixed;
+        max-height: 90vh;
+        overflow-y: auto;
+        top: 50%;
+        left: 50%;
+        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out,
+            visibility 0.5s ease-in-out;
+
+        transform: translate(-50%, -50%) scale(0.2);
+        width: 100%;
+        // height: 100%;
+        max-width: 680px;
+
+        z-index: 1000;
+        background-color: $white;
+        padding: 1rem;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        visibility: hidden;
+        box-sizing: border-box;
+        &::-webkit-scrollbar {
+            width: 8px;
+            background: transparent;
+            border-radius: 99rem;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: $primary-color;
+            border-radius: 4px;
+        }
+        &::-webkit-scrollbar-track {
+            background-color: #f0f0f0;
+            border-radius: 0 10px 10px 0;
+        }
+        .popup-article {
             display: flex;
             flex-direction: column;
+        }
 
+        .btn {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            .author {
+        }
+        button {
+            @include buttonPrimary($primary-color);
+        }
+        input {
+            @include inputPrimary($primary-color);
+            margin-bottom: 1rem;
+        }
+        textarea {
+            @include inputPrimary($primary-color);
+            resize: none;
+            height: auto;
+        }
+        .post-description {
+            @include inputPrimary($primary-color);
+            margin-bottom: 1rem;
+            resize: none;
+            height: 200px;
+            padding: 1rem;
+        }
+        .container-comments {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            .add-comment {
                 display: flex;
-                align-items: center;
-                .author-name {
-                    margin-right: 0.25rem;
+                textarea {
+                    padding: 0.5rem;
                 }
-                a {
+                flex-direction: column;
+
+                position: relative;
+                .comment {
+                    height: 100px;
+                }
+                .btn-comment {
+                    position: absolute;
+                    bottom: 0.5rem;
+                    right: 0.5rem;
+                    width: 30px;
+                    height: 30px;
+                    cursor: pointer;
+                    stroke: $primary-color;
+                    &:hover {
+                        stroke: darken($primary-color, 10%);
+                    }
+                }
+            }
+            .block-comment {
+                border-bottom: 1px solid $primary-color;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                padding-bottom: 1rem;
+                .author {
                     display: flex;
                     align-items: center;
-                }
-                img {
-                    width: 50px;
-                    height: 50px;
-                    object-fit: cover;
-                    border-radius: 50%;
-                    margin-right: 0.7rem;
+                    .author-name {
+                        margin-right: 0.25rem;
+                    }
+                    a {
+                        display: flex;
+                        align-items: center;
+                    }
+                    img {
+                        width: 50px;
+                        height: 50px;
+                        object-fit: cover;
+                        border-radius: 50%;
+                        margin-right: 0.7rem;
+                    }
                 }
             }
         }
     }
-}
-.popup.active {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    visibility: visible;
+    .popup.active {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+        visibility: visible;
+    }
+    .close.active {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+        visibility: visible;
+    }
 }
