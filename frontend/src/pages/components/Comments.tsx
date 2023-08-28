@@ -22,6 +22,8 @@ function Comments(props: any) {
     const commentsForCurrentArticle = comments.filter(
         (comment: any) => comment.article_id === currentArticle.id
     );
+    console.log(commentsForCurrentArticle);
+    
     function formatDateComments(date: string) {
         const originalDate = date;
         const parsedDate = parseISO(originalDate);
@@ -85,6 +87,7 @@ function Comments(props: any) {
                 return comment;
             }
         );
+console.log(updatedComment);
 
         dispatch(updateCommentsSuccess(updatedComment));
     };
@@ -192,7 +195,7 @@ function Comments(props: any) {
                                     <div className="text-area">
                                         <textarea
                                             defaultValue={
-                                                comments[index].content
+                                                commentsForCurrentArticle[index].content
                                             }
                                             onChange={(e) => {
                                                 setEditComment(e.target.value);
