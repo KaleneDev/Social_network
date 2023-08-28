@@ -132,6 +132,7 @@ function popup(props: any) {
                         content: contentComment,
                         user: user,
                         article_id: id,
+                        user_id: user.id,
                         createdAt: commentDataRef.current?.createdAt,
                         id: commentDataRef.current?.id,
                     };
@@ -180,6 +181,7 @@ function popup(props: any) {
             article_id: id,
             createdAt: commentDataRef.current.comment?.createdAt,
             id: commentDataRef.current.comment?.id,
+            user_id: user.id,
         };
 
         const putComment = [newComment, ...commentData.comments];

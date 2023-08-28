@@ -186,6 +186,7 @@ function Comments(props: any) {
                                     </div>
                                 </div>
                                 {(user.id === comment.user_id ||
+                                    comment.user.id ||
                                     user.role === "admin") &&
                                 isEditing ? (
                                     <div className="text-area">
