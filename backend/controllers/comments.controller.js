@@ -156,7 +156,7 @@ exports.update = async (req, res) => {
             }
         }
         //delete old file
-        if (comment.file) {
+        if (comment.file && updateComment.file) {
             const elements = comment.file.split(" + ");
             for (let index = 0; index < elements.length; index++) {
                 const element = elements[index];
