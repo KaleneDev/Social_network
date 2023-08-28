@@ -181,7 +181,7 @@ exports.delete = async (req, res) => {
             }
         }
         const user = await Users.destroy({ where: { id: req.params.id } });
-        res.status(200).json("user");
+        res.status(200).json(user);
     } catch (err) {
         console.error(err);
         res.status(500).json({

@@ -156,15 +156,14 @@ exports.update = async (req, res) => {
             }
         }
         //delete old file
-        const elements = comment.file.split(" + ");
-        for (let index = 0; index < elements.length; index++) {
-            const element = elements[index];
-            fs.unlink(
-                `${dirname}\\frontend\\public\\upload\\articles\\${element}`,
-                () => {
+        if (comment.file) {
+            const elements = comment.file.split(" + ");
+            for (let index = 0; index < elements.length; index++) {
+                const element = elements[index];
+                fs.unlink(`${element}`, () => {
                     return;
-                }
-            );
+                });
+            }
         }
 
         await comment.update(updateComment);

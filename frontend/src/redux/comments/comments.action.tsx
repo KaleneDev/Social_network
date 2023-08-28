@@ -9,9 +9,10 @@ import {
     DELETE_COMMENT_LOADING,
     DELETE_COMMENT_SUCCESS,
     DELETE_COMMENT_ERROR,
-    // PUT_COMMENT_LOADING,
-    // PUT_COMMENT_SUCCESS,
-    // PUT_COMMENT_ERROR,
+    PUT_COMMENT_LOADING,
+    PUT_COMMENT_SUCCESS,
+    PUT_COMMENT_ERROR,
+    UPDATE_COMMENTS_SUCCESS,
 } from "./comments.type";
 
 const getCommentsLoading = () => {
@@ -67,24 +68,24 @@ const deleteCommentError = (error: any) => {
         payload: error,
     };
 };
-// const putCommentLoading = () => {
-//     return {
-//         type: PUT_COMMENT_LOADING,
-//     };
-// };
-// const putCommentSuccess = (comment: any, message: string) => {
-//     return {
-//         type: PUT_COMMENT_SUCCESS,
-//         payload: comment,
-//         message: message,
-//     };
-// };
-// const putCommentError = (error: any) => {
-//     return {
-//         type: PUT_COMMENT_ERROR,
-//         payload: error,
-//     };
-// };
+const putCommentLoading = () => {
+    return {
+        type: PUT_COMMENT_LOADING,
+    };
+};
+const putCommentSuccess = (comment: any, message: string) => {
+    return {
+        type: PUT_COMMENT_SUCCESS,
+        payload: comment,
+        message: message,
+    };
+};
+const putCommentError = (error: any) => {
+    return {
+        type: PUT_COMMENT_ERROR,
+        payload: error,
+    };
+};
 
 export const getComments = () => {
     return (dispatch: any) => {
@@ -144,4 +145,29 @@ export const deleteComment = (id: string) => {
                 dispatch(deleteCommentError(error.message));
             });
     };
-}
+};
+
+export const putComment = (id: string, data: any) => {
+    const headers = {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    };
+    return (dispatch: any) => {
+        dispatch(putCommentLoading());
+        axios
+            .put(`${import.meta.env.VITE_APP_URL}comments/id/${id}`, data, {
+                headers,
+                withCredentials: true,
+            })
+            .then((res) => {
+                dispatch(putCommentSuccess(res.data, "Commentaire modifié"));
+            })
+            .catch((error) => {
+                dispatch(putCommentError(error.message));
+            });
+    };
+};
+export const updateCommentsSuccess = (updatedComments: any) => ({
+    type: UPDATE_COMMENTS_SUCCESS,
+    payload: updatedComments,
+});

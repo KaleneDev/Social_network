@@ -7,10 +7,10 @@ function DELETE_Articles(props: any) {
 
     const handleDeleteArticles = async (e: any, id: string) => {
         e.preventDefault();
-        const reponse = confirm("Voulez-vous vraiment supprimer cet article ?");
-        if (!reponse) {
-            return;
-        }
+        // const reponse = confirm("Voulez-vous vraiment supprimer cet article ?");
+        // if (!reponse) {
+        //     return;
+        // }
         if (e.target.closest(".article")) {
             const parentDiv = e.target.closest(".article");
             parentDiv.classList.add("ZoomIn");

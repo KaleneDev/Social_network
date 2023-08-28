@@ -9,10 +9,11 @@ import "../../style/pages/Home/POST_Articles.home.scss";
 import "../../style/pages/Login/Login.scss";
 import { ZoomOut } from "../../utils/AnimationText";
 
-function POST_Articles(props: any) {
+function POST_Articles() {
     const profile = useSelector((state: any) => state.userReducer.user);
     const dispatch = useDispatch<Dispatch<any>>();
     const articlesData = useSelector((state: any) => state.articlesReducer);
+
     const uid = useContext(UserIdContext);
 
     const [title, setTitle] = useState("");
@@ -32,45 +33,49 @@ function POST_Articles(props: any) {
 
     const handlePostArticles = async (e: any) => {
         e.preventDefault();
-        const data = {
-            title: title,
-            content: content,
-            user_id: profile.id,
-        };
-        try {
-            setTimeout(() => {
-                updateArticleAnimation();
-            }, 100);
-            await dispatch(postArticles(data));
-
-            function updateArticleAnimation() {
-                const articles = document.querySelectorAll(
-                    ".articles-container .article"
-                );
-                articles.forEach((article: any) => {
-                    article.style.opacity = "1";
-                    article.style.transform = `translateY(${50}px)`;
-                    article.style.transition = `opacity 0.5s ease, transform 0.5s ease`;
-                });
-            }
-            props.onArticlePosted(true);
-
-            const newArticle = {
-                title,
-                content,
-                user: profile,
-                createdAt: articlesDataRef.current.article.createdAt,
-                id: articlesDataRef.current.article?.id,
+        if (!title || !content)
+            return alert("Veuillez remplir tous les champs");
+        {
+            const data = {
+                title: title,
+                content: content,
+                user_id: profile.id,
             };
-            const updatedArticles = [newArticle, ...articlesData.articles];
-            dispatch({
-                type: "LOAD_ARTICLES_SUCCESS",
-                payload: updatedArticles,
-            });
-            setTitle("");
-            setContent("");
-        } catch (error) {
-            console.log(error);
+            try {
+                setTimeout(() => {
+                    updateArticleAnimation();
+                }, 100);
+                await dispatch(postArticles(data));
+
+                function updateArticleAnimation() {
+                    const articles = document.querySelectorAll(
+                        ".articles-container .article"
+                    );
+                    articles.forEach((article: any) => {
+                        article.style.opacity = "1";
+                        article.style.transform = `translateY(${50}px)`;
+                        article.style.transition = `opacity 0.5s ease, transform 0.5s ease`;
+                    });
+                }
+
+                const newArticle = {
+                    title,
+                    content,
+                    user: profile,
+                    createdAt: articlesDataRef.current.article.createdAt,
+                    id: articlesDataRef.current.article?.id,
+                };
+
+                const updatedArticles = [newArticle, ...articlesData.articles];
+                dispatch({
+                    type: "LOAD_ARTICLES_SUCCESS",
+                    payload: updatedArticles,
+                });
+                setTitle("");
+                setContent("");
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 

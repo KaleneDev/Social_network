@@ -9,15 +9,31 @@ import { postComment } from "../../redux/comments/comments.action";
 import Comments from "./Comments";
 function popup(props: any) {
     const articlesData = useSelector((state: any) => state.articlesReducer);
+    const commentsData = useSelector(
+        (state: any) => state.commentsReducer.comments
+    );
+    const commentData = useSelector((state: any) => state.commentsReducer.comment);
     const user = useSelector((state: any) => state.userReducer.user);
 
     const popupOpenRefs = useRef<boolean[]>([]);
     const popupRef = useRef(null);
     const [popupOpen, setPopupOpen] = useState(false);
 
-    const [newTitle, setNewTitle] = useState("");
-    const [newContent, setNewContent] = useState("");
+    useEffect(() => {
+        if (popupOpen) {
+            document.documentElement.style.overflow = "hidden"; // Désactiver le défilement
+        } else {
+            document.documentElement.style.overflow = "auto"; // Réactiver le défilement
+        }
+
+        return () => {
+            document.documentElement.style.overflow = "auto"; // Assurez-vous de réactiver le défilement lorsque le composant est démonté
+        };
+    }, [popupOpen]);
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
     const [applyBlur, setApplyBlur] = useState(false);
+    const commentDataRef = useRef(commentData);
 
     const [contentComment, setContentComment] = useState("");
 
@@ -45,9 +61,14 @@ function popup(props: any) {
 
         const initialTitle = articlesData.articles[props.index]?.title;
         const initialContent = articlesData.articles[props.index]?.content;
-        setNewTitle(initialTitle);
-        setNewContent(initialContent);
+        setTitle(initialTitle);
+        setContent(initialContent);
     }, [props.dataChildrenArticles]);
+
+    useEffect(() => {
+        commentDataRef.current = commentData;
+    }, [commentData]);
+
 
     const handleUpdateArticles = (
         e: any,
@@ -58,26 +79,11 @@ function popup(props: any) {
         e.preventDefault();
 
         const updatedArticle = {
-            title: newTitle,
-            content: newContent,
+            title,
+            content,
         };
 
-        const articleElement = document
-            .querySelectorAll(`.container-home .articles-container .ZoomOut`)
-            [index].querySelector(".article");
 
-        if (articleElement) {
-            const titleElement = articleElement.querySelector(".post-title");
-            const contentElement =
-                articleElement.querySelector(".post-description");
-
-            if (titleElement) {
-                titleElement.textContent = `${newTitle}`;
-            }
-            if (contentElement) {
-                contentElement.textContent = `${newContent}`;
-            }
-        }
         dispatch(updateArticle(id, updatedArticle));
 
         const updatedArticles = articlesData.articles.map(
@@ -108,17 +114,43 @@ function popup(props: any) {
     ) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            if (contentComment.trim() !== "") {
-                const data = {
-                    content: contentComment,
-                    user_id: user.id,
-                    article_id: id,
-                };
-                await dispatch(postComment(data));
-                setContentComment("");
+            try {
+                if (contentComment.trim() !== "") {
+                    const data = {
+                        content: contentComment,
+                        user_id: user.id,
+                        article_id: id,
+                    };
+                    await dispatch(postComment(data));
+
+                    await new Promise((resolve: any) => {
+                        setTimeout(() => {
+                            resolve();
+                        }, 100);
+                    });
+                    const newComment = {
+                        content: contentComment,
+                        user: user,
+                        article_id: id,
+                        createdAt: commentDataRef.current?.createdAt,
+                        id: commentDataRef.current?.id,
+                    };
+
+                    const putComment = [newComment, ...commentsData];
+                    dispatch({
+                        type: "GET_COMMENTS_SUCCESS",
+                        payload: putComment,
+                    });
+
+
+                    setContentComment("");
+                }
+            } catch (error) {
+                console.log(error);
             }
         }
     };
+
     const handleClosePopup = (index: number, isClose: boolean) => {
         setApplyBlur(false);
         setPopupOpen(false);
@@ -126,6 +158,7 @@ function popup(props: any) {
             popupOpenRefs.current[index] = isClose;
         }, 0);
     };
+
     const handlePostComment = async (e: any, id: string) => {
         e.preventDefault();
         const data = {
@@ -134,6 +167,27 @@ function popup(props: any) {
             article_id: id,
         };
         await dispatch(postComment(data));
+
+        await new Promise((resolve: any) => {
+            setTimeout(() => {
+                resolve();
+            }, 100);
+        });
+
+        const newComment = {
+            content: contentComment,
+            user: user,
+            article_id: id,
+            createdAt: commentDataRef.current.comment?.createdAt,
+            id: commentDataRef.current.comment?.id,
+        };
+
+        const putComment = [newComment, ...commentData.comments];
+        dispatch({
+            type: "GET_COMMENTS_SUCCESS",
+            payload: putComment,
+        });
+
         setContentComment("");
     };
     return (
@@ -143,143 +197,160 @@ function popup(props: any) {
                 <div className="container-popup" key={index}>
                     {isOpen && (
                         <>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                className={`close ${popupOpen ? "active" : ""}`}
-                                onClick={() => handleClosePopup(index, false)}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
                             <div
                                 ref={popupRef}
                                 className={`popup ${popupOpen ? "active" : ""}`}
                             >
-                                <h1>Modifier un article</h1>
-
-                                <div className="popup-article">
-                                    <h3 className="title">Titre : </h3>
-                                    {articlesData.articles[index].user &&
-                                    (user.id ===
-                                        articlesData.articles[index].user.id ||
-                                        user.role === "admin") ? (
-                                        <input
-                                            type="text"
-                                            onChange={(e) =>
-                                                setNewTitle(e.target.value)
-                                            }
-                                            defaultValue={
-                                                articlesData.articles[index]
-                                                    .title
-                                            }
+                                <div className="container-close">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="2.5"
+                                        stroke="currentColor"
+                                        className="close"
+                                        onClick={() =>
+                                            handleClosePopup(index, false)
+                                        }
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
                                         />
-                                    ) : (
-                                        <p>
-                                            {articlesData.articles[index].title}
-                                        </p>
-                                    )}
+                                    </svg>
+                                    <h2>Post</h2>
+                                </div>
 
-                                    <h3 className="content">Contenu : </h3>
-                                    {articlesData.articles[index].user &&
-                                    (user.id ===
-                                        articlesData.articles[index].user.id ||
-                                        user.role === "admin") ? (
-                                        <textarea
-                                            className="post-description"
-                                            onChange={(e) =>
-                                                setNewContent(e.target.value)
-                                            }
-                                            defaultValue={
-                                                articlesData.articles[index]
-                                                    .content
-                                            }
-                                        />
-                                    ) : (
-                                        <p>
-                                            {
-                                                articlesData.articles[index]
-                                                    .content
-                                            }
-                                        </p>
-                                    )}
+                                <div className="popup-content">
+                                    <h1>Modifier un article</h1>
 
-                                    {articlesData.articles[index].user &&
+                                    <div className="popup-article">
+                                        <h3 className="title">Titre : </h3>
+                                        {articlesData.articles[index].user &&
                                         (user.id ===
                                             articlesData.articles[index].user
                                                 .id ||
-                                            user.role === "admin") && (
-                                            <div className="btn">
-                                                <button
-                                                    className="btn-save"
-                                                    onClick={(e) =>
-                                                        handleUpdateArticles(
-                                                            e,
-                                                            articlesData
-                                                                .articles[index]
-                                                                .id,
-                                                            false,
-                                                            index
-                                                        )
-                                                    }
-                                                >
-                                                    Modifier l'article
-                                                </button>
-                                            </div>
-                                        )}
-                                </div>
-
-                                <div className="container-comments">
-                                    {/* ajouter un commentaire */}
-                                    <div className="add-comment">
-                                        <h3>Ajouter un commentaire : </h3>
-
-                                        <textarea
-                                            className="comment"
-                                            placeholder="Votre commentaire"
-                                            value={contentComment}
-                                            onChange={(e) => {
-                                                setContentComment(
-                                                    e.target.value
-                                                );
-                                            }}
-                                            onKeyDown={(e) =>
-                                                handleKeyDown(
-                                                    e,
+                                            user.role === "admin") ? (
+                                            <input
+                                                type="text"
+                                                onChange={(e) =>
+                                                    setTitle(e.target.value)
+                                                }
+                                                defaultValue={
                                                     articlesData.articles[index]
-                                                        .id
-                                                )
-                                            }
-                                        ></textarea>
-                                        <svg
-                                            type="submit"
-                                            onClick={(e) => {
-                                                handlePostComment(
-                                                    e,
-                                                    articlesData.articles[index]
-                                                        .id
-                                                );
-                                            }}
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth="2.5"
-                                            className="btn-comment"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                                                        .title
+                                                }
                                             />
-                                        </svg>
+                                        ) : (
+                                            <p>
+                                                {
+                                                    articlesData.articles[index]
+                                                        .title
+                                                }
+                                            </p>
+                                        )}
+
+                                        <h3 className="content">Contenu : </h3>
+                                        {articlesData.articles[index].user &&
+                                        (user.id ===
+                                            articlesData.articles[index].user
+                                                .id ||
+                                            user.role === "admin") ? (
+                                            <textarea
+                                                className="post-description"
+                                                onChange={(e) =>
+                                                    setContent(e.target.value)
+                                                }
+                                                defaultValue={
+                                                    articlesData.articles[index]
+                                                        .content
+                                                }
+                                            />
+                                        ) : (
+                                            <p>
+                                                {
+                                                    articlesData.articles[index]
+                                                        .content
+                                                }
+                                            </p>
+                                        )}
+
+                                        {articlesData.articles[index].user &&
+                                            (user.id ===
+                                                articlesData.articles[index]
+                                                    .user.id ||
+                                                user.role === "admin") && (
+                                                <div className="btn">
+                                                    <button
+                                                        className="btn-save"
+                                                        onClick={(e) =>
+                                                            handleUpdateArticles(
+                                                                e,
+                                                                articlesData
+                                                                    .articles[
+                                                                    index
+                                                                ].id,
+                                                                false,
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        Modifier l'article
+                                                    </button>
+                                                </div>
+                                            )}
                                     </div>
-                                    <h3>Commentaires : </h3>
-                                    <Comments index={index} />
+
+                                    <div className="container-comments">
+                                        {/* ajouter un commentaire */}
+                                        <div className="add-comment">
+                                            <h3>Ajouter un commentaire : </h3>
+
+                                            <textarea
+                                                className="comment"
+                                                placeholder="Votre commentaire"
+                                                value={contentComment}
+                                                onChange={(e) => {
+                                                    setContentComment(
+                                                        e.target.value
+                                                    );
+                                                }}
+                                                onKeyDown={(e) =>
+                                                    handleKeyDown(
+                                                        e,
+                                                        articlesData.articles[
+                                                            index
+                                                        ].id
+                                                    )
+                                                }
+                                            ></textarea>
+                                            <svg
+                                                type="submit"
+                                                onClick={(e) => {
+                                                    handlePostComment(
+                                                        e,
+                                                        articlesData.articles[
+                                                            index
+                                                        ].id
+                                                    );
+                                                }}
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth="2.5"
+                                                className="btn-comment"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <h3>Commentaires : </h3>
+                                        <Comments index={index} />
+                                    </div>
                                 </div>
                             </div>
                         </>

@@ -11,16 +11,10 @@ import "../../style/pages/Home/GET_Articles.home.scss";
 
 import { useRef, useState, useEffect } from "react";
 
-function Articles(props: any) {
+function Articles() {
     const articlesData = useSelector((state: any) => state.articlesReducer);
-
     const user = useSelector((state: any) => state.userReducer.user);
-    const [articles, setArticles] = useState(articlesData.articles);
-    useEffect(() => {
-        if (articlesData && articlesData.articles) {
-            setArticles(articlesData.articles);
-        }
-    }, [articlesData]);
+
     const containerInfoRef = useRef<any>(null);
     const errorMessages = useSelector(
         (state: any) => state.articlesReducer.errorMessage.message
@@ -62,11 +56,6 @@ function Articles(props: any) {
     // POPUP
     const [index, setIndex] = useState(0);
     const [dataChildrenArticles, setDataChildrenArticles] = useState<any>({});
-    // article down to add new article
-    const [clickPost, setClickPost] = useState(false);
-    useEffect(() => {
-        setClickPost(props.propsParent);
-    }, [clickPost, props.propsParent]);
     const dataChildren = (data: any) => {
         setIndex(data.index);
         const dataArticles = {
@@ -90,8 +79,8 @@ function Articles(props: any) {
     ) : articlesData.error ? (
         <p>{articlesData.error}</p>
     ) : (
-        articles &&
-        articles.map((article: any, index: number) => {
+        articlesData.articles &&
+        articlesData.articles.map((article: any, index: number) => {
             return (
                 <ZoomOut key={article.id || index}>
                     <div className="article" ref={elementRef}>

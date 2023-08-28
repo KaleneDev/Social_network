@@ -11,6 +11,7 @@ import {
     GET_COMMENTS_LOADING,
     GET_COMMENTS_SUCCESS,
     GET_COMMENTS_ERROR,
+    UPDATE_COMMENTS_SUCCESS,
 } from "./comments.type";
 
 const initialStateComments = {
@@ -88,14 +89,17 @@ const commentsReducer = (state = initialStateComments, action: any) => {
                 isLoading: false,
                 errorMessage: action.payload,
             };
+        case UPDATE_COMMENTS_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                comments: action.payload,
+                successMessage: "Comments updated successfully",
+                error: "",
+            };
         default:
             return state;
     }
-}
+};
 
 export default commentsReducer;
-
-
-
-
-
