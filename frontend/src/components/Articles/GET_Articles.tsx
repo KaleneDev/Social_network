@@ -14,6 +14,22 @@ import { useRef, useState, useEffect } from "react";
 function Articles() {
     const articlesData = useSelector((state: any) => state.articlesReducer);
     const user = useSelector((state: any) => state.userReducer.user);
+    const articles = useSelector(
+        (state: any) => state.articlesReducer.searchResults
+    );
+    if (articles && articles.length > 0) {
+        // mettre du plus recent au plus ancien
+        articles.sort((a: any, b: any) => {
+            return (
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            );
+        });
+
+        articlesData.articles = articles;
+    } else {
+        articlesData.articles = articlesData.articles;
+    }
 
     const containerInfoRef = useRef<any>(null);
     const errorMessages = useSelector(

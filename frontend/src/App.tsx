@@ -41,6 +41,8 @@ function App() {
                     withCredentials: true,
                 })
                 .then((response) => {
+                    console.log(response.data);
+                    
                     setUid(response.data);
                 })
                 .catch((error) => {

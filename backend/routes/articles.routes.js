@@ -15,4 +15,9 @@ router.delete("/id/:id", authArticles, articlesCtrl.delete);
 router.post("/upload", uploadFile, uploadCtrl.uploadArticle);
 // router.post("/like/:id", auth, articlesCtrl.likeArticle);
 
+// router.get("/like/:id", auth, articlesCtrl.likeArticle);
+// router.get("/dislike/:id", auth, articlesCtrl.dislikeArticle);
+
+// search articles
+router.get("/search/:title", articlesCtrl.search);
 module.exports = router;

@@ -9,12 +9,17 @@ import {
     PUT_ARTICLE_SUCCESS,
     PUT_ARTICLE_ERROR,
     UPDATE_ARTICLES_SUCCESS,
+    SERACH_ARTICLES,
+    SEARCH_ARTICLES_SUCCESS,
+    SEARCH_ARTICLES_ERROR,
 } from "./articles.type";
 
 const initialStateArticles = {
     isLoading: false,
     articles: [],
     article: {},
+    searchResults: [],
+
     error: "",
     errorMessage: "",
     successMessage: "",
@@ -22,6 +27,7 @@ const initialStateArticles = {
     postSuccess: false,
     deleteSuccess: false,
     putSuccess: false,
+    searchSuccess: false,
 };
 
 export default function articlesReducer(
@@ -48,6 +54,7 @@ export default function articlesReducer(
                 articles: [],
                 error: action.payload,
             };
+        
         case POST_ARTICLES_SUCCESS:
             return {
                 ...state,
@@ -80,6 +87,7 @@ export default function articlesReducer(
                 isLoading: false,
                 errorMessage: action.payload,
             };
+        
         case PUT_ARTICLE_SUCCESS:
             return {
                 ...state,
@@ -94,6 +102,28 @@ export default function articlesReducer(
                 isLoading: false,
                 errorMessage: action.payload,
             };
+        
+        case SERACH_ARTICLES:
+            return {
+                ...state,
+                isLoading: true,
+            };
+        case SEARCH_ARTICLES_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                searchResults: action.payload,
+                error: "",
+            };
+        case SEARCH_ARTICLES_ERROR:
+            return {
+                ...state,
+                isLoading: false,
+                searchResults: [],
+                error: action.payload,
+            };
+
+
         case UPDATE_ARTICLES_SUCCESS:
             return {
                 ...state,
@@ -102,7 +132,8 @@ export default function articlesReducer(
                 successMessage: "Articles updated successfully.",
                 errorMessage: "",
             };
-        default:
+        
+            default:
             return state;
     }
 }

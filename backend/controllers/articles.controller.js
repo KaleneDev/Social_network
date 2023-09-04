@@ -5,6 +5,8 @@ const fs = require("fs");
 const path = require("path");
 const filename = path.resolve();
 const dirname = path.dirname(filename);
+const { Op } = require("sequelize");
+const e = require("express");
 
 exports.getAll = async (req, res) => {
     // GET all articles
@@ -217,6 +219,62 @@ exports.delete = async (req, res) => {
         console.error(err);
         res.status(500).json({
             message: "Erreur lors de la suppression de l'article.",
+        });
+    }
+};
+exports.search = async (req, res) => {
+    try {
+        const decodedSearch = decodeURI(req.params.title);
+        if (decodedSearch === "*") {
+            const articles = await Articles.findAll({
+                include: [
+                    {
+                        model: Users,
+                        as: "user",
+                    },
+                    {
+                        model: Comments,
+                        as: "comments",
+                        include: [
+                            {
+                                model: Users,
+                                as: "user",
+                            },
+                        ],
+                    },
+                ],
+            });
+            return res.status(200).json(articles);
+        } else {
+            const articles = await Articles.findAll({
+                where: {
+                    title: {
+                        [Op.like]: "%" + decodedSearch + "%",
+                    },
+                },
+                include: [
+                    {
+                        model: Users,
+                        as: "user",
+                    },
+                    {
+                        model: Comments,
+                        as: "comments",
+                        include: [
+                            {
+                                model: Users,
+                                as: "user",
+                            },
+                        ],
+                    },
+                ],
+            });
+            res.status(200).json(articles);
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Erreur lors de la récupération des articles.",
         });
     }
 };

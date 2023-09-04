@@ -6,15 +6,17 @@ function SignInForm() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState(false);
-    const [errorEmail, setErrorEmail] = useState(false);
-    const [errorPassword, setErrorPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [errorEmail, setErrorEmail] = useState("");
+    const [errorPassword, setErrorPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [redirect, setRedirect] = useState(false);
 
     const handleLogin = async (e: any) => {
         e.preventDefault();
-
-        await axios
-            .post(
+        try {
+            setLoading(true)
+            const response = await axios.post(
                 `${url}users/login`,
                 {
                     email,
@@ -23,32 +25,34 @@ function SignInForm() {
                 {
                     withCredentials: true,
                 }
-            )
-            .then((res) => {
-                const maxAge = 3 * 24 * 60 * 60 * 1000;
-                const expirationDate = new Date().getTime() + maxAge;
-                localStorage.setItem("jwt", res.data.token);
-                localStorage.setItem(
-                    "jwtExpiration",
-                    expirationDate.toString()
-                );
-                window.location.href = "/";
-            })
-            .catch((error) => {
-                if (error.response.data.errors.email) {
-                    setErrorEmail(true);
-                } else {
-                    setErrorEmail(false);
-                }
+            );
 
-                if (error.response.data.errors.password) {
-                    setErrorPassword(true);
-                } else {
-                    setErrorPassword(false);
+            const maxAge = 3 * 24 * 60 * 60 * 1000;
+            const expirationDate = new Date().getTime() + maxAge;
+            localStorage.setItem("jwt", response.data.token);
+            localStorage.setItem("jwtExpiration", expirationDate.toString());
+
+            setRedirect(true);
+        } catch (error: any) {
+            if (
+                error.response &&
+                error.response.data &&
+                error.response.data.errors
+            ) {
+                if (error.response.data.errors.email) {
+                    setErrorEmail("Email inconnu");
+                } else if (error.response.data.errors.password) {
+                    setErrorPassword("Mot de passe incorrect.");
                 }
-                setErrorMessage(true);
-            });
+            } else {
+                setErrorMessage("Une erreur est survenue lors de la connexion");
+            }
+            setLoading(false);
+        }
     };
+    if (redirect) {
+        window.location.href = "/";
+    }
 
     return (
         <div className="form-container">
@@ -76,19 +80,13 @@ function SignInForm() {
                     value={password}
                 />
                 {errorPassword && (
-                    <span className="password error">
-                        Mot de passe incorrect.
-                    </span>
+                    <span className="password error">{errorPassword}</span>
                 )}
                 <button onClick={handleLogin} type="submit">
-                    Connexion
+                    {loading ? "Connexion en cours..." : "Connexion"}
                 </button>
             </form>
-            {errorMessage && (
-                <span className="email error">
-                    Une erreur est survenue lors de la connexion
-                </span>
-            )}
+            {errorMessage && <span className="error">{errorMessage}</span>}
         </div>
     );
 }

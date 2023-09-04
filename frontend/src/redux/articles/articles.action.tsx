@@ -9,7 +9,10 @@ import {
     DELETE_ARTICLE_ERROR,
     PUT_ARTICLE_SUCCESS,
     PUT_ARTICLE_ERROR,
-    UPDATE_ARTICLES_SUCCESS
+    UPDATE_ARTICLES_SUCCESS,
+    SERACH_ARTICLES,
+    SEARCH_ARTICLES_SUCCESS,
+    SEARCH_ARTICLES_ERROR,
 } from "./articles.type";
 
 const loadArticles = () => {
@@ -68,7 +71,39 @@ const updateArticleError = (error: any) => {
         payload: error,
     };
 };
+const searchArticlesLoad = () => {
+    return {
+        type: SERACH_ARTICLES,
+    };
+}
+const searchArticlesSuccess = (articles: any) => {
+    return {
+        type: SEARCH_ARTICLES_SUCCESS,
+        payload: articles,
+    };
+}
+const searchArticlesError = (error: any) => {
+    return {
+        type: SEARCH_ARTICLES_ERROR,
+        payload: error,
+    };
+}
+export const searchArticles = (search: string) => {
 
+    return (dispatch: any) => {
+        dispatch(searchArticlesLoad());
+        axios
+            .get(`${import.meta.env.VITE_APP_URL}articles/search/${search}`, {
+                withCredentials: true,
+            })
+            .then((res) => {
+                dispatch(searchArticlesSuccess(res.data));
+            })
+            .catch((err) => {
+                dispatch(searchArticlesError(err.response.data));
+            });
+    };
+}
 export const getArticles = () => {
     return (dispatch: any) => {
         dispatch(loadArticles());
