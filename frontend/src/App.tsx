@@ -20,6 +20,7 @@ function App() {
     const dispatch = useDispatch<Dispatch<any>>();
     const upload = useSelector((state: any) => state.userReducer.upload);
     const [isLoadingFinish, setIsLoadingFinish] = useState(false);
+    // const [isConnecting, setIsConnecting] = useState(localStorage.getItem("isConnecting") === "true");
 
     useEffect(() => {
         if (!upload && upload !== undefined) {
@@ -41,9 +42,9 @@ function App() {
                     withCredentials: true,
                 })
                 .then((response) => {
-                    console.log(response.data);
-                    
                     setUid(response.data);
+                    localStorage.setItem("isConnecting", "false");
+                    localStorage.removeItem("isConnecting");
                 })
                 .catch((error) => {
                     console.log(error);
@@ -65,10 +66,7 @@ function App() {
                 />
             )}
             {isLoadingFinish && (
-                <Infos
-                    text="Téléchargement en fini"
-                    color="warning-success"
-                />
+                <Infos text="Téléchargement en fini" color="warning-success" />
             )}
             {!isLoginPage && <Navbar />}
             {isLoginPage && uid && <Navbar />}

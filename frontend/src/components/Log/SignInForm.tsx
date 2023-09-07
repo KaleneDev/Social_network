@@ -15,7 +15,8 @@ function SignInForm() {
     const handleLogin = async (e: any) => {
         e.preventDefault();
         try {
-            setLoading(true)
+            setLoading(true);
+            localStorage.setItem("isConnecting", "true");
             const response = await axios.post(
                 `${url}users/login`,
                 {
@@ -34,6 +35,7 @@ function SignInForm() {
 
             setRedirect(true);
         } catch (error: any) {
+            localStorage.removeItem("isConnecting");
             if (
                 error.response &&
                 error.response.data &&
@@ -83,7 +85,9 @@ function SignInForm() {
                     <span className="password error">{errorPassword}</span>
                 )}
                 <button onClick={handleLogin} type="submit">
-                    {loading ? "Connexion en cours..." : "Connexion"}
+                    {loading && localStorage.getItem("isConnecting") === "true"
+                        ? "Connexion en cours..."
+                        : "Connexion"}
                 </button>
             </form>
             {errorMessage && <span className="error">{errorMessage}</span>}

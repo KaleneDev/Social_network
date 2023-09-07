@@ -19,7 +19,7 @@ function ProfileUser() {
 
     const profile = useSelector((state: any) => state.profileReducer.profile);
     const profileArticles = useSelector(
-        (state: any) => state.profileReducer.profile?.articles || []
+        (state: any) => state.profileReducer.profile?.articles
     );
 
     const [articles, setArticles] = useState(profileArticles);

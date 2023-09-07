@@ -49,7 +49,7 @@ function popup(props: any) {
                 popupRef.current &&
                 !(popupRef.current as any).contains(e.target)
             ) {
-                handleClosePopup(props.index, false);
+                handleClosePopup(props.dataChildrenArticles.index, false);
             }
         };
 
@@ -58,14 +58,17 @@ function popup(props: any) {
         return () => {
             window.removeEventListener("click", handleOutsideClick);
         };
-    }, [props.index]);
+    }, [props.dataChildrenArticles.index]);
     useEffect(() => {
-        popupOpenRefs.current[props.index] = props.dataChildrenArticles.isOpen;
+        popupOpenRefs.current[props.dataChildrenArticles.index] =
+            props.dataChildrenArticles.isOpen;
         setPopupOpen(props.dataChildrenArticles.isOpen);
         setApplyBlur(props.dataChildrenArticles.blur);
 
-        const initialTitle = articlesData.articles[props.index]?.title;
-        const initialContent = articlesData.articles[props.index]?.content;
+        const initialTitle =
+            articlesData.articles[props.dataChildrenArticles.index]?.title;
+        const initialContent =
+            articlesData.articles[props.dataChildrenArticles.index]?.content;
         setTitle(initialTitle);
         setContent(initialContent);
     }, [props.dataChildrenArticles]);
@@ -213,7 +216,6 @@ function popup(props: any) {
                 if (!isOpen) return null;
                 const isEditing =
                     editingCommentId === articlesData.articles[index].id;
-                console.log(articlesData.articles[index].user);
 
                 return (
                     <div className="container-popup" key={index}>

@@ -17,6 +17,7 @@ function Articles() {
     const articles = useSelector(
         (state: any) => state.articlesReducer.searchResults
     );
+
     if (articles && articles.length > 0) {
         // mettre du plus recent au plus ancien
         articles.sort((a: any, b: any) => {
@@ -41,18 +42,25 @@ function Articles() {
 
     const [message, setMessage] = useState<string>("");
     const [colorInfo, setColorInfo] = useState<string>("primary-color");
-
     useEffect(() => {
         const animation = () => {
+            
             if (!containerInfoRef.current) return;
-            containerInfoRef.current.style.visibility = "visible";
-            containerInfoRef.current.style.opacity = "1";
-            setTimeout(() => {
-                containerInfoRef.current.style.opacity = "0";
+            if (containerInfoRef.current) {
+                containerInfoRef.current.style.visibility = "visible";
+                containerInfoRef.current.style.opacity = "1";
                 setTimeout(() => {
-                    containerInfoRef.current.style.visibility = "hidden";
-                }, 1000);
-            }, 8000);
+                    if (containerInfoRef.current) {
+                        containerInfoRef.current.style.opacity = "0";
+                        setTimeout(() => {
+                            if (containerInfoRef.current) {
+                                containerInfoRef.current.style.visibility =
+                                    "hidden";
+                            }
+                        }, 1000);
+                    }
+                }, 8000);
+            }
         };
         if (successMessages) {
             setMessage(successMessages);
@@ -70,18 +78,19 @@ function Articles() {
     const containerRef = useRef(null);
     const elementRef = useRef(null);
     // POPUP
-    const [index, setIndex] = useState(0);
     const [dataChildrenArticles, setDataChildrenArticles] = useState<any>({});
+
     const dataChildren = (data: any) => {
-        setIndex(data.index);
         const dataArticles = {
             blur: true,
             isOpen: true,
-            article_id: data.article_id,
+            article_id: data.id,
+            index: data.index,
         };
 
         setDataChildrenArticles(dataArticles);
     };
+
     function formatDatePost(date: string) {
         const originalDate = date;
         const parsedDate = parseISO(originalDate);
@@ -182,7 +191,7 @@ function Articles() {
             </TextAnimationBtoT>
 
             {displayData}
-            <Popup index={index} dataChildrenArticles={dataChildrenArticles} />
+            <Popup dataChildrenArticles={dataChildrenArticles} />
             {(errorMessages || successMessages) && (
                 <Info text={message} color={colorInfo} ref={containerInfoRef} />
             )}
